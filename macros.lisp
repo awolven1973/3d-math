@@ -50,7 +50,7 @@
      (define-ofun ,(intern "VEC2" *package*) (3dm::x 3dm::y)
        (,(intern "%VEC2" *package*) (coerce 3dm::x ',element-type) (coerce 3dm::y ',element-type)))
      (define-compiler-macro ,(intern "VEC2" *package*) (&environment 3dm::env 3dm::x 3dm::y)
-       `(,(intern "%VEC2" *package*)
+       `(,',(intern "%VEC2" *package*)
 	 ,(ensure-float-param 3dm::x 3dm::env ',element-type)
 	 ,(ensure-float-param 3dm::y 3dm::env ',element-type)))))
 
@@ -77,7 +77,7 @@
 	(coerce 3dm::y ',element-type)
 	(coerce 3dm::z ',element-type)))     
      (define-compiler-macro ,(intern "VEC3" *package*) (&environment 3dm::env 3dm::x 3dm::y 3dm::z)
-       `(,(intern "%VEC3" *package*)
+       `(,',(intern "%VEC3" *package*)
 	 ,(ensure-float-param 3dm::x 3dm::env ',element-type)
 	 ,(ensure-float-param 3dm::y 3dm::env ',element-type)
 	 ,(ensure-float-param 3dm::z 3dm::env ',element-type)))))
@@ -109,7 +109,7 @@
 	(coerce 3dm::w ',element-type)))
      
      (define-compiler-macro ,(intern "VEC4" *package*) (&environment 3dm::env 3dm::x 3dm::y 3dm::z 3dm::w)
-       `(,(intern "%VEC4" *package*)
+       `(,',(intern "%VEC4" *package*)
 	 ,(ensure-float-param 3dm::x 3dm::env ',element-type)
 	 ,(ensure-float-param 3dm::y 3dm::env ',element-type)
 	 ,(ensure-float-param 3dm::z 3dm::env ',element-type)
@@ -418,6 +418,22 @@
        (declare (optimize (compilation-speed 0) (debug 1) (safety 1) speed))
        ,@3dm::body)))
 
+(defmacro define-binary-v+ (pkg retpkg)
+  `(define-ofun ,(intern "BINARY-V+" pkg) (3dm::a 3dm::b)
+     (,(intern "BINARY-OP" pkg) 3dm::a 3dm::b + ,(intern "VEC2" retpkg) ,(intern "VEC3" retpkg) ,(intern "VEC4" retpkg))))
+
+(defmacro define-binary-v- (pkg retpkg)
+  `(define-ofun ,(intern "BINARY-V-" pkg) (3dm::a 3dm::b)
+     (,(intern "BINARY-OP" pkg) 3dm::a 3dm::b - ,(intern "VEC2" retpkg) ,(intern "VEC3" retpkg) ,(intern "VEC4" retpkg))))
+
+(defmacro define-binary-v* (pkg retpkg)
+  `(define-ofun ,(intern "BINARY-V*" pkg) (3dm::a 3dm::b)
+     (,(intern "BINARY-OP" pkg) 3dm::a 3dm::b * ,(intern "VEC2" retpkg) ,(intern "VEC3" retpkg) ,(intern "VEC4" retpkg))))
+
+(defmacro define-binary-v/ (pkg retpkg)
+  `(define-ofun ,(intern "BINARY-V/" pkg) (3dm::a 3dm::b)
+     (,(intern "BINARY-OP" pkg) 3dm::a 3dm::b / ,(intern "VEC2" retpkg) ,(intern "VEC3" retpkg) ,(intern "VEC4" retpkg))))
+
 
 (defmacro define-define-veccomp-macro (pkg a-pkg b-pkg)
   `(defmacro ,(intern "DEFINE-VECCOMP" pkg) (3dm::name 3dm::op &optional (3dm::bundle 'and))
@@ -574,3 +590,72 @@
 		(expt (,(intern "VZ4" *package*) 3dm::v) 2)
 		(expt (,(intern "VW4" *package*) 3dm::v) 2))))))
 
+(defmacro define-vec2-v.-function (element-type pkg a-pkg b-pkg)
+  `(progn
+     (declaim (inline ,(intern "VEC2-V." pkg)))
+     (declaim (ftype (function (,(intern "VEC2" a-pkg) ,(intern "VEC2" b-pkg)) ,element-type) ,(intern "VEC2-V." pkg)))
+     (define-ofun ,(intern "VEC2-V." pkg) (3dm::a 3dm::b)
+       (+ (* (,(intern "VX2" a-pkg) 3dm::a) (,(intern "VX2" b-pkg) 3dm::b))
+	  (* (,(intern "VY2" a-pkg) 3dm::a) (,(intern "VY2" b-pkg) 3dm::b))))))
+
+(defmacro define-vec3-v.-function (element-type pkg a-pkg b-pkg)
+  `(progn
+     (declaim (inline ,(intern "VEC3-V." pkg)))
+     (declaim (ftype (function (,(intern "VEC3" a-pkg) ,(intern "VEC3" b-pkg)) ,element-type) ,(intern "VEC3-V." pkg)))
+     (define-ofun ,(intern "VEC3-V." pkg) (3dm::a 3dm::b)
+       (+ (* (,(intern "VX3" a-pkg) 3dm::a) (,(intern "VX3" b-pkg) 3dm::b))
+	  (* (,(intern "VY3" a-pkg) 3dm::a) (,(intern "VY3" b-pkg) 3dm::b))
+	  (* (,(intern "VZ3" a-pkg) 3dm::a) (,(intern "VZ3" b-pkg) 3dm::b))))))
+
+(defmacro define-vec4-v.-function (element-type pkg a-pkg b-pkg)
+  `(progn
+     (declaim (inline ,(intern "VEC4-V." pkg)))
+     (declaim (ftype (function (,(intern "VEC4" a-pkg) ,(intern "VEC4" b-pkg)) ,element-type) ,(intern "VEC4-V." pkg)))
+     (define-ofun ,(intern "VEC4-V." pkg) (3dm::a 3dm::b)
+       (+ (* (,(intern "VX4" a-pkg) 3dm::a) (,(intern "VX4" b-pkg) 3dm::b))
+	  (* (,(intern "VY4" a-pkg) 3dm::a) (,(intern "VY4" b-pkg) 3dm::b))
+	  (* (,(intern "VZ4" a-pkg) 3dm::a) (,(intern "VZ4" b-pkg) 3dm::b))
+	  (* (,(intern "VW4" a-pkg) 3dm::a) (,(intern "VW4" b-pkg) 3dm::b))))))
+
+(defmacro define-vc-function (name-pkg a-pkg b-pkg c-pkg)
+  `(progn
+     (declaim (inline ,(intern "VC" name-pkg)))
+     (declaim (ftype (function (,(intern "VEC3" a-pkg) ,(intern "VEC3" b-pkg)) ,(intern "VEC3" c-pkg)) ,(intern "VC" name-pkg)))
+     (define-ofun ,(intern "VC" name-pkg) (3dm::a 3dm::b)
+       (,(intern "%VEC3" c-pkg)
+	(- (* (,(intern "VY3" a-pkg) 3dm::a) (,(intern "VZ3" b-pkg) 3dm::b))
+	   (* (,(intern "VZ3" a-pkg) 3dm::a) (,(intern "VY3" b-pkg) 3dm::b)))
+	(- (* (,(intern "VZ3" a-pkg) 3dm::a) (,(intern "VX3" b-pkg) 3dm::b))
+	   (* (,(intern "VX3" a-pkg) 3dm::a) (,(intern "VZ3" b-pkg) 3dm::b)))
+	(- (* (,(intern "VX3" a-pkg) 3dm::a) (,(intern "VY3" b-pkg) 3dm::b))
+	   (* (,(intern "VY3" a-pkg) 3dm::a) (,(intern "VX3" b-pkg) 3dm::b)))))))
+
+(defmacro define-vec2-vangle-function (element-type name-pkg a-pkg b-pkg)
+  `(progn
+     (declaim (ftype (function (,(intern "VEC2" a-pkg) ,(intern "VEC2" b-pkg)) ,element-type) ,(intern "VEC2-VANGLE" name-pkg)))
+     (define-ofun ,(intern "VEC2-VANGLE" name-pkg) (3dm::a 3dm::b)
+       (let ((a (/ (,(intern "VEC2-V." name-pkg) 3dm::a 3dm::b)
+		   (,(intern "VEC2-V2NORM" a-pkg) 3dm::a)
+		   (,(intern "VEC2-V2NORM" b-pkg) 3dm::b))))
+	 (acos (cl:the (,element-type ,(mycoerce -1 element-type) ,(mycoerce +1 element-type))
+		       (min ,(mycoerce +1 element-type) (max ,(mycoerce -1 element-type) a))))))))
+
+(defmacro define-vec3-vangle-function (element-type name-pkg a-pkg b-pkg)
+  `(progn
+     (declaim (ftype (function (,(intern "VEC3" a-pkg) ,(intern "VEC3" b-pkg)) ,element-type) ,(intern "VEC3-VANGLE" name-pkg)))
+     (define-ofun ,(intern "VEC3-VANGLE" name-pkg) (3dm::a 3dm::b)
+       (let ((a (/ (,(intern "VEC3-V." name-pkg) 3dm::a 3dm::b)
+		   (,(intern "VEC3-V2NORM" a-pkg) 3dm::a)
+		   (,(intern "VEC3-V2NORM" b-pkg) 3dm::b))))
+	 (acos (cl:the (,element-type ,(mycoerce -1 element-type) ,(mycoerce +1 element-type))
+		       (min ,(mycoerce +1 element-type) (max ,(mycoerce -1 element-type) a))))))))
+
+(defmacro define-vec4-vangle-function (element-type name-pkg a-pkg b-pkg)
+  `(progn
+     (declaim (ftype (function (,(intern "VEC4" a-pkg) ,(intern "VEC4" b-pkg)) ,element-type) ,(intern "VEC4-VANGLE" name-pkg)))
+     (define-ofun ,(intern "VEC4-VANGLE" name-pkg) (3dm::a 3dm::b)
+       (let ((a (/ (,(intern "VEC4-V." name-pkg) 3dm::a 3dm::b)
+		   (,(intern "VEC4-V2NORM" a-pkg) 3dm::a)
+		   (,(intern "VEC4-V2NORM" b-pkg) 3dm::b))))
+	 (acos (cl:the (,element-type ,(mycoerce -1 element-type) ,(mycoerce +1 element-type))
+		       (min ,(mycoerce +1 element-type) (max ,(mycoerce -1 element-type) a))))))))

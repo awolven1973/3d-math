@@ -41,3 +41,24 @@
 
 (defgeneric v2norm (v)
   (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric v. (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric vc (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric vangle (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric binary-v+ (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric binary-v- (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric binary-v* (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric binary-v/ (a b)
+  (:generic-function-class fast-generic-functions:fast-generic-function))

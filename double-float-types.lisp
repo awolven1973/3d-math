@@ -41,3 +41,4 @@
 (3dm-def::define-vec2-v2norm-function cl:double-float)
 (3dm-def::define-vec3-v2norm-function cl:double-float)
 (3dm-def::define-vec4-v2norm-function cl:double-float)
+
