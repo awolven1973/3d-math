@@ -21,6 +21,10 @@
 (3dm-def::define-vec3-constructor cl:rational)
 (3dm-def::define-vec4-constructor cl:rational)
 
+(3dm-def::define-with-fast-matref cl:rational)
+(3dm-def::define-with-fast-matrefs)
+(3dm-def::define-with-fast-matcase)
+
 (3dm-def::define-mat2-constructor cl:rational)
 (3dm-def::define-mat3-constructor cl:rational)
 (3dm-def::define-mat4-constructor cl:rational)
@@ -34,3 +38,7 @@
 (3dm-def::define-vec3-vsqrlength-function cl:rational)
 (3dm-def::define-vec4-vsqrlength-function cl:rational)
 
+
+;;(3dm-def::define-do-mat-diag-macro)
+;;(3dm-def::define-meye-function cl:rational)
+;;(3dm-def::define-mcol-function)

@@ -21,11 +21,19 @@
 (3dm-def::define-vec3-constructor cl:double-float)
 (3dm-def::define-vec4-constructor cl:double-float)
 
+(cl:deftype mat () `(cl::or mat2 mat3 mat4 matn))
+
+(3dm-def::define-with-fast-matref cl:double-float)
+(3dm-def::define-with-fast-matrefs)
+(3dm-def::define-with-fast-matcase)
+;;(3dm-def::define-do-mat-diag-macro)
+
 (3dm-def::define-mat2-constructor cl:double-float)
 (3dm-def::define-mat3-constructor cl:double-float)
 (3dm-def::define-mat4-constructor cl:double-float)
 (3dm-def::define-matn-constructor cl:double-float)
 
+(3dm-def::define-quat-constructor cl:double-float)
 
 (3dm-def::define-vsqrdistance-function cl:double-float)
 (3dm-def::define-vdistance-function cl:double-float)
@@ -42,3 +50,22 @@
 (3dm-def::define-vec3-v2norm-function cl:double-float)
 (3dm-def::define-vec4-v2norm-function cl:double-float)
 
+
+;;(3dm-def::define-meye-function cl:double-float)
+(3dm-def::define-mcol-function)
+
+(3dm-def::define-mat2-mrow-function)
+(3dm-def::define-mat3-mrow-function)
+(3dm-def::define-mat4-mrow-function)
+
+;;(3dm-def::define-binary-mat2-op-definer cl:double-float)
+
+(3dm-def::define-mdet-mat2)
+(3dm-def::define-mdet-mat3)
+(3dm-def::define-mdet-mat4)
+
+(3dm-def::define-minv-mat2)
+(3dm-def::define-minv-mat3)
+(3dm-def::define-minv-mat4)
+
+(3dm-def::define-mlookat-macro cl:double-float)

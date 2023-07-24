@@ -1444,7 +1444,7 @@
 (3dm-def::defsealed vc ((a 3dm.d::vec3) (b 3dm.f::vec3))
   (3dm.d&f::vc a b))
 
-(3dm-def::defsealed vc ((a 3dm.f::vec3) (b 3dm.f::vec3))
+(3dm-def::defsealed vc ((a 3dm.f::vec3) (b 3dm.d::vec3))
   (3dm.f&d::vc a b))
 
 (3dm-def::defsealed vc ((a 3dm.f::vec3) (b 3dm.f::vec3))
@@ -1830,3 +1830,58 @@
 (define-compiler-macro v/ (val &rest vals)
   (cond ((null vals) val)
         (t (reduce (lambda (a b) `(binary-v/ ,a ,b)) (cons val vals)))))
+
+(3dm-def:defsealed vunit ((vec 3dm.f::vec2))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.f::vec3))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.f::vec4))
+  (binary-v/ vec (vlength vec)))
+;;
+(3dm-def:defsealed vunit ((vec 3dm.d::vec2))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.d::vec3))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.d::vec4))
+  (binary-v/ vec (vlength vec)))
+
+;;;
+(3dm-def:defsealed vcopy ((vec 3dm.d::vec2))
+  (3dm.d::%vec2 (3dm.d::vx2 vec) (3dm.d::vy2 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.f::vec2))
+  (3dm.f::%vec2 (3dm.f::vx2 vec) (3dm.f::vy2 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.rat::vec2))
+  (3dm.rat::%vec2 (3dm.rat::vx2 vec) (3dm.rat::vy2 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.fix::vec2))
+  (3dm.fix::%vec2 (3dm.fix::vx2 vec) (3dm.fix::vy2 vec)))
+;;
+(3dm-def:defsealed vcopy ((vec 3dm.d::vec3))
+  (3dm.d::%vec3 (3dm.d::vx3 vec) (3dm.d::vy3 vec) (3dm.d::vz3 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.f::vec3))
+  (3dm.f::%vec3 (3dm.f::vx3 vec) (3dm.f::vy3 vec) (3dm.f::vz3 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.rat::vec3))
+  (3dm.rat::%vec3 (3dm.rat::vx3 vec) (3dm.rat::vy3 vec) (3dm.rat::vz3 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.fix::vec3))
+  (3dm.fix::%vec3 (3dm.fix::vx3 vec) (3dm.fix::vy3 vec) (3dm.fix::vz3 vec)))
+;;
+(3dm-def:defsealed vcopy ((vec 3dm.d::vec4))
+  (3dm.d::%vec4 (3dm.d::vx4 vec) (3dm.d::vy4 vec) (3dm.d::vz4 vec) (3dm.d::vw4 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.f::vec4))
+  (3dm.f::%vec4 (3dm.f::vx4 vec) (3dm.f::vy4 vec) (3dm.f::vz4 vec) (3dm.f::vw4 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.rat::vec4))
+  (3dm.rat::%vec4 (3dm.rat::vx4 vec) (3dm.rat::vy4 vec) (3dm.rat::vz4 vec) (3dm.rat::vw4 vec)))
+
+(3dm-def:defsealed vcopy ((vec 3dm.fix::vec4))
+  (3dm.fix::%vec4 (3dm.fix::vx4 vec) (3dm.fix::vy4 vec) (3dm.fix::vz4 vec) (3dm.fix::vw4 vec)))

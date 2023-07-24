@@ -9,4 +9,6 @@
    (:file "fixnum-types")
    (:file "rational-types")
    (:file "generic")
-   (:file "vector-methods")))
+   (:file "vector-methods")
+   (:file "matrix-methods")
+   (:file "quaternion-methods")))

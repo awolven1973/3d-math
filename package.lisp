@@ -2,7 +2,63 @@
 
 (defpackage 3dm
   (:nicknames :3d-math :3d-math-generic)
-  (:use :cl))
+  (:use :cl)
+  (:import-from #:fast-generic-functions
+		#:inlineable)
+  (:import-from #:sealable-metaobjects
+		#:method-properties)
+  (:export #:vx
+	   #:vy
+	   #:vz
+	   #:vw
+	   #:vcopy
+	   #:qx
+	   #:qy
+	   #:qz
+	   #:qw
+	   #:v=
+	   #:v/=
+	   #:v<
+	   #:v<=
+	   #:v>
+	   #:v>=
+	   #:vsqrlength
+	   #:vlength
+	   #:vunit
+	   #:v2norm
+	   #:v.
+	   #:vc
+	   #:vangle
+	   #:v+
+	   #:v-
+	   #:v*
+	   #:v/
+	   #:mcol
+	   #:mrow
+	   #:m*
+	   #:mdet
+	   #:minv
+	   #:mlookat
+	   #:mcopy))
+
+(defmacro 3dm::define-package (name default &rest stuff)
+  `(cl:defpackage ,name
+     (:use :3dm)
+     (:import-from ,default
+		   #:vec2
+		   #:vec3
+		   #:vec4
+		   #:mat2
+		   #:mat3
+		   #:mat4
+		   #:matn
+		   #:quat
+		   #:meye
+		   #:with-vec2
+		   #:with-vec3
+		   #:with-vec4
+		   #:with-vec)
+     ,@stuff))
 
 (defpackage 3dm-def
   (:nicknames :3d-math-definitions)
@@ -36,6 +92,7 @@
 	      #:mat3
 	      #:mat4
 	      #:matn
+	      #:meye
 	      #:quat
 	      #:dquat
 	      #:with-vec2
