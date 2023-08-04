@@ -262,6 +262,14 @@
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec4) (b 3dm.d::mat4))
   (3dm.d&f::m*-mat4-vec4 b a))
 
+(3dm-def::define-m*-mat4-vec4 :3dm.f&d :3dm.f :3dm.d :3dm.d)
+
+(3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::vec4))
+  (3dm.f&d::m*-mat4-vec4 a b))
+
+(3dm-def:defsealed binary-m* ((a 3dm.d::vec4) (b 3dm.f::mat4))
+  (3dm.f&d::m*-mat4-vec4 b a))
+
 (3dm-def::define-m*-mat4-vec4 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.f::vec4))
@@ -372,6 +380,9 @@
 	      (e 1 1) (f 1 1))
 	copy))))
 
+(3dm-def:defsealed mtranspose ((mat 3dm.d::mat2))
+  (3dm.d::mat2-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.f::mat2))
   (3dm.f::with-fast-matref (f mat 2)
     (let ((copy (3dm.f::%mat2)))
@@ -382,6 +393,9 @@
 	      (e 1 1) (f 1 1))
 	copy))))
 
+(3dm-def:defsealed mtranspose ((mat 3dm.f::mat2))
+  (3dm.f::mat2-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.rat::mat2))
   (3dm.rat::with-fast-matref (f mat 2)
     (let ((copy (3dm.rat::%mat2)))
@@ -391,6 +405,9 @@
 	      (e 1 0) (f 1 0)
 	      (e 1 1) (f 1 1))
 	copy))))
+
+(3dm-def:defsealed mcopy ((mat 3dm.rat::mat2))
+  (3dm.rat::mat2-mtranspose mat))
 
 (3dm-def:defsealed mcopy ((mat 3dm.d::mat3))
   (3dm.d::with-fast-matref (f mat 3)
@@ -407,6 +424,9 @@
 	      (e 2 2) (f 2 2))
 	copy))))
 
+(3dm-def:defsealed mcopy ((mat 3dm.d::mat3))
+  (3dm.d::mat3-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.f::mat3))
   (3dm.f::with-fast-matref (f mat 3)
     (let ((copy (3dm.f::%mat3)))
@@ -422,6 +442,9 @@
 	      (e 2 2) (f 2 2))
 	copy))))
 
+(3dm-def:defsealed mtranspose ((mat 3dm.f::mat3))
+  (3dm.f::mat3-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.rat::mat3))
   (3dm.rat::with-fast-matref (f mat 3)
     (let ((copy (3dm.rat::%mat3)))
@@ -436,6 +459,9 @@
 	      (e 2 1) (f 2 1)
 	      (e 2 2) (f 2 2))
 	copy))))
+
+(3dm-def:defsealed mtranspose ((mat 3dm.rat::mat3))
+  (3dm.rat::mat3-mtranspose mat))
 
 (3dm-def:defsealed mcopy ((mat 3dm.d::mat4))
   (3dm.d::with-fast-matref (f mat 4)
@@ -459,6 +485,9 @@
 	      (e 3 3) (f 3 3))
 	copy))))
 
+(3dm-def:defsealed mtranspose ((mat 3dm.d::mat4))
+  (3dm.d::mat4-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.f::mat4))
   (3dm.f::with-fast-matref (f mat 4)
     (let ((copy (3dm.f::%mat4)))
@@ -481,6 +510,9 @@
 	      (e 3 3) (f 3 3))
 	copy))))
 
+(3dm-def:defsealed mtranspose ((mat 3dm.f::mat4))
+  (3dm.f::mat4-mtranspose mat))
+
 (3dm-def:defsealed mcopy ((mat 3dm.rat::mat4))
   (3dm.rat::with-fast-matref (f mat 4)
     (let ((copy (3dm.rat::%mat4)))
@@ -502,3 +534,95 @@
 	      (e 3 2) (f 3 2)
 	      (e 3 3) (f 3 3))
 	copy))))
+
+(3dm-def:defsealed mtranspose ((mat 3dm.rat::mat4))
+  (3dm.rat::mat4-mtranspose mat))
+
+(3dm-def::define-nmtranslate-macro :3dm.d :3dm.d :3dm.d)
+(3dm-def::define-nmtranslate-macro :3dm.d&rat :3dm.d :3dm.rat)
+(3dm-def::define-nmtranslate-macro :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.d:mat4) (vec3 3dm.d:vec3))
+  (3dm.d::nmtranslate mat vec3))
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.d:mat4) (vec3 3dm.rat:vec3))
+  (3dm.d&rat::nmtranslate mat vec3))
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.d:mat4) (vec3 3dm.f:vec3))
+  (3dm.d&f::nmtranslate mat vec3))
+
+(3dm-def::define-nmtranslate-macro :3dm.f :3dm.f :3dm.f)
+(3dm-def::define-nmtranslate-macro :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.f:mat4) (vec3 3dm.f:vec3))
+  (3dm.f::nmtranslate mat vec3))
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.f:mat4) (vec3 3dm.rat:vec3))
+  (3dm.f&rat::nmtranslate mat vec3))
+
+(3dm-def::define-nmtranslate-macro :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed nmtranslate ((mat 3dm.rat:mat4) (vec3 3dm.rat:vec3))
+  (3dm.rat::nmtranslate mat vec3))
+;;;;;;
+
+(3dm-def::define-nmscale-macro :3dm.d :3dm.d :3dm.d)
+(3dm-def::define-nmscale-macro :3dm.d&rat :3dm.d :3dm.rat)
+(3dm-def::define-nmscale-macro :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed nmscale ((mat 3dm.d:mat4) (vec3 3dm.d:vec3))
+  (3dm.d::nmscale mat vec3))
+
+(3dm-def:defsealed nmscale ((mat 3dm.d:mat4) (vec3 3dm.rat:vec3))
+  (3dm.d&rat::nmscale mat vec3))
+
+(3dm-def:defsealed nmscale ((mat 3dm.d:mat4) (vec3 3dm.f:vec3))
+  (3dm.d&f::nmscale mat vec3))
+
+(3dm-def::define-nmscale-macro :3dm.f :3dm.f :3dm.f)
+(3dm-def::define-nmscale-macro :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed nmscale ((mat 3dm.f:mat4) (vec3 3dm.f:vec3))
+  (3dm.f::nmscale mat vec3))
+
+(3dm-def:defsealed nmscale ((mat 3dm.f:mat4) (vec3 3dm.rat:vec3))
+  (3dm.f&rat::nmscale mat vec3))
+
+(3dm-def::define-nmscale-macro :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed nmscale ((mat 3dm.rat:mat4) (vec3 3dm.rat:vec3))
+  (3dm.rat::nmscale mat vec3))
+;;;;;;
+
+(3dm-def::define-%mrotation-macro cl:double-float :3dm.d :3dm.d :3dm.d)
+(3dm-def::define-%mrotation-macro cl:double-float :3dm.d&f :3dm.d :3dm.f)
+(3dm-def::define-%mrotation-macro cl:double-float :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def::define-%mrotation-macro cl:single-float :3dm.f :3dm.f :3dm.f)
+(3dm-def::define-%mrotation-macro cl:single-float :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def::define-nmrotate-macro :3dm.d :3dm.d)
+
+(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.d:vec3) (angle real))
+  (3dm.d::nmrotate mat4 vec3 angle))
+
+(3dm-def::define-nmrotate-macro :3dm.d&f :3dm.d)
+
+(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.f:vec3) (angle real))
+  (3dm.d&f::nmrotate mat4 vec3 angle))
+
+(3dm-def::define-nmrotate-macro :3dm.d&rat :3dm.d)
+
+(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.rat:vec3) (angle real))
+  (3dm.d&rat::nmrotate mat4 vec3 angle))
+
+(3dm-def::define-nmrotate-macro :3dm.f :3dm.f)
+
+(3dm-def:defsealed nmrotate ((mat4 3dm.f:mat4) (vec3 3dm.f:vec3) (angle real))
+  (3dm.f::nmrotate mat4 vec3 angle))
+
+(3dm-def::define-nmrotate-macro :3dm.f&rat :3dm.f)
+
+(3dm-def:defsealed nmrotate ((mat4 3dm.f:mat4) (vec3 3dm.rat:vec3) (angle real))
+  (3dm.f&rat::nmrotate mat4 vec3 angle))
+

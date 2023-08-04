@@ -139,326 +139,360 @@
 
 (3dm-def:defsealed vw ((vec vector))
   (aref vec 3))
+;;;;;;
 
-;; qw
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed qw ((quat 3dm.f:quat))
-  (3dm.f::qw quat))
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v= a b))
 
-(3dm-def:defsealed qw ((quat 3dm.d:quat))
-  (3dm.d::qw quat))
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v= b a))
 
-(3dm-def:defsealed qw ((quat 3dm.rat:quat))
-  (3dm.rat::qw quat))
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed qw ((quat list))
-  (cadddr quat))
-
-(3dm-def:defsealed qw ((quat vector))
-  (aref quat 3))
-
-;; veccomps
-
-(3dm-def:define-binary-op-macro cl:double-float :3dm.d :3dm.d :3dm.d)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.d&f :3dm.d :3dm.f)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.d&rat :3dm.d :3dm.rat)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.d&fix :3dm.d :3dm.fix)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.f :3dm.f :3dm.f)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.f&d :3dm.f :3dm.d)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.f&rat :3dm.f :3dm.rat)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.f&fix :3dm.f :3dm.fix)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.rat :3dm.rat :3dm.rat)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.rat&d :3dm.rat :3dm.d)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.rat&f :3dm.rat :3dm.f)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.rat&fix :3dm.rat :3dm.fix)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.fix :3dm.fix :3dm.fix)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.fix&d :3dm.fix :3dm.d)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.fix&f :3dm.fix :3dm.f)
-(3dm-def:define-binary-op-macro cl:double-float :3dm.fix&rat :3dm.fix :3dm.rat)
-
-(3dm-def:define-define-veccomp-macro :3dm.d :3dm.d :3dm.d)
-(3dm-def:define-define-veccomp-macro :3dm.d&f :3dm.d :3dm.f)
-(3dm-def:define-define-veccomp-macro :3dm.d&rat :3dm.d :3dm.rat)
-(3dm-def:define-define-veccomp-macro :3dm.d&fix :3dm.d :3dm.fix)
-(3dm-def:define-define-veccomp-macro :3dm.f :3dm.f :3dm.f)
-(3dm-def:define-define-veccomp-macro :3dm.f&d :3dm.f :3dm.d)
-(3dm-def:define-define-veccomp-macro :3dm.f&rat :3dm.f :3dm.rat)
-(3dm-def:define-define-veccomp-macro :3dm.f&fix :3dm.f :3dm.fix)
-(3dm-def:define-define-veccomp-macro :3dm.rat :3dm.rat :3dm.rat)
-(3dm-def:define-define-veccomp-macro :3dm.rat&d :3dm.rat :3dm.d)
-(3dm-def:define-define-veccomp-macro :3dm.rat&f :3dm.rat :3dm.f)
-(3dm-def:define-define-veccomp-macro :3dm.rat&fix :3dm.rat :3dm.fix)
-(3dm-def:define-define-veccomp-macro :3dm.fix :3dm.fix :3dm.fix)
-(3dm-def:define-define-veccomp-macro :3dm.fix&d :3dm.fix :3dm.d)
-(3dm-def:define-define-veccomp-macro :3dm.fix&f :3dm.fix :3dm.f)
-(3dm-def:define-define-veccomp-macro :3dm.fix&rat :3dm.fix :3dm.rat)
-
-(3dm.d::define-veccomp v= cl:=)
-(3dm.d&f::define-veccomp v= cl:=)
-(3dm.d&rat::define-veccomp v= cl:=)
-(3dm.d&fix::define-veccomp v= cl:=)
-
-(3dm.f::define-veccomp v= cl:=)
-(3dm.f&d::define-veccomp v= cl:=)
-(3dm.f&rat::define-veccomp v= cl:=)
-(3dm.f&fix::define-veccomp v= cl:=)
-
-(3dm.rat::define-veccomp v= cl:=)
-(3dm.rat&d::define-veccomp v= cl:=)
-(3dm.rat&f::define-veccomp v= cl:=)
-(3dm.rat&fix::define-veccomp v= cl:=)
-
-(3dm.fix::define-veccomp v= cl:=)
-(3dm.fix&d::define-veccomp v= cl:=)
-(3dm.fix&f::define-veccomp v= cl:=)
-(3dm.fix&rat::define-veccomp v= cl:=)
-
-(3dm.d::define-veccomp v/= cl:/= cl:or)
-(3dm.d&f::define-veccomp v/= cl:/= cl:or)
-(3dm.d&rat::define-veccomp v/= cl:/= cl:or)
-(3dm.d&fix::define-veccomp v/= cl:/= cl:or)
-
-(3dm.f::define-veccomp v/= cl:/= cl:or)
-(3dm.f&d::define-veccomp v/= cl:/= cl:or)
-(3dm.f&rat::define-veccomp v/= cl:/= cl:or)
-(3dm.f&fix::define-veccomp v/= cl:/= cl:or)
-
-(3dm.rat::define-veccomp v/= cl:/= cl:or)
-(3dm.rat&d::define-veccomp v/= cl:/= cl:or)
-(3dm.rat&f::define-veccomp v/= cl:/= cl:or)
-(3dm.rat&fix::define-veccomp v/= cl:/= cl:or)
-
-(3dm.fix::define-veccomp v/= cl:/= cl:or)
-(3dm.fix&d::define-veccomp v/= cl:/= cl:or)
-(3dm.fix&f::define-veccomp v/= cl:/= cl:or)
-(3dm.fix&rat::define-veccomp v/= cl:/= cl:or)
-
-(3dm.d::define-veccomp v< cl:<)
-(3dm.d&f::define-veccomp v< cl:<)
-(3dm.d&rat::define-veccomp v< cl:<)
-(3dm.d&fix::define-veccomp v< cl:<)
-
-(3dm.f::define-veccomp v< cl:<)
-(3dm.f&d::define-veccomp v< cl:<)
-(3dm.f&rat::define-veccomp v< cl:<)
-(3dm.f&fix::define-veccomp v< cl:<)
-
-(3dm.rat::define-veccomp v< cl:<)
-(3dm.rat&d::define-veccomp v< cl:<)
-(3dm.rat&f::define-veccomp v< cl:<)
-(3dm.rat&fix::define-veccomp v< cl:<)
-
-(3dm.fix::define-veccomp v< cl:<)
-(3dm.fix&d::define-veccomp v< cl:<)
-(3dm.fix&f::define-veccomp v< cl:<)
-(3dm.fix&rat::define-veccomp v< cl:<)
-
-(3dm.d::define-veccomp v<= cl:<=)
-(3dm.d&f::define-veccomp v<= cl:<=)
-(3dm.d&rat::define-veccomp v<= cl:<=)
-(3dm.d&fix::define-veccomp v<= cl:<=)
-
-(3dm.f::define-veccomp v<= cl:<=)
-(3dm.f&d::define-veccomp v<= cl:<=)
-(3dm.f&rat::define-veccomp v<= cl:<=)
-(3dm.f&fix::define-veccomp v<= cl:<=)
-
-(3dm.rat::define-veccomp v<= cl:<=)
-(3dm.rat&d::define-veccomp v<= cl:<=)
-(3dm.rat&f::define-veccomp v<= cl:<=)
-(3dm.rat&fix::define-veccomp v<= cl:<=)
-
-(3dm.fix::define-veccomp v<= cl:<=)
-(3dm.fix&d::define-veccomp v<= cl:<=)
-(3dm.fix&f::define-veccomp v<= cl:<=)
-(3dm.fix&rat::define-veccomp v<= cl:<=)
-
-(3dm.d::define-veccomp v> cl:>)
-(3dm.d&f::define-veccomp v> cl:>)
-(3dm.d&rat::define-veccomp v> cl:>)
-(3dm.d&fix::define-veccomp v> cl:>)
-
-(3dm.f::define-veccomp v> cl:>)
-(3dm.f&d::define-veccomp v> cl:>)
-(3dm.f&rat::define-veccomp v> cl:>)
-(3dm.f&fix::define-veccomp v> cl:>)
-
-(3dm.rat::define-veccomp v> cl:>)
-(3dm.rat&d::define-veccomp v> cl:>)
-(3dm.rat&f::define-veccomp v> cl:>)
-(3dm.rat&fix::define-veccomp v> cl:>)
-
-(3dm.fix::define-veccomp v> cl:>)
-(3dm.fix&d::define-veccomp v> cl:>)
-(3dm.fix&f::define-veccomp v> cl:>)
-(3dm.fix&rat::define-veccomp v> cl:>)
-
-(3dm.d::define-veccomp v>= cl:>=)
-(3dm.d&f::define-veccomp v>= cl:>=)
-(3dm.d&rat::define-veccomp v>= cl:>=)
-(3dm.d&fix::define-veccomp v>= cl:>=)
-
-(3dm.f::define-veccomp v>= cl:>=)
-(3dm.f&d::define-veccomp v>= cl:>=)
-(3dm.f&rat::define-veccomp v>= cl:>=)
-(3dm.f&fix::define-veccomp v>= cl:>=)
-
-(3dm.rat::define-veccomp v>= cl:>=)
-(3dm.rat&d::define-veccomp v>= cl:>=)
-(3dm.rat&f::define-veccomp v>= cl:>=)
-(3dm.rat&fix::define-veccomp v>= cl:>=)
-
-(3dm.fix::define-veccomp v>= cl:>=)
-(3dm.fix&d::define-veccomp v>= cl:>=)
-(3dm.fix&f::define-veccomp v>= cl:>=)
-(3dm.fix&rat::define-veccomp v>= cl:>=)
-
-;; binary-v=
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v= a b))
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v= a b))
 ;;
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v= a b))
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v= a b))
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v= a b))
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v= a b))
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v= b a))
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v= a b))
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v= a b))
 ;;
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v= a b))
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v= a b))
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v= a b))
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v= a b))
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v= b a))
 
-(3dm-def:defsealed binary-v= ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v= a b))
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v= a b))
+(3dm-def::defsealed binary-v= ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v= a b))
 
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v= a b))
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v= b a))
 
-(3dm-def:defsealed binary-v= ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v= a b))
-
-(3dm-def:defsealed binary-v= ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v= a b))
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v= a b))
 ;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.f&d cl:single-float :3dm.d)
 
+(3dm-def::defsealed binary-v= ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v= a b))
+
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v= ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v= a b))
+
+(3dm-def::defsealed binary-v= ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v= ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v= a b))
+
+(3dm-def:defsealed binary-v= ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v= ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v= a b))
+;;;;;;
+  
 (3dm-def::define-ofun v= (val &rest vals)
   (loop for prev = val then next
 	for next in vals
@@ -468,151 +502,357 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v= ,prev ,next))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.d cl:double-float :3dm.d)
 
-;; binary-v/=
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v/= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v/= a b))
 ;;
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v/= a b))
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v/= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v/= a b))
-
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v/= a b))
 ;;
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v/= a b))
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v/= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v/= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v/= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v/= a b))
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v/= a b))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v/= a b))
+(3dm-def::defsealed binary-v/= ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v/= b a))
 
-(3dm-def:defsealed binary-v/= ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v/= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v/= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/= cl:or :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v/= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/= cl:or :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v/= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/= cl:or :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v/= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/= cl:or :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v/= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/= cl:or :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v/= a b))
+
+(3dm-def:defsealed binary-v/= ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v/= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/= cl:or :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/= ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v/= a b))
 
 (3dm-def::define-ofun v/= (val &rest vals)
   (loop for prev = val then next
@@ -623,151 +863,358 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v/= ,prev ,next))))
+;;;;;;
 
-;; binary-v<
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v< a b))
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v< a b))
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v< a b))
 ;;
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v< a b))
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v< a b))
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v< a b))
-
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v< a b))
 ;;
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v< a b))
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v< a b))
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v< a b))
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v< a b))
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v< a b))
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v< a b))
 
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v< a b))
+(3dm-def::defsealed binary-v< ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v< b a))
 
-(3dm-def:defsealed binary-v< ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v< a b))
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v< ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v< a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:< cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v< b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:< cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v< a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:< cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v< b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:< cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v< a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:< cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v< a b))
+
+(3dm-def:defsealed binary-v< ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v< b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:< cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v< ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v< a b))
 
 (3dm-def::define-ofun v< (val &rest vals)
   (loop for prev = val then next
@@ -778,151 +1225,357 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v< ,prev ,next))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.d cl:double-float :3dm.d)
 
-;; binary-v<=
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v<= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v<= a b))
 ;;
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v<= a b))
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v<= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v<= a b))
-
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v<= a b))
 ;;
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v<= a b))
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v<= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v<= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v<= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v<= a b))
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v<= a b))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v<= a b))
+(3dm-def::defsealed binary-v<= ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v<= b a))
 
-(3dm-def:defsealed binary-v<= ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v<= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v<= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:<= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v<= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:<= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v<= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:<= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v<= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:<= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v<= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:<= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v<= a b))
+
+(3dm-def:defsealed binary-v<= ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v<= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:<= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v<= ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v<= a b))
 
 (3dm-def::define-ofun v<= (val &rest vals)
   (loop for prev = val then next
@@ -933,151 +1586,357 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v<= ,prev ,next))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.d cl:double-float :3dm.d)
 
-;; binary-v>
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v> a b))
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v> a b))
 ;;
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v> a b))
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v> a b))
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v> a b))
-
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v> a b))
 ;;
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v> a b))
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v> a b))
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v> a b))
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v> a b))
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v> a b))
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v> a b))
 
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v> a b))
+(3dm-def::defsealed binary-v> ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v> b a))
 
-(3dm-def:defsealed binary-v> ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v> a b))
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v> ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v> a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:> cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v> b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:> cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v> a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:> cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v> b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:> cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v> a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:> cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v> a b))
+
+(3dm-def:defsealed binary-v> ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v> b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:> cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v> ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v> a b))
 
 (3dm-def::define-ofun v> (val &rest vals)
   (loop for prev = val then next
@@ -1088,151 +1947,357 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v> ,prev ,next))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.d cl:double-float :3dm.d)
 
-;; binary-v>=
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec2) (b 3dm.rat::vec2))
-  (3dm.d&rat::binary-v>= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec2) (b 3dm.fix::vec2))
-  (3dm.d&fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec2) (b 3dm.rat::vec2))
-  (3dm.f&rat::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec2) (b 3dm.fix::vec2))
-  (3dm.f&fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
-  (3dm.rat::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b 3dm.d::vec2))
-  (3dm.rat&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b 3dm.f::vec2))
-  (3dm.rat&f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b 3dm.fix::vec2))
-  (3dm.rat&fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec2) (b 3dm.fix::vec2))
-  (3dm.fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec2) (b 3dm.d::vec2))
-  (3dm.fix&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec2) (b 3dm.f::vec2))
-  (3dm.fix&f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec2) (b 3dm.rat::vec2))
-  (3dm.fix&rat::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v>= a b))
 ;;
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v>= a b))
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec3) (b 3dm.rat::vec3))
-  (3dm.d&rat::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec3) (b 3dm.fix::vec3))
-  (3dm.d&fix::binary-v>= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec3) (b 3dm.rat::vec3))
-  (3dm.f&rat::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec3) (b 3dm.fix::vec3))
-  (3dm.f&fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
-  (3dm.rat::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b 3dm.d::vec3))
-  (3dm.rat&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b 3dm.f::vec3))
-  (3dm.rat&f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b 3dm.fix::vec3))
-  (3dm.rat&fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec3) (b 3dm.fix::vec3))
-  (3dm.fix::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec3) (b 3dm.d::vec3))
-  (3dm.fix&d::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec3) (b 3dm.f::vec3))
-  (3dm.fix&f::binary-v>= a b))
-
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec3) (b 3dm.rat::vec3))
-  (3dm.fix&rat::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v>= a b))
 ;;
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v>= a b))
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.d cl:double-float :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec4) (b 3dm.rat::vec4))
-  (3dm.d&rat::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.d::vec4) (b 3dm.fix::vec4))
-  (3dm.d&fix::binary-v>= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.d :3dm.d :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec4) (b 3dm.rat::vec4))
-  (3dm.f&rat::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.f::vec4) (b 3dm.fix::vec4))
-  (3dm.f&fix::binary-v>= a b))
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
-  (3dm.rat::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b 3dm.d::vec4))
-  (3dm.rat&d::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b 3dm.f::vec4))
-  (3dm.rat&f::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b 3dm.fix::vec4))
-  (3dm.rat&fix::binary-v>= a b))
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.f&d :3dm.f :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec4) (b 3dm.fix::vec4))
-  (3dm.fix::binary-v>= a b))
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.f&d cl:single-float :3dm.d)
 
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec4) (b 3dm.d::vec4))
-  (3dm.fix&d::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v>= a b))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec4) (b 3dm.f::vec4))
-  (3dm.fix&f::binary-v>= a b))
+(3dm-def::defsealed binary-v>= ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v>= b a))
 
-(3dm-def:defsealed binary-v>= ((a 3dm.fix::vec4) (b 3dm.rat::vec4))
-  (3dm.fix&rat::binary-v>= a b))
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v>= a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:>= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v>= b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:>= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v>= a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:>= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v>= b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:>= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v>= a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:>= cl:and :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v>= a b))
+
+(3dm-def:defsealed binary-v>= ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v>= b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:>= cl:and :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v>= ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v>= a b))
 
 (3dm-def::define-ofun v>= (val &rest vals)
   (loop for prev = val then next
@@ -1243,6 +2308,1565 @@
   `(and ,@(loop for prev = val then next
 		for next in vals
 		collect `(binary-v>= ,prev ,next))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v+ a b))
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v+ a b))
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v+ ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v+ a b))
+
+(3dm-def::defsealed binary-v+ ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.rat::%vec2 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.rat::%vec2 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.rat::%vec3 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.rat::%vec3 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.rat::%vec4 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.rat::%vec4 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.d::%vec2 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.d::%vec3 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.d::%vec4 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v+ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v+ b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:+ 3dm.f::%vec2 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v+ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v+ b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:+ 3dm.f::%vec3 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v+ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v+ a b))
+
+(3dm-def:defsealed binary-v+ ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v+ b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:+ 3dm.f::%vec4 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v+ ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v+ a b))
+
+(3dm-def::define-ofun v+ (val &rest vals)
+  (loop with result = val
+	for next in vals
+	do (setq result (binary-v+ result next))
+	finally (return result)))
+
+(define-compiler-macro v+ (val &rest vals)
+  (cond ((null vals) val)
+        (t (reduce (lambda (a b) `(binary-v+ ,a ,b)) (cons val vals)))))
+
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.d::%vec2 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.d::%vec3 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.d::%vec4 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.d::%vec2 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.f&d::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.d::%vec3 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.f&d::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v- ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.d::%vec4 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v- ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.f&d::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.f::%vec2 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.f::%vec3 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.f::%vec4 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.d::%vec2 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.d::%vec3 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.d::%vec4 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.rat::%vec2 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.rat::%vec2 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.rat::%vec2 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.rat::%vec3 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.rat::%vec3 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.rat::%vec3 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.rat::%vec4 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.rat::%vec4 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.rat::%vec4 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.d::%vec2 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.d::%vec3 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.d::%vec4 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.d::%vec2 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.d::%vec2 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.d::%vec3 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.d::%vec3 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.d::%vec4 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.d::%vec4 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.f::%vec2 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.f::%vec3 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.f::%vec4 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v- a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v- a b))
+
+(3dm-def::def-vec2-number-binary-op cl:- 3dm.f::%vec2 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::vec2-number-binary-v- a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:- 3dm.f::%vec2 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v- a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v- a b))
+
+(3dm-def::def-vec3-number-binary-op cl:- 3dm.f::%vec3 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::vec3-number-binary-v- a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:- 3dm.f::%vec3 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v- a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v- a b))
+
+(3dm-def::def-vec4-number-binary-op cl:- 3dm.f::%vec4 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v- ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::vec4-number-binary-v- a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:- 3dm.f::%vec4 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v- ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v- a b))
+
+(3dm-def::define-ofun v- (val &rest vals)
+  (if (null vals)
+      (binary-v* -1 val)
+      (loop with result = val
+	    for next in vals
+	    do (setq result (binary-v- result next))
+	    finally (return result))))
+
+(define-compiler-macro v- (val &rest vals)
+  (cond ((null vals) `(binary-v* -1 ,val))
+        (t (reduce (lambda (a b) `(binary-v- ,a ,b)) (cons val vals)))))
+
+;;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v* a b))
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.d::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v* a b))
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.d::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v* ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v* a b))
+
+(3dm-def::defsealed binary-v* ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.d::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.rat::%vec2 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.rat::%vec2 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.rat::%vec3 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.rat::%vec3 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.rat::%vec4 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.rat::%vec4 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.d::%vec2 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.d::%vec3 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.d::%vec4 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v* ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v* a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::number-vec2-binary-v* b a))
+
+(3dm-def::def-vec2-vec2-binary-op cl:* 3dm.f::%vec2 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v* a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::number-vec3-binary-v* b a))
+
+(3dm-def::def-vec3-vec3-binary-op cl:* 3dm.f::%vec3 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v* a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v* a b))
+
+(3dm-def:defsealed binary-v* ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::number-vec4-binary-v* b a))
+
+(3dm-def::def-vec4-vec4-binary-op cl:* 3dm.f::%vec4 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v* ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v* a b))
+
+(3dm-def::define-ofun v* (val &rest vals)
+  (loop with result = val
+	for next in vals
+	do (setq result (binary-v* result next))
+	finally (return result)))
+
+(define-compiler-macro v* (val &rest vals)
+  (cond ((null vals) val)
+        (t (reduce (lambda (a b) `(binary-v* ,a ,b)) (cons val vals)))))
+;;;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.d:vec2))
+  (3dm.d::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.d::%vec2 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec2) (b cl:double-float))
+  (3dm.d::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.d:vec3))
+  (3dm.d::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.d::%vec3 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec3) (b cl:double-float))
+  (3dm.d::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d cl:double-float :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.d:vec4))
+  (3dm.d::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.d::%vec4 :3dm.d :3dm.d cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec4) (b cl:double-float))
+  (3dm.d::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d :3dm.d :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a cl:single-float) (b 3dm.d:vec2))
+  (3dm.f&d::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.d::%vec2 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec2) (b cl:single-float))
+  (3dm.f&d::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a cl:single-float) (b 3dm.d:vec3))
+  (3dm.f&d::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.d::%vec3 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec3) (b cl:single-float))
+  (3dm.f&d::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.f&d cl:single-float :3dm.d)
+
+(3dm-def::defsealed binary-v/ ((a cl:single-float) (b 3dm.d:vec4))
+  (3dm.f&d::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.d::%vec4 :3dm.f&d :3dm.d cl:single-float)
+
+(3dm-def::defsealed binary-v/ ((a 3dm.d:vec4) (b cl:single-float))
+  (3dm.f&d::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.f:vec2))
+  (3dm.f::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.f::%vec2 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec2) (b cl:single-float))
+  (3dm.f::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.f:vec3))
+  (3dm.f::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.f::%vec3 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec3) (b cl:single-float))
+  (3dm.f::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.f cl:single-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.f:vec4))
+  (3dm.f::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.f::%vec4 :3dm.f :3dm.f cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec4) (b cl:single-float))
+  (3dm.f::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.f:vec2))
+  (3dm.d&f::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.d::%vec2 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec2) (b cl:double-float))
+  (3dm.d&f::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.f:vec3))
+  (3dm.d&f::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.d::%vec3 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec3) (b cl:double-float))
+  (3dm.d&f::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d&f cl:double-float :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.f:vec4))
+  (3dm.d&f::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.d::%vec4 :3dm.d&f :3dm.f cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec4) (b cl:double-float))
+  (3dm.d&f::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.rat::%vec2 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.rat::vec2))
+  (3dm.rat::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.rat::%vec2 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec2) (b cl:rational))
+  (3dm.rat::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.rat::%vec2 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.rat::%vec3 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.rat::vec3))
+  (3dm.rat::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.rat::%vec3 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec3) (b cl:rational))
+  (3dm.rat::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.rat::%vec3 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.rat::%vec4 :3dm.rat cl:rational :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.rat::vec4))
+  (3dm.rat::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.rat::%vec4 :3dm.rat :3dm.rat cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec4) (b cl:rational))
+  (3dm.rat::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.rat::%vec4 :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.rat::vec2))
+  (3dm.d&rat::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.d::%vec2 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec2) (b cl:double-float))
+  (3dm.d&rat::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.rat::vec3))
+  (3dm.d&rat::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.d::%vec3 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec3) (b cl:double-float))
+  (3dm.d&rat::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d&rat cl:double-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:double-float) (b 3dm.rat::vec4))
+  (3dm.d&rat::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.d::%vec4 :3dm.d&rat :3dm.rat cl:double-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec4) (b cl:double-float))
+  (3dm.d&rat::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.d::vec2))
+  (3dm.rat&d::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.d::%vec2 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d::vec2) (b cl:rational))
+  (3dm.rat&d::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.d::%vec2 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.d::vec3))
+  (3dm.rat&d::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.d::%vec3 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d::vec3) (b cl:rational))
+  (3dm.rat&d::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.d::%vec3 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.rat&d cl:rational :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.d::vec4))
+  (3dm.rat&d::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.d::%vec4 :3dm.rat&d :3dm.d cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.d::vec4) (b cl:rational))
+  (3dm.rat&d::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.d::%vec4 :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.rat::vec2))
+  (3dm.f&rat::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.f::%vec2 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec2) (b cl:single-float))
+  (3dm.f&rat::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.rat::vec3))
+  (3dm.f&rat::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.f::%vec3 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec3) (b cl:single-float))
+  (3dm.f&rat::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.f&rat cl:single-float :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a cl:single-float) (b 3dm.rat::vec4))
+  (3dm.f&rat::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.f::%vec4 :3dm.f&rat :3dm.rat cl:single-float)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat::vec4) (b cl:single-float))
+  (3dm.f&rat::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vec4-binary-v/ a b))
+;;;;
+(3dm-def::def-number-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.f::vec2))
+  (3dm.rat&f::number-vec2-binary-v/ a b))
+
+(3dm-def::def-vec2-number-binary-op cl:/ 3dm.f::%vec2 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f::vec2) (b cl:rational))
+  (3dm.rat&f::vec2-number-binary-v/ a b))
+
+(3dm-def::def-vec2-vec2-binary-op cl:/ 3dm.f::%vec2 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vec2-binary-v/ a b))
+;;
+(3dm-def::def-number-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.f::vec3))
+  (3dm.rat&f::number-vec3-binary-v/ a b))
+
+(3dm-def::def-vec3-number-binary-op cl:/ 3dm.f::%vec3 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f::vec3) (b cl:rational))
+  (3dm.rat&f::vec3-number-binary-v/ a b))
+
+(3dm-def::def-vec3-vec3-binary-op cl:/ 3dm.f::%vec3 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vec3-binary-v/ a b))
+;;
+(3dm-def::def-number-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.rat&f cl:rational :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a cl:rational) (b 3dm.f::vec4))
+  (3dm.rat&f::number-vec4-binary-v/ a b))
+
+(3dm-def::def-vec4-number-binary-op cl:/ 3dm.f::%vec4 :3dm.rat&f :3dm.f cl:rational)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.f::vec4) (b cl:rational))
+  (3dm.rat&f::vec4-number-binary-v/ a b))
+
+(3dm-def::def-vec4-vec4-binary-op cl:/ 3dm.f::%vec4 :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed binary-v/ ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vec4-binary-v/ a b))
+
+(3dm-def::define-ofun v/ (val &rest vals)
+  (if (null vals)
+      (binary-v/ 1 val)
+      (loop with result = val
+	    for next in vals
+	    do (setq result (binary-v/ result next))
+	    finally (return result))))
+
+(define-compiler-macro v/ (val &rest vals)
+  (cond ((null vals) `(binary-v/ 1 ,val))
+        (t (reduce (lambda (a b) `(binary-v/ ,a ,b)) (cons val vals)))))
+;;;;;;
 
 (3dm-def:defsealed vsqrlength ((v 3dm.d::vec2))
   (3dm.d::vec2-vsqrlength v))
@@ -1272,40 +3896,276 @@
   (3dm.rat::vec4-vsqrlength v))
 
 (3dm-def:defsealed vlength ((v 3dm.d::vec2))
-  (3dm.d::vec2-vlength v))
+  (sqrt (3dm.d::vec2-vsqrlength v)))
 
 (3dm-def:defsealed vlength ((v 3dm.d::vec3))
-  (3dm.d::vec3-vlength v))
+  (sqrt (3dm.d::vec3-vsqrlength v)))
 
 (3dm-def:defsealed vlength ((v 3dm.d::vec4))
-  (3dm.d::vec4-vlength v))
+  (sqrt (3dm.d::vec4-vsqrlength v)))
 
 (3dm-def:defsealed vlength ((v 3dm.f::vec2))
-  (3dm.f::vec2-vlength v))
+  (sqrt (3dm.f::vec2-vsqrlength v)))
 
 (3dm-def:defsealed vlength ((v 3dm.f::vec3))
-  (3dm.f::vec3-vlength v))
+  (sqrt (3dm.f::vec3-vsqrlength v)))
 
 (3dm-def:defsealed vlength ((v 3dm.f::vec4))
-  (3dm.f::vec4-vlength v))
+  (sqrt (3dm.f::vec4-vsqrlength v)))
+
+(3dm-def:defsealed vlength ((v 3dm.rat::vec2))
+  (sqrt (3dm.rat::vec2-vsqrlength v)))
+
+(3dm-def:defsealed vlength ((v 3dm.rat::vec3))
+  (sqrt (3dm.rat::vec3-vsqrlength v)))
+
+(3dm-def:defsealed vlength ((v 3dm.rat::vec4))
+  (sqrt (3dm.rat::vec4-vsqrlength v)))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.d&rat::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.rat&d::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.rat&d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (3dm.f&rat::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (3dm.f&rat::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.f&rat :3dm.f :3dm.rat)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (3dm.f&rat::vec4-vsqrdistance a b))
+
+(3dm-def::define-vec2-vsqrdistance-macro :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (3dm.rat&f::vec2-vsqrdistance a b))
+
+(3dm-def::define-vec3-vsqrdistance-macro :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (3dm.rat&f::vec3-vsqrdistance a b))
+
+(3dm-def::define-vec4-vsqrdistance-macro :3dm.rat&f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed vsqrdistance ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (3dm.rat&f::vec4-vsqrdistance a b))
+;;;;
+(3dm-def:defsealed vdistance ((a 3dm.d::vec2) (b 3dm.d::vec2))
+  (sqrt (3dm.d::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d::vec3) (b 3dm.d::vec3))
+  (sqrt (3dm.d::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d::vec4) (b 3dm.d::vec4))
+  (sqrt (3dm.d::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec2) (b 3dm.d::vec2))
+  (sqrt (3dm.f&d::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec3) (b 3dm.d::vec3))
+  (sqrt (3dm.f&d::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec4) (b 3dm.d::vec4))
+  (sqrt (3dm.f&d::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d::vec2) (b 3dm.f::vec2))
+  (sqrt (3dm.d&f::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d::vec3) (b 3dm.f::vec3))
+  (sqrt (3dm.d&f::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d::vec4) (b 3dm.f::vec4))
+  (sqrt (3dm.d&f::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec2) (b 3dm.f::vec2))
+  (sqrt (3dm.f::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec3) (b 3dm.f::vec3))
+  (sqrt (3dm.f::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f::vec4) (b 3dm.f::vec4))
+  (sqrt (3dm.f::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat::vec2) (b 3dm.rat::vec2))
+  (sqrt (3dm.rat::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat::vec3) (b 3dm.rat::vec3))
+  (sqrt (3dm.rat::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat::vec4) (b 3dm.rat::vec4))
+  (sqrt (3dm.rat::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (sqrt (3dm.d&rat::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (sqrt (3dm.d&rat::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (sqrt (3dm.d&rat::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (sqrt (3dm.rat&d::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (sqrt (3dm.rat&d::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (sqrt (3dm.rat&d::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f:vec2) (b 3dm.rat:vec2))
+  (sqrt (3dm.f&rat::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f:vec3) (b 3dm.rat:vec3))
+  (sqrt (3dm.f&rat::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.f:vec4) (b 3dm.rat:vec4))
+  (sqrt (3dm.f&rat::vec4-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec2) (b 3dm.f:vec2))
+  (sqrt (3dm.rat&f::vec2-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec3) (b 3dm.f:vec3))
+  (sqrt (3dm.rat&f::vec3-vsqrdistance a b)))
+
+(3dm-def:defsealed vdistance ((a 3dm.rat:vec4) (b 3dm.f:vec4))
+  (sqrt (3dm.rat&f::vec4-vsqrdistance a b)))
+;;;;;;
+
 
 (3dm-def:defsealed v2norm ((v 3dm.d::vec2))
-  (3dm.d::vec2-v2norm v))
+  (sqrt (3dm.d::vec2-vsqr2norm v)))
 
 (3dm-def:defsealed v2norm ((v 3dm.d::vec3))
-  (3dm.d::vec3-v2norm v))
+  (sqrt (3dm.d::vec3-vsqr2norm v)))
 
 (3dm-def:defsealed v2norm ((v 3dm.d::vec4))
-  (3dm.d::vec4-v2norm v))
+  (sqrt (3dm.d::vec4-vsqr2norm v)))
 
 (3dm-def:defsealed v2norm ((v 3dm.f::vec2))
-  (3dm.f::vec2-v2norm v))
+  (sqrt (3dm.f::vec2-vsqr2norm v)))
 
 (3dm-def:defsealed v2norm ((v 3dm.f::vec3))
-  (3dm.f::vec3-v2norm v))
+  (sqrt (3dm.f::vec3-vsqr2norm v)))
 
 (3dm-def:defsealed v2norm ((v 3dm.f::vec4))
-  (3dm.f::vec4-v2norm v))
+  (sqrt (3dm.f::vec4-vsqr2norm v)))
+
+(3dm-def:defsealed v2norm ((v 3dm.rat::vec2))
+  (sqrt (3dm.rat::vec2-vsqr2norm v)))
+
+(3dm-def:defsealed v2norm ((v 3dm.rat::vec3))
+  (sqrt (3dm.f::vec3-vsqr2norm v)))
+
+(3dm-def:defsealed v2norm ((v 3dm.rat::vec4))
+  (sqrt (3dm.rat::vec4-vsqr2norm v)))
 
 (3dm-def::define-vec2-v.-function cl:double-float :3dm.d :3dm.d :3dm.d)
 (3dm-def::define-vec2-v.-function cl:double-float :3dm.d&f :3dm.d :3dm.f)
@@ -1324,7 +4184,7 @@
 (3dm-def:defsealed v. ((a 3dm.d::vec2) (b 3dm.f::vec2))
   (3dm.d&f::vec2-v. a b))
 
-(3dm-def:defsealed v. ((a 3dm.d::vec2) (b 3dm.d::vec2))
+(3dm-def:defsealed v. ((a 3dm.f::vec2) (b 3dm.d::vec2))
   (3dm.f&d::vec2-v. a b))
 
 (3dm-def:defsealed v. ((a 3dm.f::vec2) (b 3dm.f::vec2))
@@ -1365,7 +4225,7 @@
 (3dm-def:defsealed v. ((a 3dm.d::vec3) (b 3dm.f::vec3))
   (3dm.d&f::vec3-v. a b))
 
-(3dm-def:defsealed v. ((a 3dm.d::vec3) (b 3dm.d::vec3))
+(3dm-def:defsealed v. ((a 3dm.f::vec3) (b 3dm.d::vec3))
   (3dm.f&d::vec3-v. a b))
 
 (3dm-def:defsealed v. ((a 3dm.f::vec3) (b 3dm.f::vec3))
@@ -1406,7 +4266,7 @@
 (3dm-def:defsealed v. ((a 3dm.d::vec4) (b 3dm.f::vec4))
   (3dm.d&f::vec4-v. a b))
 
-(3dm-def:defsealed v. ((a 3dm.d::vec4) (b 3dm.d::vec4))
+(3dm-def:defsealed v. ((a 3dm.f::vec4) (b 3dm.d::vec4))
   (3dm.f&d::vec4-v. a b))
 
 (3dm-def:defsealed v. ((a 3dm.f::vec4) (b 3dm.f::vec4))
@@ -1460,376 +4320,110 @@
   (3dm.rat::vc a b))
 
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec2) (b 3dm.d:vec2))
+  (3dm.d::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec2) (b 3dm.f:vec2))
+  (3dm.d&f::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec2) (b 3dm.d:vec2))
+  (3dm.f&d::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:single-float :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec2) (b 3dm.f:vec2))
+  (3dm.f::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.rat:vec2) (b 3dm.rat:vec2))
+  (3dm.rat::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.rat:vec2) (b 3dm.d:vec2))
+  (3dm.d&rat::vec2-vangle a b))
+
 (3dm-def::define-vec2-vangle-function cl:double-float :3dm.rat&d :3dm.rat :3dm.d)
 
+(3dm-def:defsealed vangle ((a 3dm.d:vec2) (b 3dm.rat:vec2))
+  (3dm.rat&d::vec2-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec3) (b 3dm.d:vec3))
+  (3dm.d::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec3) (b 3dm.f:vec3))
+  (3dm.d&f::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec3) (b 3dm.d:vec3))
+  (3dm.f&d::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:single-float :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec3) (b 3dm.f:vec3))
+  (3dm.f::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.rat:vec3) (b 3dm.rat:vec3))
+  (3dm.rat::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec3) (b 3dm.rat:vec3))
+  (3dm.d&rat::vec3-vangle a b))
+
 (3dm-def::define-vec3-vangle-function cl:double-float :3dm.rat&d :3dm.rat :3dm.d)
 
+(3dm-def:defsealed vangle ((a 3dm.rat:vec3) (b 3dm.d:vec3))
+  (3dm.rat&d::vec3-vangle a b))
+;;;
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec4) (b 3dm.d:vec4))
+  (3dm.d::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.d&f :3dm.d :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec4) (b 3dm.f:vec4))
+  (3dm.d&f::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.f&d :3dm.f :3dm.d)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec4) (b 3dm.d:vec4))
+  (3dm.f&d::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:single-float :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed vangle ((a 3dm.f:vec4) (b 3dm.f:vec4))
+  (3dm.f::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.rat:vec4) (b 3dm.rat:vec4))
+  (3dm.rat::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.d&rat :3dm.d :3dm.rat)
+
+(3dm-def:defsealed vangle ((a 3dm.d:vec4) (b 3dm.rat:vec4))
+  (3dm.d&rat::vec4-vangle a b))
+
 (3dm-def::define-vec4-vangle-function cl:double-float :3dm.rat&d :3dm.rat :3dm.d)
 
-(3dm-def::define-binary-v+ :3dm.d :3dm.d)
-(3dm-def::define-binary-v+ :3dm.d&f :3dm.d)
-(3dm-def::define-binary-v+ :3dm.f&d :3dm.d)
-(3dm-def::define-binary-v+ :3dm.f :3dm.f)
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.d::vec2))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec2) (b real))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.d::vec3))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec3) (b real))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.d::vec4))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec4) (b real))
-  (3dm.d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.f::vec2))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec2) (b real))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.f::vec3))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec3) (b real))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a real) (b 3dm.f::vec4))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def:defsealed binary-v+ ((a 3dm.f::vec4) (b real))
-  (3dm.f::binary-v+ a b))
-
-(3dm-def::define-binary-v- :3dm.d :3dm.d)
-(3dm-def::define-binary-v- :3dm.d&f :3dm.d)
-(3dm-def::define-binary-v- :3dm.f&d :3dm.d)
-(3dm-def::define-binary-v- :3dm.f :3dm.f)
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.d::vec2))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec2) (b real))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.d::vec3))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec3) (b real))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.d::vec4))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec4) (b real))
-  (3dm.d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.f::vec2))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec2) (b real))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.f::vec3))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec3) (b real))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a real) (b 3dm.f::vec4))
-  (3dm.f::binary-v- a b))
-
-(3dm-def:defsealed binary-v- ((a 3dm.f::vec4) (b real))
-  (3dm.f::binary-v- a b))
-
-(3dm-def::define-binary-v* :3dm.d :3dm.d)
-(3dm-def::define-binary-v* :3dm.d&f :3dm.d)
-(3dm-def::define-binary-v* :3dm.f&d :3dm.d)
-(3dm-def::define-binary-v* :3dm.f :3dm.f)
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.d::vec2))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec2) (b real))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.d::vec3))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec3) (b real))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.d::vec4))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec4) (b real))
-  (3dm.d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.f::vec2))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec2) (b real))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.f::vec3))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec3) (b real))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a real) (b 3dm.f::vec4))
-  (3dm.f::binary-v* a b))
-
-(3dm-def:defsealed binary-v* ((a 3dm.f::vec4) (b real))
-  (3dm.f::binary-v* a b))
-
-(3dm-def::define-binary-v/ :3dm.d :3dm.d)
-(3dm-def::define-binary-v/ :3dm.d&f :3dm.d)
-(3dm-def::define-binary-v/ :3dm.f&d :3dm.d)
-(3dm-def::define-binary-v/ :3dm.f :3dm.f)
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec2) (b 3dm.d::vec2))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.d::vec2))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec2) (b real))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec3) (b 3dm.d::vec3))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.d::vec3))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec3) (b real))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec4) (b 3dm.d::vec4))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.d::vec4))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec4) (b real))
-  (3dm.d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec2) (b 3dm.f::vec2))
-  (3dm.d&f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec3) (b 3dm.f::vec3))
-  (3dm.d&f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.d::vec4) (b 3dm.f::vec4))
-  (3dm.d&f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec2) (b 3dm.d::vec2))
-  (3dm.f&d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec3) (b 3dm.d::vec3))
-  (3dm.f&d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec4) (b 3dm.d::vec4))
-  (3dm.f&d::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec2) (b 3dm.f::vec2))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.f::vec2))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec2) (b real))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec3) (b 3dm.f::vec3))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.f::vec3))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec3) (b real))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec4) (b 3dm.f::vec4))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a real) (b 3dm.f::vec4))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def:defsealed binary-v/ ((a 3dm.f::vec4) (b real))
-  (3dm.f::binary-v/ a b))
-
-(3dm-def::define-ofun v+ (val &rest vals)
-  (loop with result = val
-	for next in vals
-	do (setq result (binary-v+ result next))
-	finally (return result)))
-
-(define-compiler-macro v+ (val &rest vals)
-  (cond ((null vals) val)
-        (t (reduce (lambda (a b) `(binary-v+ ,a ,b)) (cons val vals)))))
-
-(3dm-def::define-ofun v- (val &rest vals)
-  (loop with result = val
-	for next in vals
-	do (setq result (binary-v- result next))
-	finally (return result)))
-
-(define-compiler-macro v- (val &rest vals)
-  (cond ((null vals) val)
-        (t (reduce (lambda (a b) `(binary-v- ,a ,b)) (cons val vals)))))
-
-(3dm-def::define-ofun v* (val &rest vals)
-  (loop with result = val
-	for next in vals
-	do (setq result (binary-v* result next))
-	finally (return result)))
-
-(define-compiler-macro v* (val &rest vals)
-  (cond ((null vals) val)
-        (t (reduce (lambda (a b) `(binary-v* ,a ,b)) (cons val vals)))))
-
-(3dm-def::define-ofun v/ (val &rest vals)
-  (loop with result = val
-	for next in vals
-	do (setq result (binary-v/ result next))
-	finally (return result)))
-
-(define-compiler-macro v/ (val &rest vals)
-  (cond ((null vals) val)
-        (t (reduce (lambda (a b) `(binary-v/ ,a ,b)) (cons val vals)))))
+(3dm-def:defsealed vangle ((a 3dm.rat:vec4) (b 3dm.d:vec4))
+  (3dm.rat&d::vec4-vangle a b))
+;;;;;
 
 (3dm-def:defsealed vunit ((vec 3dm.f::vec2))
   (binary-v/ vec (vlength vec)))
@@ -1847,6 +4441,15 @@
   (binary-v/ vec (vlength vec)))
 
 (3dm-def:defsealed vunit ((vec 3dm.d::vec4))
+  (binary-v/ vec (vlength vec)))
+;;
+(3dm-def:defsealed vunit ((vec 3dm.rat::vec2))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.rat::vec3))
+  (binary-v/ vec (vlength vec)))
+
+(3dm-def:defsealed vunit ((vec 3dm.rat::vec4))
   (binary-v/ vec (vlength vec)))
 
 ;;;
@@ -1885,3 +4488,187 @@
 
 (3dm-def:defsealed vcopy ((vec 3dm.fix::vec4))
   (3dm.fix::%vec4 (3dm.fix::vx4 vec) (3dm.fix::vy4 vec) (3dm.fix::vz4 vec) (3dm.fix::vw4 vec)))
+;;;;
+
+(3dm-def:defsealed orthogonalize ((u 3dm.d::vec3) (v 3dm.d::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.f::vec3) (v 3dm.f::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.d::vec3) (v 3dm.f::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.f::vec3) (v 3dm.d::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.rat::vec3) (v 3dm.rat::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.d::vec3) (v 3dm.rat::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.rat::vec3) (v 3dm.d::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.f::vec3) (v 3dm.rat::vec3))
+  (vc (vc u v) u))
+
+(3dm-def:defsealed orthogonalize ((u 3dm.rat::vec3) (v 3dm.f::vec3))
+  (vc (vc u v) u))
+
+;;;;
+(3dm-def:defsealed lerp ((a vector) (b vector) (s real))
+  (map 'vector
+       #'+
+       (map 'vector #'(lambda (value)
+			(* (- 1 s) value)) a)
+       (map 'vector #'(lambda (value)
+			(* s value)) b)))
+
+(3dm-def:defsealed lerp ((a list) (b list) (s real))
+  (mapcar
+   #'+
+   (mapcar #'(lambda (value)
+	       (* (- 1 s) value)) a)
+   (mapcar #'(lambda (value)
+	       (* s value)) b)))
+;;;
+
+(3dm-def::define-vec2-vlerp-macro :3dm.d :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec2) (b 3dm.d:vec2) (param real))
+  (3dm.d::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.d&f :3dm.d :3dm.f :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec2) (b 3dm.f:vec2) (param real))
+  (3dm.d&f::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.f&d :3dm.f :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec2) (b 3dm.d:vec2) (param real))
+  (3dm.f&d::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.f :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec2) (b 3dm.f:vec2) (param real))
+  (3dm.f::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.f&rat :3dm.f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec2) (b 3dm.rat:vec2) (param real))
+  (3dm.f&rat::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.rat&f :3dm.rat :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec2) (b 3dm.f:vec2) (param real))
+  (3dm.rat&f::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.d&rat :3dm.d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec2) (b 3dm.rat:vec2) (param real))
+  (3dm.d&rat::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.rat&d :3dm.rat :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec2) (b 3dm.d:vec2) (param real))
+  (3dm.rat&d::vec2-vlerp a b param))
+
+(3dm-def::define-vec2-vlerp-macro :3dm.rat :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec2) (b 3dm.rat:vec2) (param real))
+  (3dm.rat::vec2-vlerp a b param))
+
+;;;;
+
+(3dm-def::define-vec3-vlerp-macro :3dm.d :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec3) (b 3dm.d:vec3) (param real))
+  (3dm.d::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.d&f :3dm.d :3dm.f :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec3) (b 3dm.f:vec3) (param real))
+  (3dm.d&f::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.f&d :3dm.f :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec3) (b 3dm.d:vec3) (param real))
+  (3dm.f&d::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.f :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec3) (b 3dm.f:vec3) (param real))
+  (3dm.f::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.f&rat :3dm.f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec3) (b 3dm.rat:vec3) (param real))
+  (3dm.f&rat::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.rat&f :3dm.rat :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec3) (b 3dm.f:vec3) (param real))
+  (3dm.rat&f::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.d&rat :3dm.d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec3) (b 3dm.rat:vec3) (param real))
+  (3dm.d&rat::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.rat&d :3dm.rat :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec3) (b 3dm.d:vec3) (param real))
+  (3dm.rat&d::vec3-vlerp a b param))
+
+(3dm-def::define-vec3-vlerp-macro :3dm.rat :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec3) (b 3dm.rat:vec3) (param real))
+  (3dm.rat::vec3-vlerp a b param))
+;;;;;
+
+(3dm-def::define-vec4-vlerp-macro :3dm.d :3dm.d :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec4) (b 3dm.d:vec4) (param real))
+  (3dm.d::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.d&f :3dm.d :3dm.f :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec4) (b 3dm.f:vec4) (param real))
+  (3dm.d&f::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.f&d :3dm.f :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec4) (b 3dm.d:vec4) (param real))
+  (3dm.f&d::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.f :3dm.f :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec4) (b 3dm.f:vec4) (param real))
+  (3dm.f::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.f&rat :3dm.f :3dm.rat :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.f:vec4) (b 3dm.rat:vec4) (param real))
+  (3dm.f&rat::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.rat&f :3dm.rat :3dm.f :3dm.f)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec4) (b 3dm.f:vec4) (param real))
+  (3dm.rat&f::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.d&rat :3dm.d :3dm.rat :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.d:vec4) (b 3dm.rat:vec4) (param real))
+  (3dm.d&rat::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.rat&d :3dm.rat :3dm.d :3dm.d)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec4) (b 3dm.d:vec4) (param real))
+  (3dm.rat&d::vec4-vlerp a b param))
+
+(3dm-def::define-vec4-vlerp-macro :3dm.rat :3dm.rat :3dm.rat :3dm.rat)
+
+(3dm-def:defsealed lerp ((a 3dm.rat:vec4) (b 3dm.rat:vec4) (param real))
+  (3dm.rat::vec4-vlerp a b param))

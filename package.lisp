@@ -33,13 +33,28 @@
 	   #:v-
 	   #:v*
 	   #:v/
+	   #:orthogonalize
 	   #:mcol
 	   #:mrow
 	   #:m*
+	   #:mtranspose
 	   #:mdet
 	   #:minv
 	   #:mlookat
-	   #:mcopy))
+	   #:mcopy
+	   #:nmtranslate
+	   #:nmscale
+	   #:nmrotate
+	   #:lerp
+	   #:q*
+	   #:qconjugate
+	   #:qrotation
+	   #:rotate-vector
+	   #:quaternion-from-to
+	   #:quaternion-x-axis
+	   #:quaternion-y-axis
+	   #:quaternion-z-axis
+	   #:matrix-from-quaternion))
 
 (defmacro 3dm::define-package (name default &rest stuff)
   `(cl:defpackage ,name
