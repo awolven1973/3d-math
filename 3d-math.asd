@@ -1,5 +1,7 @@
 (defsystem 3d-math
-  :description "Generic math common lisp library for 3d graphics applications."
+  :description "Generic 3d math common lisp library for 3d graphics applications."
+  :author "Andrew Kenneth Wolven <awolven@gmail.com>"
+  :license "MIT"
   :depends-on (:fast-generic-functions)
   :components
   ((:file "package")
