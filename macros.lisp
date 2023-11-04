@@ -1631,3 +1631,32 @@
 	   (setf (f 3 3) ,one)
 	   mat)))))
 
+(defmacro binary-m*-simple-array (a b a-array-element-type b-array-element-type result-array-element-type)
+  (let ((a-sym (gensym))
+	(b-sym (gensym)))
+    `(let ((,a-sym ,a)
+	   (,b-sym ,b))
+       (declare (type (simple-array ,a-array-element-type) ,a-sym))
+       (declare (type (simple-array ,b-array-element-type) ,b-sym))
+       (let* ((adims (array-dimensions ,a-sym))
+	      (bdims (array-dimensions ,b-sym))
+	      (m (first adims))
+	      (n (second adims)))
+	 (assert (= (cl:the fixnum n) (cl:the fixnum (first bdims))))
+	 (let* ((p (second bdims))
+		(result (make-array (list m p) :element-type ',result-array-element-type)))
+	   (loop for i from 0 below m
+		 do (loop for j from 0 below p
+			  do (setf (aref result i j)
+				   (loop for k from 0 below n
+					 with sum of-type ,result-array-element-type
+					   = ,(if (eq t result-array-element-type)
+						  0
+						  (mycoerce 0 result-array-element-type))
+					 
+					 
+					 do (incf sum (* (cl:the ,a-array-element-type (aref ,a-sym i k))
+							 (cl:the ,b-array-element-type (aref ,b-sym k j))))
+					 finally (return sum))))
+		 finally (return result)))))))
+

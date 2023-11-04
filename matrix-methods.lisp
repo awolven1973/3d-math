@@ -298,7 +298,24 @@
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::mat4))
   (3dm.f&d::m*-mat4-mat4 a b))
 
-
+(3dm-def:defsealed binary-m* ((a simple-array) (b simple-array))
+  (declare (optimize (speed 3) (safety 3)))
+  (cond ((and (eq (array-element-type a) 'double-float)
+	      (eq (array-element-type b) 'double-float))
+	 (3dm-def::binary-m*-simple-array a b double-float double-float double-float))
+	((and (eq (array-element-type a) 'single-float)
+	      (eq (array-element-type b) 'double-float))
+	 (3dm-def::binary-m*-simple-array a b single-float double-float double-float))
+	((and (eq (array-element-type a) 'double-float)
+	      (eq (array-element-type b) 'single-float))
+	 (3dm-def::binary-m*-simple-array a b double-float single-float double-float))
+	((and (eq (array-element-type a) 'single-float)
+	      (eq (array-element-type b) 'single-float))
+	 (3dm-def::binary-m*-simple-array a b single-float single-float single-float))
+	((and (eq (array-element-type a) 'rational)
+	      (eq (array-element-type b) 'rational))
+	 (3dm-def::binary-m*-simple-array a b rational rational rational))
+	(t (3dm-def::binary-m*-simple-array a b number number t))))
 
 (3dm-def::define-ofun m* (val &rest vals)
   (loop with result = val
