@@ -298,7 +298,8 @@
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::mat4))
   (3dm.f&d::m*-mat4-mat4 a b))
 
-(3dm-def:defsealed binary-m* ((a simple-array) (b simple-array))
+(3dm-def:defsealed binary-m* ((a #-ALLEGRO simple-array #+ALLEGRO array)
+			      (b #-ALLEGRO simple-array #+ALLEGRO array))
   (declare (optimize (speed 3) (safety 3)))
   (cond ((and (eq (array-element-type a) 'double-float)
 	      (eq (array-element-type b) 'double-float))

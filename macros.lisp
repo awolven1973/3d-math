@@ -454,8 +454,10 @@
 (defmacro defsealed (name lambda-list &body body)
   `(progn
      (defmethod ,name ,lambda-list
+       #+SBCL
        (declare (sealable-metaobjects:method-properties fast-generic-functions:inlineable))
        ,@body)
+     #+SBCL
      (fast-generic-functions:seal-domain #',name ',(mapcar #'(lambda (arg)
 							       (if (second arg)
 								   (second arg)
