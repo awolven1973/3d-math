@@ -993,13 +993,17 @@
 	(+ (* (,',(intern "VX2" b-pkg) ,b) (e 0 0)) (* (,',(intern "VY2" b-pkg) ,b) (e 0 1)))
 	(+ (* (,',(intern "VX2" b-pkg) ,b) (e 1 0)) (* (,',(intern "VY2" b-pkg) ,b) (e 1 1)))))))
 
-(defun unroll-axb (rows-a cols-a cols-b)
+(defun unroll-axb (rows-a cols-a cols-b &key clampf)
   (loop for i from 0 below rows-a
 	append (loop for j from 0 below cols-b
 		     collect `(setf (g ,i ,j)
-				    (+ ,@(loop for k from 0 below cols-a 
-					       collect `(* (e ,i ,k) (f ,k ,j))))))))
-
+				    ,(if clampf
+					 `(clampf
+					   (+ ,@(loop for k from 0 below cols-a 
+						      collect `(* (e ,i ,k) (f ,k ,j)))))
+					 `(+ ,@(loop for k from 0 below cols-a 
+						     collect `(* (e ,i ,k) (f ,k ,j)))))))))
+				    
 (defmacro define-m*-mat2-mat2 (pkg a-pkg b-pkg c-pkg)
   `(defmacro ,(intern "M*-MAT2-MAT2" pkg) (a b)
      (let ((a-sym (gensym "A"))
@@ -1075,6 +1079,20 @@
 	   (,',(intern "WITH-FAST-MATREF" b-pkg) (f ,b-sym 4)
 	    (,',(intern "WITH-FAST-MATREF" c-pkg) (g ,c-sym 4)
 	     ,@(unroll-axb 4 4 4))))
+	  ,c-sym))))
+
+(defmacro define-m*-mat4-single-float-mat4 (pkg a-pkg b-pkg)
+  `(defmacro ,(intern "M*-MAT4-MAT4" pkg) (a b)
+     (let ((a-sym (gensym "A"))
+	   (b-sym (gensym "B"))
+	   (c-sym (gensym "C")))
+       `(let ((,a-sym ,a)
+	      (,b-sym ,b)
+	      (,c-sym (3dm.f::mat4)))
+	  (,',(intern "WITH-FAST-MATREF" a-pkg) (e ,a-sym 4)
+	   (,',(intern "WITH-FAST-MATREF" b-pkg) (f ,b-sym 4)
+	    (3dm.f::with-fast-matref (g ,c-sym 4)
+	     ,@(unroll-axb 4 4 4 :clampf t))))
 	  ,c-sym))))
 
 (defmacro define-mdet-mat2 ()
@@ -1664,4 +1682,30 @@
 							 (cl:the ,b-array-element-type (aref ,b-sym k j))))
 					 finally (return sum))))
 		 finally (return result)))))))
+
+(defmacro binary-m*-simple-array-to-mat4-single-float (a b a-array-element-type b-array-element-type)
+  (let ((a-sym (gensym))
+	(b-sym (gensym)))
+    `(let ((,a-sym ,a)
+	   (,b-sym ,b))
+       (declare (type (simple-array ,a-array-element-type) ,a-sym))
+       (declare (type (simple-array ,b-array-element-type) ,b-sym))
+       (let* ((adims (array-dimensions ,a-sym))
+	      (bdims (array-dimensions ,b-sym))
+	      (m (first adims))
+	      (n (second adims)))
+	 (assert (= (cl:the fixnum n) (cl:the fixnum (first bdims))))
+	 (let* ((p (second bdims))
+		(result (3dm.f::mat4)))
+	   (3dm.f::with-fast-matref (e result 4)
+	     (loop for i from 0 below m
+		   do (loop for j from 0 below p
+			    do (setf (e i j)
+				     (clampf (loop for k from 0 below n
+						   with sum of-type single-float
+						     = 0.0f0						   
+						   do (incf sum (* (cl:the ,a-array-element-type (aref ,a-sym i k))
+								   (cl:the ,b-array-element-type (aref ,b-sym k j))))
+						   finally (return sum)))))
+		   finally (return result))))))))
 

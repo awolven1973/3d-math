@@ -54,7 +54,9 @@
 	   #:quaternion-x-axis
 	   #:quaternion-y-axis
 	   #:quaternion-z-axis
-	   #:matrix-from-quaternion))
+	   #:matrix-from-quaternion
+	   #:mcopy-mat4-to-single-float ;; used by krma.
+	   ))
 
 (defmacro 3dm::define-package (name default &rest stuff)
   `(cl:defpackage ,name

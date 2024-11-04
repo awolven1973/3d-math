@@ -279,6 +279,7 @@
   (3dm.f::m*-mat4-vec4 b a))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.d :3dm.d :3dm.d :3dm.d)
+(3dm-def::define-m*-mat4-single-float-mat4 :3dm.d :3dm.d :3dm.d) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.d::mat4))
   (3dm.d::m*-mat4-mat4 a b))
@@ -289,11 +290,13 @@
   (3dm.f::m*-mat4-mat4 a b))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.d&f :3dm.d :3dm.f :3dm.d)
+(3dm-def::define-m*-mat4-single-float-mat4 :3dm.d&f :3dm.d :3dm.f) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.f::mat4))
   (3dm.d&f::m*-mat4-mat4 a b))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.f&d :3dm.f :3dm.d :3dm.d)
+(3dm-def::define-m*-mat4-single-float-mat4 :3dm.f&d :3dm.f :3dm.d) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::mat4))
   (3dm.f&d::m*-mat4-mat4 a b))
@@ -552,6 +555,116 @@
 	      (e 3 2) (f 3 2)
 	      (e 3 3) (f 3 3))
 	copy))))
+
+(defun binary-m*-mat4-mat4-to-single-float-mat4 (a b)
+  ;; todo: write some optimized m* for simple-array mixed with 3dm types
+  (typecase a
+    (3dm.f::mat4
+     (typecase b
+       (3dm.f::mat4 (3dm.f::m*-mat4-mat4 a b))
+       (3dm.d::mat4 (3dm.f&d::m*-mat4-single-float-mat4 a b))
+       (t (3dm::m* a b))))
+    (3dm.d::mat4
+     (typecase b
+       (3dm.f::mat4 (3dm.d&f::m*-mat4-single-float-mat4 a b))
+       (3dm.d::mat4 (3dm.d::m*-mat4-single-float-mat4 a b))
+       (t (3dm::m* a b))))
+    (#+allegro simple-array #-allegro array
+     (typecase b
+       (#+allegro simple-array #-allegro array
+	(3dm.f::m*-mat4-mat4 (mcopy-mat4-to-single-float a) (mcopy-mat4-to-single-float b)))
+       (3dm.f::mat4
+        (3dm.f::m*-mat4-mat4 (mcopy-mat4-to-single-float a) b))
+       (3dm.d::mat4
+	(3dm.f&d::m*-mat4-single-float-mat4 (mcopy-mat4-to-single-float a) b))
+       (t (m* a b))))
+    (t (3dm::m* a b))))       
+
+(defun mcopy-mat4-to-single-float (mat4)
+  (etypecase mat4
+    (null (3dm.f::meye 4))
+    (3dm.f::mat4 (3dm.f::with-fast-matref (f mat4 4)
+		   (let ((copy (3dm.f::%mat4)))
+		     (3dm.f::with-fast-matref (e copy 4)
+		       (setf (e 0 0) (f 0 0)
+			     (e 0 1) (f 0 1)
+			     (e 0 2) (f 0 2)
+			     (e 0 3) (f 0 3)
+			     (e 1 0) (f 1 0)
+			     (e 1 1) (f 1 1)
+			     (e 1 2) (f 1 2)
+			     (e 1 3) (f 1 3)
+			     (e 2 0) (f 2 0)
+			     (e 2 1) (f 2 1)
+			     (e 2 2) (f 2 2)
+			     (e 2 3) (f 2 3)
+			     (e 3 0) (f 3 0)
+			     (e 3 1) (f 3 1)
+			     (e 3 2) (f 3 2)
+			     (e 3 3) (f 3 3)))
+		     copy)))
+    
+    (#-ALLEGRO simple-array #+ALLEGRO array
+     (let ((copy (3dm.f::%mat4)))
+       (3dm.f::with-fast-matref (e copy 4)
+	 (setf (e 0 0) (3dm-def::clampf (aref mat4 0 0))
+	       (e 0 1) (3dm-def::clampf (aref mat4 0 1))
+	       (e 0 2) (3dm-def::clampf (aref mat4 0 2))
+	       (e 0 3) (3dm-def::clampf (aref mat4 0 3))
+	       (e 1 0) (3dm-def::clampf (aref mat4 1 0))
+	       (e 1 1) (3dm-def::clampf (aref mat4 1 1))
+	       (e 1 2) (3dm-def::clampf (aref mat4 1 2))
+	       (e 1 3) (3dm-def::clampf (aref mat4 1 3))
+	       (e 2 0) (3dm-def::clampf (aref mat4 2 0))
+	       (e 2 1) (3dm-def::clampf (aref mat4 2 1))
+	       (e 2 2) (3dm-def::clampf (aref mat4 2 2))
+	       (e 2 3) (3dm-def::clampf (aref mat4 2 3))
+	       (e 3 0) (3dm-def::clampf (aref mat4 3 0))
+	       (e 3 1) (3dm-def::clampf (aref mat4 3 1))
+	       (e 3 2) (3dm-def::clampf (aref mat4 3 2))
+	       (e 3 3) (3dm-def::clampf (aref mat4 3 3))))
+       copy))
+    
+    (3dm.d::mat4 (3dm.d::with-fast-matref (f mat4 4)
+		   (let ((copy (3dm.f::%mat4)))
+		     (3dm.f::with-fast-matref (e copy 4)
+		       (setf (e 0 0) (3dm-def::clampf (f 0 0))
+			     (e 0 1) (3dm-def::clampf (f 0 1))
+			     (e 0 2) (3dm-def::clampf (f 0 2))
+			     (e 0 3) (3dm-def::clampf (f 0 3))
+			     (e 1 0) (3dm-def::clampf (f 1 0))
+			     (e 1 1) (3dm-def::clampf (f 1 1))
+			     (e 1 2) (3dm-def::clampf (f 1 2))
+			     (e 1 3) (3dm-def::clampf (f 1 3))
+			     (e 2 0) (3dm-def::clampf (f 2 0))
+			     (e 2 1) (3dm-def::clampf (f 2 1))
+			     (e 2 2) (3dm-def::clampf (f 2 2))
+			     (e 2 3) (3dm-def::clampf (f 2 3))
+			     (e 3 0) (3dm-def::clampf (f 3 0))
+			     (e 3 1) (3dm-def::clampf (f 3 1))
+			     (e 3 2) (3dm-def::clampf (f 3 2))
+			     (e 3 3) (3dm-def::clampf (f 3 3))))
+		     copy)))
+    (3dm.rat::mat4 (3dm.rat::with-fast-matref (f mat4 4)
+		     (let ((copy (3dm.f::%mat4)))
+		       (3dm.f::with-fast-matref (e copy 4)
+			 (setf (e 0 0) (3dm-def::clampf (f 0 0))
+			       (e 0 1) (3dm-def::clampf (f 0 1))
+			       (e 0 2) (3dm-def::clampf (f 0 2))
+			       (e 0 3) (3dm-def::clampf (f 0 3))
+			       (e 1 0) (3dm-def::clampf (f 1 0))
+			       (e 1 1) (3dm-def::clampf (f 1 1))
+			       (e 1 2) (3dm-def::clampf (f 1 2))
+			       (e 1 3) (3dm-def::clampf (f 1 3))
+			       (e 2 0) (3dm-def::clampf (f 2 0))
+			       (e 2 1) (3dm-def::clampf (f 2 1))
+			       (e 2 2) (3dm-def::clampf (f 2 2))
+			       (e 2 3) (3dm-def::clampf (f 2 3))
+			       (e 3 0) (3dm-def::clampf (f 3 0))
+			       (e 3 1) (3dm-def::clampf (f 3 1))
+			       (e 3 2) (3dm-def::clampf (f 3 2))
+			       (e 3 3) (3dm-def::clampf (f 3 3))))
+		       copy)))))
 
 (3dm-def:defsealed mtranspose ((mat 3dm.rat::mat4))
   (3dm.rat::mat4-mtranspose mat))
