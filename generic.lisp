@@ -164,7 +164,7 @@
   #+SBCL
   (:generic-function-class fast-generic-functions:fast-generic-function))
 
-(defgeneric nmrotate (mat4 vec3 angle)
+(defgeneric mrotate (mat4 vec3 angle)
   #+SBCL
   (:generic-function-class fast-generic-functions:fast-generic-function))
 

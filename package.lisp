@@ -44,7 +44,7 @@
 	   #:mcopy
 	   #:nmtranslate
 	   #:nmscale
-	   #:nmrotate
+	   #:mrotate
 	   #:lerp
 	   #:q*
 	   #:qconjugate

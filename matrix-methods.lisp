@@ -619,28 +619,28 @@
 (3dm-def::define-%mrotation-macro cl:single-float :3dm.f :3dm.f :3dm.f)
 (3dm-def::define-%mrotation-macro cl:single-float :3dm.f&rat :3dm.f :3dm.rat)
 
-(3dm-def::define-nmrotate-macro :3dm.d :3dm.d)
+(3dm-def::define-mrotate-macro :3dm.d :3dm.d)
 
-(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.d:vec3) (angle real))
-  (3dm.d::nmrotate mat4 vec3 angle))
+(3dm-def:defsealed mrotate ((mat4 3dm.d:mat4) (vec3 3dm.d:vec3) (angle real))
+  (3dm.d::mrotate mat4 vec3 angle))
 
-(3dm-def::define-nmrotate-macro :3dm.d&f :3dm.d)
+(3dm-def::define-mrotate-macro :3dm.d&f :3dm.d)
 
-(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.f:vec3) (angle real))
-  (3dm.d&f::nmrotate mat4 vec3 angle))
+(3dm-def:defsealed mrotate ((mat4 3dm.d:mat4) (vec3 3dm.f:vec3) (angle real))
+  (3dm.d&f::mrotate mat4 vec3 angle))
 
-(3dm-def::define-nmrotate-macro :3dm.d&rat :3dm.d)
+(3dm-def::define-mrotate-macro :3dm.d&rat :3dm.d)
 
-(3dm-def:defsealed nmrotate ((mat4 3dm.d:mat4) (vec3 3dm.rat:vec3) (angle real))
-  (3dm.d&rat::nmrotate mat4 vec3 angle))
+(3dm-def:defsealed mrotate ((mat4 3dm.d:mat4) (vec3 3dm.rat:vec3) (angle real))
+  (3dm.d&rat::mrotate mat4 vec3 angle))
 
-(3dm-def::define-nmrotate-macro :3dm.f :3dm.f)
+(3dm-def::define-mrotate-macro :3dm.f :3dm.f)
 
-(3dm-def:defsealed nmrotate ((mat4 3dm.f:mat4) (vec3 3dm.f:vec3) (angle real))
-  (3dm.f::nmrotate mat4 vec3 angle))
+(3dm-def:defsealed mrotate ((mat4 3dm.f:mat4) (vec3 3dm.f:vec3) (angle real))
+  (3dm.f::mrotate mat4 vec3 angle))
 
-(3dm-def::define-nmrotate-macro :3dm.f&rat :3dm.f)
+(3dm-def::define-mrotate-macro :3dm.f&rat :3dm.f)
 
-(3dm-def:defsealed nmrotate ((mat4 3dm.f:mat4) (vec3 3dm.rat:vec3) (angle real))
-  (3dm.f&rat::nmrotate mat4 vec3 angle))
+(3dm-def:defsealed mrotate ((mat4 3dm.f:mat4) (vec3 3dm.rat:vec3) (angle real))
+  (3dm.f&rat::mrotate mat4 vec3 angle))
 

@@ -1518,8 +1518,11 @@
 			   (f 3 3) ,one)))))
 	   ,mat-sym)))))
 
-(defmacro define-nmrotate-macro (pkg m-pkg)
-  `(defmacro ,(intern "NMROTATE" pkg) (mat vec3 angle)
+(defmacro define-mrotate-macro (pkg m-pkg)
+  ;; to do an nmrotate instead of a mrotate,
+  ;; I need an nm*-mat4-mat4, which would multiply a matrix in place
+  ;; I don't currently have that.  Rather this function be called mrotate.
+  `(defmacro ,(intern "MROTATE" pkg) (mat vec3 angle)
      `(,',(intern "M*-MAT4-MAT4" m-pkg) ,mat (,',(intern "%MROTATION" pkg) (,',(intern "%MAT4" m-pkg)) ,vec3 ,angle))))
 
 (defmacro define-rotate-vector-macro (pkg v-pkg v-element-type q-pkg c-pkg)
