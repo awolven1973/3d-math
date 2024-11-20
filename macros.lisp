@@ -365,17 +365,17 @@
 (deftype mat-dim ()
   '(integer 0 #.(1- *matrix-limit*)))
 
-(defstruct (3dm::%matn)
-  (3dm::mrows NIL :type mat-dim)
-  (3dm::mcols NIL :type mat-dim))  
+(defstruct (3dm::%matn))  
 
 (defmacro define-matn-type (element-type)
   `(defstruct (,(intern "MATN" *package*) (:conc-name NIL)
 	       (:include 3dm::%matn)
-	       (:constructor ,(intern "%MATN" *package*) (3dm::mrows 3dm::mcols ,(intern "MARRN" *package*)))
+	       (:constructor ,(intern "%MATN" *package*) (,(intern "MROWS" *package*) ,(intern "MCOLS" *package*) ,(intern "MARRN" *package*)))
 	       (:copier NIL)
 	       (:predicate ,(intern "MATN-P" *package*)))
-     (,(intern "MARRN" *package*) NIL :type (simple-array ,element-type))))
+     (,(intern "MARRN" *package*) NIL :type (simple-array ,element-type))
+     (,(intern "MROWS" *package*) NIL :type mat-dim)
+     (,(intern "MCOLS" *package*) NIL :type mat-dim)))
 
 (defmacro define-matn-constructor (element-type)
   `(progn
@@ -426,11 +426,12 @@
 
 (defmacro define-dquat-type ()
   `(defstruct (,(intern "DQUAT" *package*) (:conc-name NIL)
-	       (:constructor ,(intern "%DQUAT" *package*) (3dm::qreal 3dm::qdual))
+	       (:constructor ,(intern "%DQUAT" *package*) (,(intern "QREAL" *package*)
+							   ,(intern "QDUAL" *package*)))
 	       (:copier ,(intern "DQCOPY" *package*))
-	       (:predicate dquat-p))
-     (3dm::qreal (,(intern "QUAT" *package*)) :type ,(intern "QUAT" *package*))
-     (3dm::qdual (,(intern "QUAT" *package*)) :type ,(intern "QUAT" *package*))))
+	       (:predicate ,(intern "DQUAT-P" *package*)))
+     (,(intern "QREAL" *package*) (,(intern "QUAT" *package*)) :type ,(intern "QUAT" *package*))
+     (,(intern "QDUAL" *package*) (,(intern "QUAT" *package*)) :type ,(intern "QUAT" *package*))))
 
 (defmacro define-quat-constructor (element-type)
   `(progn
@@ -709,7 +710,7 @@
      (declaim (ftype (function (,(intern "VEC2" *package*))
 			       (,element-type ,(coerce 0 element-type)))
 		     ,(intern "VEC2-VSQR2NORM" *package*)))
-     (define-ofun ,(intern "VEC2-V2NORM" *package*) (3dm::v)
+     (define-ofun ,(intern "VEC2-VSQR2NORM" *package*) (3dm::v)
        (+ (expt (,(intern "VX2" *package*) 3dm::v) 2)
 	  (expt (,(intern "VY2" *package*) 3dm::v) 2)))))
 
@@ -882,7 +883,7 @@
               (,(intern "MAT2" *package*) (,iter (,(intern "MARR2" *package*) ,m) 2))
               (,(intern "MAT3" *package*) (,iter (,(intern "MARR3" *package*) ,m) 3))
               (,(intern "MAT4" *package*) (,iter (,(intern "MARR4" *package*) ,m) 4))
-              (,(intern "MATN" *package*) (,iter (,(intern "MARRN" *package*) ,m) (min (3dm::mrows ,m) (3dm::mcols ,m))))))))))
+              (,(intern "MATN" *package*) (,iter (,(intern "MARRN" *package*) ,m) (min (,(intern "MROWS" *package*) ,m) (,(intern "MCOLS" *package*) ,m))))))))))
 
 (defmacro define-meye-function (element-type)
   `(progn
@@ -1082,7 +1083,7 @@
 	  ,c-sym))))
 
 (defmacro define-m*-mat4-single-float-mat4 (pkg a-pkg b-pkg)
-  `(defmacro ,(intern "M*-MAT4-MAT4" pkg) (a b)
+  `(defmacro ,(intern "M*-MAT4-SINGLE-FLOAT-MAT4" pkg) (a b)
      (let ((a-sym (gensym "A"))
 	   (b-sym (gensym "B"))
 	   (c-sym (gensym "C")))

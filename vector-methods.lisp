@@ -4139,7 +4139,6 @@
   (sqrt (3dm.rat&f::vec4-vsqrdistance a b)))
 ;;;;;;
 
-
 (3dm-def:defsealed v2norm ((v 3dm.d::vec2))
   (sqrt (3dm.d::vec2-vsqr2norm v)))
 

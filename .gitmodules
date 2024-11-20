@@ -1,0 +1,6 @@
+[submodule "submodules/fast-generic-functions"]
+	path = submodules/fast-generic-functions
+	url = git@github.com:awolven/fast-generic-functions
+[submodule "submodules/sealable-metaobjects"]
+	path = submodules/sealable-metaobjects
+	url = git@github.com:awolven/sealable-metaobjects.git
