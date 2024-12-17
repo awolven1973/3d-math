@@ -215,6 +215,12 @@ vector.")
 (defgeneric matrix-from-quaternion (quat)
   #+SBCL
   (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric coerce-to-double-float (thing)
+  #+SBCL
+  (:generic-function-class fast-generic-functions:fast-generic-function))
+
+(defgeneric coerce-to-single-float (thing)
+  #+SBCL
+  (:generic-function-class fast-generic-functions:fast-generic-function))
   
-
-

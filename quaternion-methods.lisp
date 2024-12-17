@@ -1,5 +1,8 @@
 (in-package :3dm)
 
+#+sbcl
+(declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
+
 (3dm-def:defsealed qx ((quat 3dm.d::quat))
   (3dm.d::qx quat))
 

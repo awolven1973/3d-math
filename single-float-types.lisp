@@ -1,5 +1,8 @@
 (cl:in-package :3dm.f)
 
+#+sbcl
+(cl:declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
+
 (3dm-def:define-vec2-type cl:single-float)
 (3dm-def:define-vec3-type cl:single-float)
 (3dm-def:define-vec4-type cl:single-float)

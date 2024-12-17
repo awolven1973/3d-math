@@ -56,6 +56,8 @@
 	   #:quaternion-z-axis
 	   #:matrix-from-quaternion
 	   #:mcopy-mat4-to-single-float ;; used by krma.
+	   #:coerce-to-double-float
+	   #:coerce-to-single-float
 	   ))
 
 (defmacro 3dm::define-package (name default &rest stuff)

@@ -1,5 +1,8 @@
 (in-package :3dm)
 
+#+sbcl
+(declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
+
 ;; vx
 
 (3dm-def:defsealed vx ((vec 3dm.f:vec2))
@@ -4671,3 +4674,77 @@
 
 (3dm-def:defsealed lerp ((a 3dm.rat:vec4) (b 3dm.rat:vec4) (param real))
   (3dm.rat::vec4-vlerp a b param))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.d::vec2))
+  v)
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.d::vec3))
+  v)
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.d::vec4))
+  v)
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.f::vec2))
+  (3dm.d::vec2 (vx v) (vy v)))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.f::vec3))
+  (3dm.d::vec3 (vx v) (vy v) (vz v)))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.f::vec4))
+  (3dm.d::vec4 (vx v) (vy v) (vz v) (vw v)))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.rat::vec2))
+  (3dm.d::vec2 (vx v) (vy v)))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.rat::vec3))
+  (3dm.d::vec3 (vx v) (vy v) (vz v)))
+
+(3dm-def:defsealed coerce-to-double-float ((v 3dm.rat::vec4))
+  (3dm.d::vec4 (vx v) (vy v) (vz v) (vw v)))
+
+(3dm-def:defsealed coerce-to-double-float ((number double-float))
+  number)
+
+(3dm-def:defsealed coerce-to-double-float ((number single-float))
+  (coerce number 'double-float))
+
+(3dm-def:defsealed coerce-to-double-float ((number rational))
+  (coerce number 'double-float))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.f::vec2))
+  v)
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.f::vec3))
+  v)
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.f::vec4))
+  v)
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.d::vec2))
+  (3dm.f::vec2 (vx v) (vy v)))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.d::vec3))
+  (3dm.f::vec3 (vx v) (vy v) (vz v)))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.d::vec4))
+  (3dm.f::vec4 (vx v) (vy v) (vz v) (vw v)))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.rat::vec2))
+  (3dm.f::vec2 (vx v) (vy v)))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.rat::vec3))
+  (3dm.f::vec3 (vx v) (vy v) (vz v)))
+
+(3dm-def:defsealed coerce-to-single-float ((v 3dm.rat::vec4))
+  (3dm.f::vec4 (vx v) (vy v) (vz v) (vw v)))
+
+(3dm-def:defsealed coerce-to-single-float ((number single-float))
+  number)
+
+(3dm-def:defsealed coerce-to-single-float ((number double-float))
+  (3dm-def::clampf number))
+
+(3dm-def:defsealed coerce-to-single-float ((number rational))
+  (3dm-def::clampf number))
+
+
