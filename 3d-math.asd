@@ -16,7 +16,7 @@
    (:file "quaternion-methods")))
 
 (setf (logical-pathname-translations "3D-MATH-SUBMODULES")
-      (list (list "**;*"
+      (list (list "**;*.*.*"
 		  (merge-pathnames (make-pathname
 				    :directory '(:relative :wild-inferiors)
 				    :name :wild
