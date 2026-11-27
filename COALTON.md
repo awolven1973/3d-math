@@ -21,3 +21,9 @@ Use a current Coalton checkout with the F32/F64, UFix, native-representation and
 - Benchmarks are preliminary, not a claim of improved performance. The baseline uses fast-generic-functions sealed methods, the experimental CL wrapper ordinary CLOS dispatch. Compare direct typed entry points as well, inspect disassembly, and measure allocation before deciding whether to integrate the Coalton methods into original sealed dispatch. Array recursion needs testing on the target compiler, including large dimensions.
 
 This is an uncompiled first implementation: the repository editing environment does not provide a configured SBCL/Coalton runtime. Run ASDF tests before using the experimental code in production. Coalton API version compatibility, compiler acceptance and numerical/runtime equivalence have not yet been established.
+
+## Host compiler portability
+
+All numerical Common Lisp bridge bodies explicitly declare native struct types, single/double-float scalar types, fixed-size specialized backing arrays or rank-two specialized arrays, and valid index/dimension types. Scalar and array read/creation expressions carry explicit CL THE result types where appropriate. This intentionally does not depend on SBCL propagating Coalton's host annotations or defstruct accessor result types. The fixed-size index bounds are guaranteed by the internal unrolled kernels; general array dimensions are checked in the CL adapter. These declarations use ANSI Common Lisp, but compilation, allocation behavior, and machine code still require verification on SBCL, Clozure CL and Allegro CL. No global safety policy is changed.
+
+Keeping existing 3d-math structs makes this an apples-to-apples comparison of arithmetic and dispatch. A separate Coalton-defined representation (with an explicitly chosen specialized storage strategy) is a possible subsequent experiment, not a requirement of this port.
