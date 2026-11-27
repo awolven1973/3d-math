@@ -750,7 +750,7 @@
   (declare mul-f-mat4-d-mat4 (Fmat4 * Dmat4 -> Dmat4))
   (define (mul-f-mat4-d-mat4 a b) (multiply a b))
 
-  (repr :native (cl:simple-array cl:single-float (* *)))
+  (repr :native (cl:simple-array cl:single-float (cl:* cl:*)))
   (define-type FArray)
   (inline)
   (declare f-array-ref (FArray * UFix * UFix -> F32))
@@ -764,7 +764,7 @@
   (define (make-f-array m n)
     (lisp (-> FArray) (m n) (cl:make-array (cl:list m n) :element-type 'cl:single-float)))
 
-  (repr :native (cl:simple-array cl:double-float (* *)))
+  (repr :native (cl:simple-array cl:double-float (cl:* cl:*)))
   (define-type DArray)
   (inline)
   (declare d-array-ref (DArray * UFix * UFix -> F64))

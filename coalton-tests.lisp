@@ -39,7 +39,7 @@
     (array (loop for i below (array-total-size x) collect (row-major-aref x i)))))
 
 (defun same-result-p (a b)
-  (and (eq (type-of a) (type-of b))
+  (and (equal (type-of a) (type-of b))
        (or (not (arrayp a)) (and (equal (array-dimensions a) (array-dimensions b))
                                 (equal (array-element-type a) (array-element-type b))))
        (let ((xs (components a)) (ys (components b)))
@@ -106,6 +106,9 @@
   (let ((a (make-array '(2 3) :element-type 'double-float :initial-element 1d0))
         (b (make-array '(2 2) :element-type 'double-float :initial-element 1d0)))
     (assert (handler-case (progn (m* a b) nil) (error () t))))
+  ;; The fallback retains the general numeric/rational array path.
+  (check-pair (make-array '(1 2) :initial-contents '((1/3 2/3)))
+              (make-array '(2 1) :initial-contents '((3) (6))))
   (format t "~&Coalton multiplication regression checks passed.~%")
   t)
 

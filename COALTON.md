@@ -6,6 +6,7 @@ This branch adds an optional ASDF system. The base 3d-math system and its sealed
 (asdf:load-system "3d-math/coalton")
 (3dm.coalton:m* (3dm.d:mat4) (3dm.d:mat4))
 (asdf:test-system "3d-math/coalton")
+(asdf:load-system "3d-math/coalton/tests")
 (3dm.coalton:benchmark)
 ```
 
