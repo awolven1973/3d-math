@@ -144,15 +144,23 @@
      (3dm.coalton:dquat (port-convert (3dm.coalton::dquat-real v) kind copy)
                        (port-convert (3dm.coalton::dquat-dual v) kind copy)))))
 
-(defun port-kernel (name kind &rest args)
-  ;; A deliberately simple first bridge: resolve the concrete root at runtime.
-  ;; All numerical kernels are statically typed and monomorphized in Coalton.
-  (let ((sym (find-symbol (format nil "~A-~A" name (ecase kind (:d "D") (:f "F") (:r "R"))) :3dm.coalton)))
-    (unless (and sym (fboundp sym)) (error "Missing Coalton kernel ~A/~A" name kind))
-    (apply (symbol-function sym) args)))
+(defmacro port-kernel (name kind &rest args)
+  ;; Resolve root names at macroexpansion, not at numerical runtime.
+  ;; The generated ordinary CL calls retain the original lexical environment.
+  (check-type name string)
+  `(ecase ,kind
+     ,@(loop for k in '(:d :f :r)
+             for suffix in '("D" "F" "R")
+             for sym = (find-symbol (format nil "~A-~A" name suffix) :3dm.coalton)
+             collect (if sym
+                         `(,k (,sym ,@args))
+                         `(,k (error "No Coalton kernel for ~A/~A" ,name ,k))))))
 
-(defun port-invoke (name kind &rest args)
-  (apply #'port-kernel name kind (mapcar (lambda (x) (port-convert x kind)) args)))
+(defmacro port-invoke (name kind &rest args)
+  (let ((k (gensym "KIND")))
+    `(let ((,k ,kind))
+       (port-kernel ,name ,k
+                    ,@(mapcar (lambda (arg) `(port-convert ,arg ,k)) args)))))
 
 (defun port-broadcast (name v kind)
   (if (realp v)
@@ -160,19 +168,26 @@
                                          :initial-element v))
       (port-convert v kind)))
 
-(defun port-vector-bin (name op a b)
-  (let ((kind (port-common-kind a b)))
-    (port-kernel op kind (port-broadcast name a kind) (port-broadcast name b kind))))
+(defmacro port-vector-bin (name op a b)
+  (let ((av (gensym "A")) (bv (gensym "B")) (k (gensym "KIND")))
+    `(let* ((,av ,a) (,bv ,b) (,k (port-common-kind ,av ,bv)))
+       (port-kernel ,op ,k
+                    (port-broadcast ,name ,av ,k)
+                    (port-broadcast ,name ,bv ,k)))))
 
-(defun port-vector-compare (name op relation a b &optional negate)
-  ;; Preserve CL exact mixed-float/rational comparisons rather than rounding
-  ;; a rational operand into the promoted floating-point type.
-  (if (eq (port-kind a) (port-kind b))
-      (port-vector-bin name op a b)
-      (let* ((n (ecase name (:vec2 2) (:vec3 3) (:vec4 4)))
-             (aa (if (realp a) (make-list n :initial-element a) (port-components a)))
-             (bb (if (realp b) (make-list n :initial-element b) (port-components b))))
-        (if negate (some relation aa bb) (every relation aa bb)))))
+(defun port-mixed-compare (name relation a b negate)
+  ;; Preserve exact Common Lisp mixed-float/rational comparison semantics.
+  (let* ((n (ecase name (:vec2 2) (:vec3 3) (:vec4 4)))
+         (aa (if (realp a) (make-list n :initial-element a) (port-components a)))
+         (bb (if (realp b) (make-list n :initial-element b) (port-components b))))
+    (if negate (some relation aa bb) (every relation aa bb))))
+
+(defmacro port-vector-compare (name op relation a b &optional negate)
+  (let ((av (gensym "A")) (bv (gensym "B")))
+    `(let ((,av ,a) (,bv ,b))
+       (if (eq (port-kind ,av) (port-kind ,bv))
+           (port-vector-bin ,name ,op ,av ,bv)
+           (port-mixed-compare ,name ,relation ,av ,bv ,negate)))))
 
 (defun port-precision-p (v name kind)
   (and (eq (port-geometry-name v) name)
@@ -953,9 +968,33 @@
   (let ((kind (port-common-kind a b)))
     (port-kernel "MATN-MM" kind (port-dynamic-matrix a kind) (port-dynamic-matrix b kind))))
 
+(defun port-real-array-p (a)
+  (or (member (array-element-type a) '(single-float double-float))
+      (loop for i below (array-total-size a) always (realp (row-major-aref a i)))))
+
 (defmethod binary-m* ((a array) (b array))
-  (let ((kind (port-common-kind a b)))
-    (port-rank2-array (port-kernel "MATN-MM" kind (port-array-matrix a kind) (port-array-matrix b kind)) kind)))
+  (check-type a (array * (* *)))
+  (check-type b (array * (* *)))
+  (cond
+    ((and (typep a '(simple-array double-float (* *)))
+          (typep b '(simple-array double-float (* *))))
+     (3dm-def::coalton-simple-array-multiply a b double-float double-float double-float))
+    ((and (typep a '(simple-array single-float (* *)))
+          (typep b '(simple-array single-float (* *))))
+     (3dm-def::coalton-simple-array-multiply a b single-float single-float single-float))
+    ((and (typep a '(simple-array single-float (* *)))
+          (typep b '(simple-array double-float (* *))))
+     (3dm-def::coalton-simple-array-multiply a b single-float double-float double-float))
+    ((and (typep a '(simple-array double-float (* *)))
+          (typep b '(simple-array single-float (* *))))
+     (3dm-def::coalton-simple-array-multiply a b double-float single-float double-float))
+    ((and (port-real-array-p a) (port-real-array-p b))
+     (let ((kind (port-common-kind a b)))
+       (port-rank2-array (port-kernel "MATN-MM" kind
+                                     (port-array-matrix a kind)
+                                     (port-array-matrix b kind)) kind)))
+    ;; Keep the original general numeric array path for non-real elements.
+    (t (3dm-def::binary-m*-simple-array a b number number t))))
 
 (defmethod binary-m* ((a 3dm.coalton:mat2) (b array))
   (let ((kind (port-common-kind a b)))

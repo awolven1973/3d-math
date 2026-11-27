@@ -8,6 +8,7 @@
   ((:file "package")
    (:file "macros")
    (:file "generic")
+   (:file "coalton-method-kernels")
    (:file "coalton-compatibility")
    (:file "coalton-constructors")))
 

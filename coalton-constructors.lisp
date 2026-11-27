@@ -67,7 +67,7 @@
 
 (cl:declaim (cl:inline vec2 %vec2))
 (cl:defun vec2 (x y)
-  (3dm::port-construct :vec2 :d (cl:list x y)))
+  (3dm.coalton:vec2 (cl:coerce x 'cl:double-float) (cl:coerce y 'cl:double-float)))
 (cl:defun %vec2 (x y) (vec2 x y))
 
 (cl:declaim (cl:inline vx2))
@@ -104,7 +104,7 @@
 
 (cl:declaim (cl:inline vec3 %vec3))
 (cl:defun vec3 (x y z)
-  (3dm::port-construct :vec3 :d (cl:list x y z)))
+  (3dm.coalton:vec3 (cl:coerce x 'cl:double-float) (cl:coerce y 'cl:double-float) (cl:coerce z 'cl:double-float)))
 (cl:defun %vec3 (x y z) (vec3 x y z))
 
 (cl:declaim (cl:inline vx3))
@@ -144,7 +144,7 @@
 
 (cl:declaim (cl:inline vec4 %vec4))
 (cl:defun vec4 (x y z w)
-  (3dm::port-construct :vec4 :d (cl:list x y z w)))
+  (3dm.coalton:vec4 (cl:coerce x 'cl:double-float) (cl:coerce y 'cl:double-float) (cl:coerce z 'cl:double-float) (cl:coerce w 'cl:double-float)))
 (cl:defun %vec4 (x y z w) (vec4 x y z w))
 
 (cl:declaim (cl:inline vx4))
@@ -197,7 +197,7 @@
 (cl:defun mrows (m) (3dm::port-dimensions m))
 (cl:defun mcols (m) (cl:nth-value 1 (3dm::port-dimensions m)))
 (cl:defun meye (n) (3dm::port-eye n :d))
-(cl:defun quat (x y z w) (3dm::port-construct :quat :d (cl:list x y z w)))
+(cl:defun quat (x y z w) (3dm.coalton:quat (cl:coerce x 'cl:double-float) (cl:coerce y 'cl:double-float) (cl:coerce z 'cl:double-float) (cl:coerce w 'cl:double-float)))
 (cl:defun %quat (x y z w) (quat x y z w))
 (cl:defun qcopy (q) (3dm::port-convert q (3dm::port-kind q) cl:t))
 (cl:defun dquat (r d)
@@ -276,7 +276,7 @@
 
 (cl:declaim (cl:inline vec2 %vec2))
 (cl:defun vec2 (x y)
-  (3dm::port-construct :vec2 :f (cl:list x y)))
+  (3dm.coalton:vec2 (3dm-def::clampf x) (3dm-def::clampf y)))
 (cl:defun %vec2 (x y) (vec2 x y))
 
 (cl:declaim (cl:inline vx2))
@@ -313,7 +313,7 @@
 
 (cl:declaim (cl:inline vec3 %vec3))
 (cl:defun vec3 (x y z)
-  (3dm::port-construct :vec3 :f (cl:list x y z)))
+  (3dm.coalton:vec3 (3dm-def::clampf x) (3dm-def::clampf y) (3dm-def::clampf z)))
 (cl:defun %vec3 (x y z) (vec3 x y z))
 
 (cl:declaim (cl:inline vx3))
@@ -353,7 +353,7 @@
 
 (cl:declaim (cl:inline vec4 %vec4))
 (cl:defun vec4 (x y z w)
-  (3dm::port-construct :vec4 :f (cl:list x y z w)))
+  (3dm.coalton:vec4 (3dm-def::clampf x) (3dm-def::clampf y) (3dm-def::clampf z) (3dm-def::clampf w)))
 (cl:defun %vec4 (x y z w) (vec4 x y z w))
 
 (cl:declaim (cl:inline vx4))
@@ -406,7 +406,7 @@
 (cl:defun mrows (m) (3dm::port-dimensions m))
 (cl:defun mcols (m) (cl:nth-value 1 (3dm::port-dimensions m)))
 (cl:defun meye (n) (3dm::port-eye n :f))
-(cl:defun quat (x y z w) (3dm::port-construct :quat :f (cl:list x y z w)))
+(cl:defun quat (x y z w) (3dm.coalton:quat (3dm-def::clampf x) (3dm-def::clampf y) (3dm-def::clampf z) (3dm-def::clampf w)))
 (cl:defun %quat (x y z w) (quat x y z w))
 (cl:defun qcopy (q) (3dm::port-convert q (3dm::port-kind q) cl:t))
 (cl:defun dquat (r d)
@@ -485,7 +485,7 @@
 
 (cl:declaim (cl:inline vec2 %vec2))
 (cl:defun vec2 (x y)
-  (3dm::port-construct :vec2 :r (cl:list x y)))
+  (3dm.coalton:vec2 (cl:rationalize x) (cl:rationalize y)))
 (cl:defun %vec2 (x y) (vec2 x y))
 
 (cl:declaim (cl:inline vx2))
@@ -522,7 +522,7 @@
 
 (cl:declaim (cl:inline vec3 %vec3))
 (cl:defun vec3 (x y z)
-  (3dm::port-construct :vec3 :r (cl:list x y z)))
+  (3dm.coalton:vec3 (cl:rationalize x) (cl:rationalize y) (cl:rationalize z)))
 (cl:defun %vec3 (x y z) (vec3 x y z))
 
 (cl:declaim (cl:inline vx3))
@@ -562,7 +562,7 @@
 
 (cl:declaim (cl:inline vec4 %vec4))
 (cl:defun vec4 (x y z w)
-  (3dm::port-construct :vec4 :r (cl:list x y z w)))
+  (3dm.coalton:vec4 (cl:rationalize x) (cl:rationalize y) (cl:rationalize z) (cl:rationalize w)))
 (cl:defun %vec4 (x y z w) (vec4 x y z w))
 
 (cl:declaim (cl:inline vx4))
@@ -615,7 +615,7 @@
 (cl:defun mrows (m) (3dm::port-dimensions m))
 (cl:defun mcols (m) (cl:nth-value 1 (3dm::port-dimensions m)))
 (cl:defun meye (n) (3dm::port-eye n :r))
-(cl:defun quat (x y z w) (3dm::port-construct :quat :r (cl:list x y z w)))
+(cl:defun quat (x y z w) (3dm.coalton:quat (cl:rationalize x) (cl:rationalize y) (cl:rationalize z) (cl:rationalize w)))
 (cl:defun %quat (x y z w) (quat x y z w))
 (cl:defun qcopy (q) (3dm::port-convert q (3dm::port-kind q) cl:t))
 (cl:defun dquat (r d)
@@ -694,7 +694,7 @@
 
 (cl:declaim (cl:inline vec2 %vec2))
 (cl:defun vec2 (x y)
-  (3dm::port-construct :vec2 :fix (cl:list x y)))
+  (3dm.coalton:vec2 (cl:the cl:fixnum (cl:round x)) (cl:the cl:fixnum (cl:round y))))
 (cl:defun %vec2 (x y) (vec2 x y))
 
 (cl:declaim (cl:inline vx2))
@@ -731,7 +731,7 @@
 
 (cl:declaim (cl:inline vec3 %vec3))
 (cl:defun vec3 (x y z)
-  (3dm::port-construct :vec3 :fix (cl:list x y z)))
+  (3dm.coalton:vec3 (cl:the cl:fixnum (cl:round x)) (cl:the cl:fixnum (cl:round y)) (cl:the cl:fixnum (cl:round z))))
 (cl:defun %vec3 (x y z) (vec3 x y z))
 
 (cl:declaim (cl:inline vx3))
@@ -771,7 +771,7 @@
 
 (cl:declaim (cl:inline vec4 %vec4))
 (cl:defun vec4 (x y z w)
-  (3dm::port-construct :vec4 :fix (cl:list x y z w)))
+  (3dm.coalton:vec4 (cl:the cl:fixnum (cl:round x)) (cl:the cl:fixnum (cl:round y)) (cl:the cl:fixnum (cl:round z)) (cl:the cl:fixnum (cl:round w))))
 (cl:defun %vec4 (x y z w) (vec4 x y z w))
 
 (cl:declaim (cl:inline vx4))
@@ -824,7 +824,7 @@
 (cl:defun mrows (m) (3dm::port-dimensions m))
 (cl:defun mcols (m) (cl:nth-value 1 (3dm::port-dimensions m)))
 (cl:defun meye (n) (3dm::port-eye n :fix))
-(cl:defun quat (x y z w) (3dm::port-construct :quat :fix (cl:list x y z w)))
+(cl:defun quat (x y z w) (3dm.coalton:quat (cl:the cl:fixnum (cl:round x)) (cl:the cl:fixnum (cl:round y)) (cl:the cl:fixnum (cl:round z)) (cl:the cl:fixnum (cl:round w))))
 (cl:defun %quat (x y z w) (quat x y z w))
 (cl:defun qcopy (q) (3dm::port-convert q (3dm::port-kind q) cl:t))
 (cl:defun dquat (r d)
