@@ -7,6 +7,7 @@
                     (#:types #:coalton/types))
   (:export #:Vec2 #:Vec3 #:Vec4
            #:Mat2 #:Mat3 #:Mat4 #:MatN
+           #:Quat #:DQuat
            #:make-mat2 #:make-mat3 #:make-mat4 #:make-matn
            #:mat2-ref #:mat3-ref #:mat4-ref #:matn-ref
            #:matn-rows #:matn-cols
@@ -17,33 +18,50 @@
 (coalton-toplevel
   ;; Vectors are products of scalars; fixed matrices have their own
   ;; nominal types, each containing a specialized column-major array.
+  (repr :lisp)
   (derive Eq)
   (define-type (Vec2 :a)
     (Vec2 :a :a))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (Mat2 :a)
     (Mat2Data (arr:LispArray :a)))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (Vec3 :a)
     (Vec3 :a :a :a))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (Mat3 :a)
     (Mat3Data (arr:LispArray :a)))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (Vec4 :a)
     (Vec4 :a :a :a :a))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (Mat4 :a)
     (Mat4Data (arr:LispArray :a)))
 
+  (repr :lisp)
   (derive Eq)
   (define-type (MatN :a)
     (MatNData UFix UFix (arr:LispArray :a)))
+
+  (repr :lisp)
+  (derive Eq)
+  (define-type (Quat :a)
+    (Quat :a :a :a :a))
+
+  (repr :lisp)
+  (derive Eq)
+  (define-type (DQuat :a)
+    (DQuat (Quat :a) (Quat :a)))
 
   ;; Only the scalar typeclass needs to know about precision promotion.
   ;; Fraction multiplication and accumulation remain exact, and RuntimeRepr
