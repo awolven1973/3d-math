@@ -142,14 +142,11 @@
             ((string= name "3DM.RAT") 'rational)
             (t (error "Unsupported numeric package ~A" package)))))
 
+  ;; The concrete Coalton roots have ordinary Common Lisp entrypoints.
+  ;; Keep argument forms in the original Lisp lexical environment:
+  ;; reparsing them inside COALTON would recreate uninterned symbols.
   (defun coalton-argument (type form)
-    (let ((coalton-type
-            (ecase type
-              (single-float 'coalton:F32)
-              (double-float 'coalton:F64)
-              (rational 'coalton:Fraction))))
-      `(coalton:lisp (coalton:-> ,coalton-type) ()
-         (the ,type ,form))))
+    `(the ,type ,form))
 
   (defun coalton-result-type (a b)
     (cond ((and (eq a 'rational) (eq b 'rational)) 'rational)
@@ -164,9 +161,8 @@
            (fn (or (find-symbol name :3dm.coalton)
                    (error "Missing Coalton kernel ~A" name))))
       `(the ,(coalton-result-type a-type b-type)
-         (coalton:coalton
-           (,fn ,@(mapcar (lambda (form) (coalton-argument a-type form)) a-forms)
-                ,@(mapcar (lambda (form) (coalton-argument b-type form)) b-forms))))))
+         (,fn ,@(mapcar (lambda (form) (coalton-argument a-type form)) a-forms)
+              ,@(mapcar (lambda (form) (coalton-argument b-type form)) b-forms)))))
 
   (defun coalton-accumulate-form (a-type b-type c-type acc a b)
     (let* ((name (format nil "ACCUMULATE-~A~A"
@@ -175,10 +171,9 @@
            (fn (or (find-symbol name :3dm.coalton)
                    (error "Missing Coalton kernel ~A" name))))
       `(the ,c-type
-         (coalton:coalton
-           (,fn ,(coalton-argument c-type acc)
-                ,(coalton-argument a-type a)
-                ,(coalton-argument b-type b)))))))
+         (,fn ,(coalton-argument c-type acc)
+              ,(coalton-argument a-type a)
+              ,(coalton-argument b-type b))))))
 
 (defmacro coalton-matrix-matrix (a b n a-pkg b-pkg c-pkg)
   (let* ((a-var (gensym "A")) (b-var (gensym "B")) (c-var (gensym "C"))
