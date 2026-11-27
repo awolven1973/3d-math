@@ -46,13 +46,32 @@
     (MatNData UFix UFix (arr:LispArray :a)))
 
   ;; Only the scalar typeclass needs to know about precision promotion.
-  ;; The generic same-type instance covers Fraction as well as floats:
   ;; Fraction multiplication and accumulation remain exact, and RuntimeRepr
   ;; Fraction supplies rational storage for LispArray. No float conversion.
   (define-class (Num :c => ScalarProduct :a :b :c (:a :b -> :c))
     (scalar-product (:a * :b -> :c)))
 
-  (define-instance (Num :a => ScalarProduct :a :a :a)
+  ;; Avoid a nonlinear instance head (ScalarProduct :a :a :a).
+  ;; Some Coalton versions fail to register mixed-precision instances
+  ;; alongside that generic instance in UPDATE-INSTANCE-FUNDEPS.
+  ;; Keep the arithmetic kernels polymorphic; enumerate scalar types only.
+  (define-instance (ScalarProduct F32 F32 F32)
+    (inline)
+    (define (scalar-product a b) (* a b)))
+
+  (define-instance (ScalarProduct F64 F64 F64)
+    (inline)
+    (define (scalar-product a b) (* a b)))
+
+  (define-instance (ScalarProduct Fraction Fraction Fraction)
+    (inline)
+    (define (scalar-product a b) (* a b)))
+
+  (define-instance (ScalarProduct IFix IFix IFix)
+    (inline)
+    (define (scalar-product a b) (* a b)))
+
+  (define-instance (ScalarProduct Integer Integer Integer)
     (inline)
     (define (scalar-product a b) (* a b)))
 
