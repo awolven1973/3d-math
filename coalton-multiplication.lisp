@@ -46,6 +46,9 @@
     (MatNData UFix UFix (arr:LispArray :a)))
 
   ;; Only the scalar typeclass needs to know about precision promotion.
+  ;; The generic same-type instance covers Fraction as well as floats:
+  ;; Fraction multiplication and accumulation remain exact, and RuntimeRepr
+  ;; Fraction supplies rational storage for LispArray. No float conversion.
   (define-class (Num :c => ScalarProduct :a :b :c (:a :b -> :c))
     (scalar-product (:a * :b -> :c)))
 
