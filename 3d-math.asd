@@ -3,18 +3,13 @@
   :author "Andrew Kenneth Wolven <awolven@gmail.com>"
   :license "MIT"
   :depends-on (:fast-generic-functions "3d-math/coalton")
+  :serial t
   :components
   ((:file "package")
    (:file "macros")
-   (:file "single-float-types")
-   (:file "double-float-types")
-   (:file "fixnum-types")
-   (:file "rational-types")
    (:file "generic")
-   (:file "vector-methods")
-   (:file "coalton-method-kernels")
-   (:file "matrix-methods")
-   (:file "quaternion-methods")))
+   (:file "coalton-compatibility")
+   (:file "coalton-constructors")))
 
 (setf (logical-pathname-translations "3D-MATH-SUBMODULES")
       (list (list "**;*.*.*"
@@ -35,7 +30,9 @@
 (asdf:defsystem "3d-math/coalton"
   :description "Pure Coalton matrix and vector multiplication."
   :depends-on ("coalton")
-  :components ((:file "coalton-multiplication"))
+  :serial t
+  :components ((:file "coalton-multiplication")
+               (:file "coalton-numerics"))
   :in-order-to ((asdf:test-op (asdf:test-op "3d-math/coalton/tests"))))
 
 (asdf:defsystem "3d-math/coalton/tests"
@@ -44,3 +41,10 @@
   :perform (asdf:test-op (op system)
              (declare (ignore op system))
              (uiop:symbol-call :3dm.coalton.tests :run-tests)))
+
+(asdf:defsystem "3d-math/port-tests"
+  :depends-on ("3d-math")
+  :components ((:file "coalton-port-tests"))
+  :perform (asdf:test-op (op system)
+             (declare (ignore op system))
+             (uiop:symbol-call :3dm.port-tests :run-tests)))
