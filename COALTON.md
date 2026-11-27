@@ -1,29 +1,27 @@
-# Experimental Coalton matrix multiplication
+# Pure Coalton multiplication experiment
 
-This branch adds an optional ASDF system. The base 3d-math system and its sealed methods, compiler macro, and private KRMA helpers remain unchanged. No changes to upstream or PR are made here.
+This is an independent numerical library expressed in Coalton. The original 3d-math sources remain unchanged. The optional system depends on Coalton, not on the original CL implementation. No handwritten CL numerical code or `lisp` expressions are used.
 
 ```lisp
 (asdf:load-system "3d-math/coalton")
-(3dm.coalton:m* (3dm.d:mat4) (3dm.d:mat4))
+(coalton:coalton
+  (3dm.coalton:m*
+    (3dm.coalton:make-mat2 1d0 2d0 3d0 4d0)
+    (3dm.coalton:Vec2 5d0 7d0)))
+;; Vec2 with values 19d0 and 43d0
+
 (asdf:test-system "3d-math/coalton")
-(asdf:load-system "3d-math/coalton/tests")
-(3dm.coalton:benchmark)
 ```
 
-Use a current Coalton checkout with the F32/F64, UFix, native-representation and functional-dependency interfaces documented in the [manual](https://coalton-lang.github.io/manual/). Coalton and 3d-math's existing dependencies must be discoverable by ASDF. For speed comparisons use COALTON_ENV=release and ensure no development-mode cached Coalton FASLs are used.
+## Representation and dispatch
 
-## Design
+- `Vec2`, `Vec3`, `Vec4` are parametric algebraic data types. Their scalar fields may be boxed; no claim is made that polymorphic ADT fields have the same layout as the original specialized CL structs.
+- `Mat2`, `Mat3`, `Mat4` are Coalton-defined nominal types holding `coalton/lisparray:LispArray` values. This standard library abstraction supports specialized arrays (including F32/F64 where the host supports them), with dedicated specialized make, aref and set! functions. Fixed matrices retain the original column-major layout and row-major constructor argument order. The raw data constructors are not exported.
+- `MatN` is a Coalton-defined rectangular matrix with runtime dimensions and row-major storage, replacing the original rank-two CL array operand. `make-matn` accepts a list in row-major order and validates the length. Dimensions must have a product representable as UFix and supported by the host's array limits.
+- `ScalarProduct` uses a functional dependency to determine the result scalar from the two operand types. A single Num-constrained same-type instance and two mixed F32/F64 instances replace the precision-specific method matrix. Mixed precision promotes to F64 before multiplication. The generic instance also permits other Num types; this extends the original fixed-size operation coverage.
+- `Multipliable` uses another functional dependency to infer the result matrix/vector type. Same-size multiplication is unrolled, with shared dot2/dot3/dot4 functions. Rectangular multiplication uses typed loops. Vector-times-matrix deliberately means matrix-times-column-vector, as in original 3d-math. Additional mixed-precision and Mat3 matrix-matrix combinations become available through the generic instances.
+- `m*` is binary, with static dispatch. Write `(m* (m* a b) c)` for heterogeneous chains rather than a CL variadic rest list. This is a deliberate idiomatic Coalton interface change, not a drop-in CL API replacement.
 
-- Coalton `Multipliable :left :right :result (:left :right -> :result)` maps operand types to result type. It has one instance per existing fixed-size sealed binary-m* method (27 instances); fixed-size arithmetic is expressed in Coalton with shared Num-constrained dot2/dot3/dot4 and explicit F32-to-F64 widening. Existing column-major matrices and vector structs are mapped by repr :native. CL bridges perform access, allocation and stores only. No new representation or copies of input matrices/vectors.
-- Both orders of matrix/vector arguments preserve the original matrix-times-column-vector behavior. Existing unsupported fixed-size precision combinations are not silently extended. Floating point array products (all four precision pairs) use typed Coalton accumulation and traversal; non-float/general arrays use the original CL implementation, as do other existing or downstream methods. Specialized private KRMA clamping helpers are untouched.
-- The CL-facing 3dm.coalton:m* uses a separate generic function, a left fold and compiler macro. Original 3dm:m* remains usable for A/B comparisons, and no sealed method is overwritten. Statically typed Coalton code can call 3dm.coalton.kernel:multiply for fixed-size operands. The CL adapter invokes unconstrained typed entry points after CLOS dispatch or array checks. Those entry points assume the declared native type contract.
-- Tests cover every existing fixed-size signature, signed/nonsymmetric values, nonmutation, result representation, mixed precision, argument order, rectangular/empty arrays, incompatible dimensions and chained calls. The legacy mat2 constructor writes e01 twice; fixtures use native storage directly and do not change that preexisting issue.
-- Benchmarks are preliminary, not a claim of improved performance. The baseline uses fast-generic-functions sealed methods, the experimental CL wrapper ordinary CLOS dispatch. Compare direct typed entry points as well, inspect disassembly, and measure allocation before deciding whether to integrate the Coalton methods into original sealed dispatch. Array recursion needs testing on the target compiler, including large dimensions.
+Tests cover all four float precision combinations for fixed matrix-matrix, matrix-vector and vector-matrix products at every size, rectangular products, empty inner dimension, chaining, and coordinate indexing. Expected results are calculated independently from integer-valued fixtures rather than invoking original CL methods. This is a readability and language-design experiment; disassembly and allocation measurements are still required to evaluate representation specialization, dictionary elimination, and performance against the original CL baseline.
 
-This is an uncompiled first implementation: the repository editing environment does not provide a configured SBCL/Coalton runtime. Run ASDF tests before using the experimental code in production. Coalton API version compatibility, compiler acceptance and numerical/runtime equivalence have not yet been established.
-
-## Host compiler portability
-
-All numerical Common Lisp bridge bodies explicitly declare native struct types, single/double-float scalar types, fixed-size specialized backing arrays or rank-two specialized arrays, and valid index/dimension types. Scalar and array read/creation expressions carry explicit CL THE result types where appropriate. This intentionally does not depend on SBCL propagating Coalton's host annotations or defstruct accessor result types. The fixed-size index bounds are guaranteed by the internal unrolled kernels; general array dimensions are checked in the CL adapter. These declarations use ANSI Common Lisp, but compilation, allocation behavior, and machine code still require verification on SBCL, Clozure CL and Allegro CL. No global safety policy is changed.
-
-Keeping existing 3d-math structs makes this an apples-to-apples comparison of arithmetic and dispatch. A separate Coalton-defined representation (with an explicitly chosen specialized storage strategy) is a possible subsequent experiment, not a requirement of this port.
+The code uses the current Coalton APIs documented in [define-type](https://github.com/coalton-lang/coalton/blob/main/docs/manual/site/operators/define-type.md), [define-class](https://github.com/coalton-lang/coalton/blob/main/docs/manual/site/operators/define-class.md), [define-instance](https://github.com/coalton-lang/coalton/blob/main/docs/manual/site/operators/define-instance.md), and [LispArray](https://github.com/coalton-lang/coalton/blob/main/library/lisparray.ct). The branch has not yet been compiled or run in a configured Coalton runtime.

@@ -1,1035 +1,340 @@
-;;;; Experimental statically typed multiplication. Existing CL storage is native.
-;;;; Host Lisp bridges declare their types explicitly for portability across
-;;;; optimizing compilers, independently of Coalton's emitted annotations.
-;;;; Fixed-size indices are internal and valid by construction; rank-two array
-;;;; dimensions and indices fit nonnegative fixnums as required by the adapter.
-(cl:defpackage #:3dm.coalton.kernel
+;;;; A Coalton implementation of the 3d-math multiplication interface.
+;;;; No dependencies on the original Common Lisp structs or methods.
+
+(cl:defpackage #:3dm.coalton
   (:use #:coalton #:coalton-prelude)
-  (:export #:Multipliable #:multiply #:Dmat2 #:Dmat3 #:Dmat4 #:Dvec2 #:Dvec3 #:Dvec4 #:Fmat2 #:Fmat3 #:Fmat4 #:Fvec2 #:Fvec3 #:Fvec4 #:DArray #:FArray))
-(cl:in-package #:3dm.coalton.kernel)
+  (:local-nicknames (#:arr #:coalton/lisparray)
+                    (#:types #:coalton/types))
+  (:export #:Vec2 #:Vec3 #:Vec4
+           #:Mat2 #:Mat3 #:Mat4 #:MatN
+           #:make-mat2 #:make-mat3 #:make-mat4 #:make-matn
+           #:mat2-ref #:mat3-ref #:mat4-ref #:matn-ref
+           #:matn-rows #:matn-cols
+           #:ScalarProduct #:scalar-product
+           #:Multipliable #:m*))
+(cl:in-package #:3dm.coalton)
 
 (coalton-toplevel
-  ;; A pair of operand types determines the result type.
-  (define-class (Multipliable :left :right :result (:left :right -> :result))
-    (multiply (:left * :right -> :result)))
+  ;; Vectors are products of scalars; fixed matrices have their own
+  ;; nominal types, each containing a specialized column-major array.
+  (derive Eq)
+  (define-type (Vec2 :a)
+    (Vec2 :a :a))
 
-  ;; Reuse one arithmetic definition for both float precisions.
+  (derive Eq)
+  (define-type (Mat2 :a)
+    (Mat2Data (arr:LispArray :a)))
+
+  (derive Eq)
+  (define-type (Vec3 :a)
+    (Vec3 :a :a :a))
+
+  (derive Eq)
+  (define-type (Mat3 :a)
+    (Mat3Data (arr:LispArray :a)))
+
+  (derive Eq)
+  (define-type (Vec4 :a)
+    (Vec4 :a :a :a :a))
+
+  (derive Eq)
+  (define-type (Mat4 :a)
+    (Mat4Data (arr:LispArray :a)))
+
+  (derive Eq)
+  (define-type (MatN :a)
+    (MatNData UFix UFix (arr:LispArray :a)))
+
+  ;; Only the scalar typeclass needs to know about precision promotion.
+  (define-class (Num :c => ScalarProduct :a :b :c (:a :b -> :c))
+    (scalar-product (:a * :b -> :c)))
+
+  (define-instance (Num :a => ScalarProduct :a :a :a)
+    (inline)
+    (define (scalar-product a b) (* a b)))
+
+  (define-instance (ScalarProduct F32 F64 F64)
+    (inline)
+    (define (scalar-product a b) (* (into a) b)))
+
+  (define-instance (ScalarProduct F64 F32 F64)
+    (inline)
+    (define (scalar-product a b) (* a (into b))))
+
+  (define-class (Multipliable :a :b :c (:a :b -> :c))
+    (m* (:a * :b -> :c)))
+
   (inline)
-  (declare dot2 (Num :a => :a * :a * :a * :a -> :a))
+  (declare dot2 (ScalarProduct :a :b :c =>
+                  :a * :a * :b * :b -> :c))
   (define (dot2 a0 a1 b0 b1)
-    (+ (* a0 b0) (* a1 b1)))
+    (+ (scalar-product a0 b0) (scalar-product a1 b1)))
 
   (inline)
-  (declare dot3 (Num :a => :a * :a * :a * :a * :a * :a -> :a))
+  (declare make-mat2 (types:RuntimeRepr :a =>
+                       :a * :a * :a * :a -> Mat2 :a))
+  (define (make-mat2 e00 e01 e10 e11)
+    (let ((data (arr:make-uninitialized 4)))
+      (progn
+        (arr:set! data 0 e00)
+        (arr:set! data 1 e10)
+        (arr:set! data 2 e01)
+        (arr:set! data 3 e11)
+        (Mat2Data data))))
+
+  (inline)
+  (declare mat2-ref (Mat2 :a * UFix * UFix -> :a))
+  (define (mat2-ref (Mat2Data data) row col)
+    (if (and (< row 2) (< col 2))
+        (arr:aref data (+ row (* 2 col)))
+        (error "Matrix index out of bounds")))
+
+  (define-instance ((ScalarProduct :a :b :c) (types:RuntimeRepr :c) =>
+                    Multipliable (Mat2 :a) (Mat2 :b) (Mat2 :c))
+    (inline)
+    (define (m* (Mat2Data a) (Mat2Data b))
+      (make-mat2
+        (dot2 (arr:aref a 0) (arr:aref a 2)
+              (arr:aref b 0) (arr:aref b 1))
+        (dot2 (arr:aref a 0) (arr:aref a 2)
+              (arr:aref b 2) (arr:aref b 3))
+        (dot2 (arr:aref a 1) (arr:aref a 3)
+              (arr:aref b 0) (arr:aref b 1))
+        (dot2 (arr:aref a 1) (arr:aref a 3)
+              (arr:aref b 2) (arr:aref b 3)))))
+
+  (define-instance (ScalarProduct :b :a :c =>
+                    Multipliable (Mat2 :a) (Vec2 :b) (Vec2 :c))
+    (inline)
+    (define (m* (Mat2Data a) (Vec2 x y))
+      (Vec2
+        (dot2 x y
+              (arr:aref a 0) (arr:aref a 2))
+        (dot2 x y
+              (arr:aref a 1) (arr:aref a 3)))))
+
+  ;; Match 3d-math: vector * matrix denotes the same column-vector transform.
+  (define-instance (ScalarProduct :a :b :c =>
+                    Multipliable (Vec2 :a) (Mat2 :b) (Vec2 :c))
+    (inline)
+    (define (m* v m) (m* m v)))
+
+  (inline)
+  (declare dot3 (ScalarProduct :a :b :c =>
+                  :a * :a * :a * :b * :b * :b -> :c))
   (define (dot3 a0 a1 a2 b0 b1 b2)
-    (+ (+ (* a0 b0) (* a1 b1)) (* a2 b2)))
+    (+ (+ (scalar-product a0 b0) (scalar-product a1 b1)) (scalar-product a2 b2)))
 
   (inline)
-  (declare dot4 (Num :a => :a * :a * :a * :a * :a * :a * :a * :a -> :a))
+  (declare make-mat3 (types:RuntimeRepr :a =>
+                       :a * :a * :a * :a * :a * :a * :a * :a * :a -> Mat3 :a))
+  (define (make-mat3 e00 e01 e02 e10 e11 e12 e20 e21 e22)
+    (let ((data (arr:make-uninitialized 9)))
+      (progn
+        (arr:set! data 0 e00)
+        (arr:set! data 1 e10)
+        (arr:set! data 2 e20)
+        (arr:set! data 3 e01)
+        (arr:set! data 4 e11)
+        (arr:set! data 5 e21)
+        (arr:set! data 6 e02)
+        (arr:set! data 7 e12)
+        (arr:set! data 8 e22)
+        (Mat3Data data))))
+
+  (inline)
+  (declare mat3-ref (Mat3 :a * UFix * UFix -> :a))
+  (define (mat3-ref (Mat3Data data) row col)
+    (if (and (< row 3) (< col 3))
+        (arr:aref data (+ row (* 3 col)))
+        (error "Matrix index out of bounds")))
+
+  (define-instance ((ScalarProduct :a :b :c) (types:RuntimeRepr :c) =>
+                    Multipliable (Mat3 :a) (Mat3 :b) (Mat3 :c))
+    (inline)
+    (define (m* (Mat3Data a) (Mat3Data b))
+      (make-mat3
+        (dot3 (arr:aref a 0) (arr:aref a 3) (arr:aref a 6)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2))
+        (dot3 (arr:aref a 0) (arr:aref a 3) (arr:aref a 6)
+              (arr:aref b 3) (arr:aref b 4) (arr:aref b 5))
+        (dot3 (arr:aref a 0) (arr:aref a 3) (arr:aref a 6)
+              (arr:aref b 6) (arr:aref b 7) (arr:aref b 8))
+        (dot3 (arr:aref a 1) (arr:aref a 4) (arr:aref a 7)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2))
+        (dot3 (arr:aref a 1) (arr:aref a 4) (arr:aref a 7)
+              (arr:aref b 3) (arr:aref b 4) (arr:aref b 5))
+        (dot3 (arr:aref a 1) (arr:aref a 4) (arr:aref a 7)
+              (arr:aref b 6) (arr:aref b 7) (arr:aref b 8))
+        (dot3 (arr:aref a 2) (arr:aref a 5) (arr:aref a 8)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2))
+        (dot3 (arr:aref a 2) (arr:aref a 5) (arr:aref a 8)
+              (arr:aref b 3) (arr:aref b 4) (arr:aref b 5))
+        (dot3 (arr:aref a 2) (arr:aref a 5) (arr:aref a 8)
+              (arr:aref b 6) (arr:aref b 7) (arr:aref b 8)))))
+
+  (define-instance (ScalarProduct :b :a :c =>
+                    Multipliable (Mat3 :a) (Vec3 :b) (Vec3 :c))
+    (inline)
+    (define (m* (Mat3Data a) (Vec3 x y z))
+      (Vec3
+        (dot3 x y z
+              (arr:aref a 0) (arr:aref a 3) (arr:aref a 6))
+        (dot3 x y z
+              (arr:aref a 1) (arr:aref a 4) (arr:aref a 7))
+        (dot3 x y z
+              (arr:aref a 2) (arr:aref a 5) (arr:aref a 8)))))
+
+  ;; Match 3d-math: vector * matrix denotes the same column-vector transform.
+  (define-instance (ScalarProduct :a :b :c =>
+                    Multipliable (Vec3 :a) (Mat3 :b) (Vec3 :c))
+    (inline)
+    (define (m* v m) (m* m v)))
+
+  (inline)
+  (declare dot4 (ScalarProduct :a :b :c =>
+                  :a * :a * :a * :a * :b * :b * :b * :b -> :c))
   (define (dot4 a0 a1 a2 a3 b0 b1 b2 b3)
-    (+ (+ (+ (* a0 b0) (* a1 b1)) (* a2 b2)) (* a3 b3)))
+    (+ (+ (+ (scalar-product a0 b0) (scalar-product a1 b1)) (scalar-product a2 b2)) (scalar-product a3 b3)))
 
   (inline)
-  (declare widen (F32 -> F64))
-  (define (widen x) (into x))
+  (declare make-mat4 (types:RuntimeRepr :a =>
+                       :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a * :a -> Mat4 :a))
+  (define (make-mat4 e00 e01 e02 e03 e10 e11 e12 e13 e20 e21 e22 e23 e30 e31 e32 e33)
+    (let ((data (arr:make-uninitialized 16)))
+      (progn
+        (arr:set! data 0 e00)
+        (arr:set! data 1 e10)
+        (arr:set! data 2 e20)
+        (arr:set! data 3 e30)
+        (arr:set! data 4 e01)
+        (arr:set! data 5 e11)
+        (arr:set! data 6 e21)
+        (arr:set! data 7 e31)
+        (arr:set! data 8 e02)
+        (arr:set! data 9 e12)
+        (arr:set! data 10 e22)
+        (arr:set! data 11 e32)
+        (arr:set! data 12 e03)
+        (arr:set! data 13 e13)
+        (arr:set! data 14 e23)
+        (arr:set! data 15 e33)
+        (Mat4Data data))))
 
-  (repr :native 3dm.d::mat2)
-  (define-type Dmat2)
   (inline)
-  (declare d-mat2-ref (Dmat2 * UFix -> F64))
-  (define (d-mat2-ref m index)
-    (lisp (-> F64) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::mat2 m)
-                    (cl:type (cl:integer 0 3) index))
-        (cl:let ((data (3dm.d::marr2 m)))
-          (cl:declare (cl:type (cl:simple-array cl:double-float (4)) data))
-          (cl:the cl:double-float (cl:aref data index))))))
-  (inline)
-  (declare make-d-mat2 (F64 * F64 * F64 * F64 -> Dmat2))
-  (define (make-d-mat2 x0 x1 x2 x3)
-    (lisp (-> Dmat2) (x0 x1 x2 x3)
-      (cl:let* ((m (3dm.d::%mat2)) (data (3dm.d::marr2 m)))
-        (cl:declare (cl:type cl:double-float x0 x1 x2 x3)
-                    (cl:type 3dm.d::mat2 m)
-                    (cl:type (cl:simple-array cl:double-float (4)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3)
-        m)))
+  (declare mat4-ref (Mat4 :a * UFix * UFix -> :a))
+  (define (mat4-ref (Mat4Data data) row col)
+    (if (and (< row 4) (< col 4))
+        (arr:aref data (+ row (* 4 col)))
+        (error "Matrix index out of bounds")))
 
-  (repr :native 3dm.d::vec2)
-  (define-type Dvec2)
-  (inline)
-  (declare d-vec2-x (Dvec2 -> F64))
-  (define (d-vec2-x v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec2 v))
-        (cl:the cl:double-float (3dm.d::vx2 v)))))
-  (inline)
-  (declare d-vec2-y (Dvec2 -> F64))
-  (define (d-vec2-y v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec2 v))
-        (cl:the cl:double-float (3dm.d::vy2 v)))))
-  (inline)
-  (declare make-d-vec2 (F64 * F64 -> Dvec2))
-  (define (make-d-vec2 x0 x1)
-    (lisp (-> Dvec2) (x0 x1)
-      (cl:locally
-        (cl:declare (cl:type cl:double-float x0 x1))
-        (cl:the 3dm.d::vec2 (3dm.d::%vec2 x0 x1)))))
-
-  (repr :native 3dm.d::mat3)
-  (define-type Dmat3)
-  (inline)
-  (declare d-mat3-ref (Dmat3 * UFix -> F64))
-  (define (d-mat3-ref m index)
-    (lisp (-> F64) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::mat3 m)
-                    (cl:type (cl:integer 0 8) index))
-        (cl:let ((data (3dm.d::marr3 m)))
-          (cl:declare (cl:type (cl:simple-array cl:double-float (9)) data))
-          (cl:the cl:double-float (cl:aref data index))))))
-  (inline)
-  (declare make-d-mat3 (F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 -> Dmat3))
-  (define (make-d-mat3 x0 x1 x2 x3 x4 x5 x6 x7 x8)
-    (lisp (-> Dmat3) (x0 x1 x2 x3 x4 x5 x6 x7 x8)
-      (cl:let* ((m (3dm.d::%mat3)) (data (3dm.d::marr3 m)))
-        (cl:declare (cl:type cl:double-float x0 x1 x2 x3 x4 x5 x6 x7 x8)
-                    (cl:type 3dm.d::mat3 m)
-                    (cl:type (cl:simple-array cl:double-float (9)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3
-                 (cl:aref data 4) x4
-                 (cl:aref data 5) x5
-                 (cl:aref data 6) x6
-                 (cl:aref data 7) x7
-                 (cl:aref data 8) x8)
-        m)))
-
-  (repr :native 3dm.d::vec3)
-  (define-type Dvec3)
-  (inline)
-  (declare d-vec3-x (Dvec3 -> F64))
-  (define (d-vec3-x v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec3 v))
-        (cl:the cl:double-float (3dm.d::vx3 v)))))
-  (inline)
-  (declare d-vec3-y (Dvec3 -> F64))
-  (define (d-vec3-y v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec3 v))
-        (cl:the cl:double-float (3dm.d::vy3 v)))))
-  (inline)
-  (declare d-vec3-z (Dvec3 -> F64))
-  (define (d-vec3-z v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec3 v))
-        (cl:the cl:double-float (3dm.d::vz3 v)))))
-  (inline)
-  (declare make-d-vec3 (F64 * F64 * F64 -> Dvec3))
-  (define (make-d-vec3 x0 x1 x2)
-    (lisp (-> Dvec3) (x0 x1 x2)
-      (cl:locally
-        (cl:declare (cl:type cl:double-float x0 x1 x2))
-        (cl:the 3dm.d::vec3 (3dm.d::%vec3 x0 x1 x2)))))
-
-  (repr :native 3dm.d::mat4)
-  (define-type Dmat4)
-  (inline)
-  (declare d-mat4-ref (Dmat4 * UFix -> F64))
-  (define (d-mat4-ref m index)
-    (lisp (-> F64) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::mat4 m)
-                    (cl:type (cl:integer 0 15) index))
-        (cl:let ((data (3dm.d::marr4 m)))
-          (cl:declare (cl:type (cl:simple-array cl:double-float (16)) data))
-          (cl:the cl:double-float (cl:aref data index))))))
-  (inline)
-  (declare make-d-mat4 (F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 * F64 -> Dmat4))
-  (define (make-d-mat4 x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-    (lisp (-> Dmat4) (x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-      (cl:let* ((m (3dm.d::%mat4)) (data (3dm.d::marr4 m)))
-        (cl:declare (cl:type cl:double-float x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-                    (cl:type 3dm.d::mat4 m)
-                    (cl:type (cl:simple-array cl:double-float (16)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3
-                 (cl:aref data 4) x4
-                 (cl:aref data 5) x5
-                 (cl:aref data 6) x6
-                 (cl:aref data 7) x7
-                 (cl:aref data 8) x8
-                 (cl:aref data 9) x9
-                 (cl:aref data 10) x10
-                 (cl:aref data 11) x11
-                 (cl:aref data 12) x12
-                 (cl:aref data 13) x13
-                 (cl:aref data 14) x14
-                 (cl:aref data 15) x15)
-        m)))
-
-  (repr :native 3dm.d::vec4)
-  (define-type Dvec4)
-  (inline)
-  (declare d-vec4-x (Dvec4 -> F64))
-  (define (d-vec4-x v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec4 v))
-        (cl:the cl:double-float (3dm.d::vx4 v)))))
-  (inline)
-  (declare d-vec4-y (Dvec4 -> F64))
-  (define (d-vec4-y v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec4 v))
-        (cl:the cl:double-float (3dm.d::vy4 v)))))
-  (inline)
-  (declare d-vec4-z (Dvec4 -> F64))
-  (define (d-vec4-z v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec4 v))
-        (cl:the cl:double-float (3dm.d::vz4 v)))))
-  (inline)
-  (declare d-vec4-w (Dvec4 -> F64))
-  (define (d-vec4-w v)
-    (lisp (-> F64) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.d::vec4 v))
-        (cl:the cl:double-float (3dm.d::vw4 v)))))
-  (inline)
-  (declare make-d-vec4 (F64 * F64 * F64 * F64 -> Dvec4))
-  (define (make-d-vec4 x0 x1 x2 x3)
-    (lisp (-> Dvec4) (x0 x1 x2 x3)
-      (cl:locally
-        (cl:declare (cl:type cl:double-float x0 x1 x2 x3))
-        (cl:the 3dm.d::vec4 (3dm.d::%vec4 x0 x1 x2 x3)))))
-
-  (repr :native 3dm.f::mat2)
-  (define-type Fmat2)
-  (inline)
-  (declare f-mat2-ref (Fmat2 * UFix -> F32))
-  (define (f-mat2-ref m index)
-    (lisp (-> F32) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::mat2 m)
-                    (cl:type (cl:integer 0 3) index))
-        (cl:let ((data (3dm.f::marr2 m)))
-          (cl:declare (cl:type (cl:simple-array cl:single-float (4)) data))
-          (cl:the cl:single-float (cl:aref data index))))))
-  (inline)
-  (declare make-f-mat2 (F32 * F32 * F32 * F32 -> Fmat2))
-  (define (make-f-mat2 x0 x1 x2 x3)
-    (lisp (-> Fmat2) (x0 x1 x2 x3)
-      (cl:let* ((m (3dm.f::%mat2)) (data (3dm.f::marr2 m)))
-        (cl:declare (cl:type cl:single-float x0 x1 x2 x3)
-                    (cl:type 3dm.f::mat2 m)
-                    (cl:type (cl:simple-array cl:single-float (4)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3)
-        m)))
-
-  (repr :native 3dm.f::vec2)
-  (define-type Fvec2)
-  (inline)
-  (declare f-vec2-x (Fvec2 -> F32))
-  (define (f-vec2-x v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec2 v))
-        (cl:the cl:single-float (3dm.f::vx2 v)))))
-  (inline)
-  (declare f-vec2-y (Fvec2 -> F32))
-  (define (f-vec2-y v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec2 v))
-        (cl:the cl:single-float (3dm.f::vy2 v)))))
-  (inline)
-  (declare make-f-vec2 (F32 * F32 -> Fvec2))
-  (define (make-f-vec2 x0 x1)
-    (lisp (-> Fvec2) (x0 x1)
-      (cl:locally
-        (cl:declare (cl:type cl:single-float x0 x1))
-        (cl:the 3dm.f::vec2 (3dm.f::%vec2 x0 x1)))))
-
-  (repr :native 3dm.f::mat3)
-  (define-type Fmat3)
-  (inline)
-  (declare f-mat3-ref (Fmat3 * UFix -> F32))
-  (define (f-mat3-ref m index)
-    (lisp (-> F32) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::mat3 m)
-                    (cl:type (cl:integer 0 8) index))
-        (cl:let ((data (3dm.f::marr3 m)))
-          (cl:declare (cl:type (cl:simple-array cl:single-float (9)) data))
-          (cl:the cl:single-float (cl:aref data index))))))
-  (inline)
-  (declare make-f-mat3 (F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 -> Fmat3))
-  (define (make-f-mat3 x0 x1 x2 x3 x4 x5 x6 x7 x8)
-    (lisp (-> Fmat3) (x0 x1 x2 x3 x4 x5 x6 x7 x8)
-      (cl:let* ((m (3dm.f::%mat3)) (data (3dm.f::marr3 m)))
-        (cl:declare (cl:type cl:single-float x0 x1 x2 x3 x4 x5 x6 x7 x8)
-                    (cl:type 3dm.f::mat3 m)
-                    (cl:type (cl:simple-array cl:single-float (9)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3
-                 (cl:aref data 4) x4
-                 (cl:aref data 5) x5
-                 (cl:aref data 6) x6
-                 (cl:aref data 7) x7
-                 (cl:aref data 8) x8)
-        m)))
-
-  (repr :native 3dm.f::vec3)
-  (define-type Fvec3)
-  (inline)
-  (declare f-vec3-x (Fvec3 -> F32))
-  (define (f-vec3-x v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec3 v))
-        (cl:the cl:single-float (3dm.f::vx3 v)))))
-  (inline)
-  (declare f-vec3-y (Fvec3 -> F32))
-  (define (f-vec3-y v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec3 v))
-        (cl:the cl:single-float (3dm.f::vy3 v)))))
-  (inline)
-  (declare f-vec3-z (Fvec3 -> F32))
-  (define (f-vec3-z v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec3 v))
-        (cl:the cl:single-float (3dm.f::vz3 v)))))
-  (inline)
-  (declare make-f-vec3 (F32 * F32 * F32 -> Fvec3))
-  (define (make-f-vec3 x0 x1 x2)
-    (lisp (-> Fvec3) (x0 x1 x2)
-      (cl:locally
-        (cl:declare (cl:type cl:single-float x0 x1 x2))
-        (cl:the 3dm.f::vec3 (3dm.f::%vec3 x0 x1 x2)))))
-
-  (repr :native 3dm.f::mat4)
-  (define-type Fmat4)
-  (inline)
-  (declare f-mat4-ref (Fmat4 * UFix -> F32))
-  (define (f-mat4-ref m index)
-    (lisp (-> F32) (m index)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::mat4 m)
-                    (cl:type (cl:integer 0 15) index))
-        (cl:let ((data (3dm.f::marr4 m)))
-          (cl:declare (cl:type (cl:simple-array cl:single-float (16)) data))
-          (cl:the cl:single-float (cl:aref data index))))))
-  (inline)
-  (declare make-f-mat4 (F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 * F32 -> Fmat4))
-  (define (make-f-mat4 x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-    (lisp (-> Fmat4) (x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-      (cl:let* ((m (3dm.f::%mat4)) (data (3dm.f::marr4 m)))
-        (cl:declare (cl:type cl:single-float x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15)
-                    (cl:type 3dm.f::mat4 m)
-                    (cl:type (cl:simple-array cl:single-float (16)) data))
-        (cl:setf (cl:aref data 0) x0
-                 (cl:aref data 1) x1
-                 (cl:aref data 2) x2
-                 (cl:aref data 3) x3
-                 (cl:aref data 4) x4
-                 (cl:aref data 5) x5
-                 (cl:aref data 6) x6
-                 (cl:aref data 7) x7
-                 (cl:aref data 8) x8
-                 (cl:aref data 9) x9
-                 (cl:aref data 10) x10
-                 (cl:aref data 11) x11
-                 (cl:aref data 12) x12
-                 (cl:aref data 13) x13
-                 (cl:aref data 14) x14
-                 (cl:aref data 15) x15)
-        m)))
-
-  (repr :native 3dm.f::vec4)
-  (define-type Fvec4)
-  (inline)
-  (declare f-vec4-x (Fvec4 -> F32))
-  (define (f-vec4-x v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec4 v))
-        (cl:the cl:single-float (3dm.f::vx4 v)))))
-  (inline)
-  (declare f-vec4-y (Fvec4 -> F32))
-  (define (f-vec4-y v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec4 v))
-        (cl:the cl:single-float (3dm.f::vy4 v)))))
-  (inline)
-  (declare f-vec4-z (Fvec4 -> F32))
-  (define (f-vec4-z v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec4 v))
-        (cl:the cl:single-float (3dm.f::vz4 v)))))
-  (inline)
-  (declare f-vec4-w (Fvec4 -> F32))
-  (define (f-vec4-w v)
-    (lisp (-> F32) (v)
-      (cl:locally
-        (cl:declare (cl:type 3dm.f::vec4 v))
-        (cl:the cl:single-float (3dm.f::vw4 v)))))
-  (inline)
-  (declare make-f-vec4 (F32 * F32 * F32 * F32 -> Fvec4))
-  (define (make-f-vec4 x0 x1 x2 x3)
-    (lisp (-> Fvec4) (x0 x1 x2 x3)
-      (cl:locally
-        (cl:declare (cl:type cl:single-float x0 x1 x2 x3))
-        (cl:the 3dm.f::vec4 (3dm.f::%vec4 x0 x1 x2 x3)))))
-
-  (define-instance (Multipliable Dmat2 Dvec2 Dvec2)
+  (define-instance ((ScalarProduct :a :b :c) (types:RuntimeRepr :c) =>
+                    Multipliable (Mat4 :a) (Mat4 :b) (Mat4 :c))
     (inline)
-    (define (multiply a b)
-      (make-d-vec2
-        (dot2 (d-vec2-x b) (d-vec2-y b)
-              (d-mat2-ref a 0) (d-mat2-ref a 2))
-        (dot2 (d-vec2-x b) (d-vec2-y b)
-              (d-mat2-ref a 1) (d-mat2-ref a 3)))))
-  (declare mul-d-mat2-d-vec2 (Dmat2 * Dvec2 -> Dvec2))
-  (define (mul-d-mat2-d-vec2 a b) (multiply a b))
+    (define (m* (Mat4Data a) (Mat4Data b))
+      (make-mat4
+        (dot4 (arr:aref a 0) (arr:aref a 4) (arr:aref a 8) (arr:aref a 12)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2) (arr:aref b 3))
+        (dot4 (arr:aref a 0) (arr:aref a 4) (arr:aref a 8) (arr:aref a 12)
+              (arr:aref b 4) (arr:aref b 5) (arr:aref b 6) (arr:aref b 7))
+        (dot4 (arr:aref a 0) (arr:aref a 4) (arr:aref a 8) (arr:aref a 12)
+              (arr:aref b 8) (arr:aref b 9) (arr:aref b 10) (arr:aref b 11))
+        (dot4 (arr:aref a 0) (arr:aref a 4) (arr:aref a 8) (arr:aref a 12)
+              (arr:aref b 12) (arr:aref b 13) (arr:aref b 14) (arr:aref b 15))
+        (dot4 (arr:aref a 1) (arr:aref a 5) (arr:aref a 9) (arr:aref a 13)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2) (arr:aref b 3))
+        (dot4 (arr:aref a 1) (arr:aref a 5) (arr:aref a 9) (arr:aref a 13)
+              (arr:aref b 4) (arr:aref b 5) (arr:aref b 6) (arr:aref b 7))
+        (dot4 (arr:aref a 1) (arr:aref a 5) (arr:aref a 9) (arr:aref a 13)
+              (arr:aref b 8) (arr:aref b 9) (arr:aref b 10) (arr:aref b 11))
+        (dot4 (arr:aref a 1) (arr:aref a 5) (arr:aref a 9) (arr:aref a 13)
+              (arr:aref b 12) (arr:aref b 13) (arr:aref b 14) (arr:aref b 15))
+        (dot4 (arr:aref a 2) (arr:aref a 6) (arr:aref a 10) (arr:aref a 14)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2) (arr:aref b 3))
+        (dot4 (arr:aref a 2) (arr:aref a 6) (arr:aref a 10) (arr:aref a 14)
+              (arr:aref b 4) (arr:aref b 5) (arr:aref b 6) (arr:aref b 7))
+        (dot4 (arr:aref a 2) (arr:aref a 6) (arr:aref a 10) (arr:aref a 14)
+              (arr:aref b 8) (arr:aref b 9) (arr:aref b 10) (arr:aref b 11))
+        (dot4 (arr:aref a 2) (arr:aref a 6) (arr:aref a 10) (arr:aref a 14)
+              (arr:aref b 12) (arr:aref b 13) (arr:aref b 14) (arr:aref b 15))
+        (dot4 (arr:aref a 3) (arr:aref a 7) (arr:aref a 11) (arr:aref a 15)
+              (arr:aref b 0) (arr:aref b 1) (arr:aref b 2) (arr:aref b 3))
+        (dot4 (arr:aref a 3) (arr:aref a 7) (arr:aref a 11) (arr:aref a 15)
+              (arr:aref b 4) (arr:aref b 5) (arr:aref b 6) (arr:aref b 7))
+        (dot4 (arr:aref a 3) (arr:aref a 7) (arr:aref a 11) (arr:aref a 15)
+              (arr:aref b 8) (arr:aref b 9) (arr:aref b 10) (arr:aref b 11))
+        (dot4 (arr:aref a 3) (arr:aref a 7) (arr:aref a 11) (arr:aref a 15)
+              (arr:aref b 12) (arr:aref b 13) (arr:aref b 14) (arr:aref b 15)))))
 
-  (define-instance (Multipliable Dvec2 Dmat2 Dvec2)
+  (define-instance (ScalarProduct :b :a :c =>
+                    Multipliable (Mat4 :a) (Vec4 :b) (Vec4 :c))
     (inline)
-    (define (multiply a b)
-      (make-d-vec2
-        (dot2 (d-vec2-x a) (d-vec2-y a)
-              (d-mat2-ref b 0) (d-mat2-ref b 2))
-        (dot2 (d-vec2-x a) (d-vec2-y a)
-              (d-mat2-ref b 1) (d-mat2-ref b 3)))))
-  (declare mul-d-vec2-d-mat2 (Dvec2 * Dmat2 -> Dvec2))
-  (define (mul-d-vec2-d-mat2 a b) (multiply a b))
+    (define (m* (Mat4Data a) (Vec4 x y z w))
+      (Vec4
+        (dot4 x y z w
+              (arr:aref a 0) (arr:aref a 4) (arr:aref a 8) (arr:aref a 12))
+        (dot4 x y z w
+              (arr:aref a 1) (arr:aref a 5) (arr:aref a 9) (arr:aref a 13))
+        (dot4 x y z w
+              (arr:aref a 2) (arr:aref a 6) (arr:aref a 10) (arr:aref a 14))
+        (dot4 x y z w
+              (arr:aref a 3) (arr:aref a 7) (arr:aref a 11) (arr:aref a 15)))))
 
-  (define-instance (Multipliable Dmat2 Fvec2 Dvec2)
+  ;; Match 3d-math: vector * matrix denotes the same column-vector transform.
+  (define-instance (ScalarProduct :a :b :c =>
+                    Multipliable (Vec4 :a) (Mat4 :b) (Vec4 :c))
     (inline)
-    (define (multiply a b)
-      (make-d-vec2
-        (dot2 (widen (f-vec2-x b)) (widen (f-vec2-y b))
-              (d-mat2-ref a 0) (d-mat2-ref a 2))
-        (dot2 (widen (f-vec2-x b)) (widen (f-vec2-y b))
-              (d-mat2-ref a 1) (d-mat2-ref a 3)))))
-  (declare mul-d-mat2-f-vec2 (Dmat2 * Fvec2 -> Dvec2))
-  (define (mul-d-mat2-f-vec2 a b) (multiply a b))
+    (define (m* v m) (m* m v)))
 
-  (define-instance (Multipliable Fvec2 Dmat2 Dvec2)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec2
-        (dot2 (widen (f-vec2-x a)) (widen (f-vec2-y a))
-              (d-mat2-ref b 0) (d-mat2-ref b 2))
-        (dot2 (widen (f-vec2-x a)) (widen (f-vec2-y a))
-              (d-mat2-ref b 1) (d-mat2-ref b 3)))))
-  (declare mul-f-vec2-d-mat2 (Fvec2 * Dmat2 -> Dvec2))
-  (define (mul-f-vec2-d-mat2 a b) (multiply a b))
+  ;; Dynamic rectangular matrices. Their input list and storage are
+  ;; row-major, matching the original rank-two CL array path.
+  (declare make-matn (types:RuntimeRepr :a =>
+                      UFix * UFix * List :a -> MatN :a))
+  (define (make-matn rows cols elements)
+    (let ((data (into elements)))
+      (if (== (arr:length data) (* rows cols))
+          (MatNData rows cols data)
+          (error "Incorrect number of matrix elements"))))
 
-  (define-instance (Multipliable Fmat2 Fvec2 Fvec2)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec2
-        (dot2 (f-vec2-x b) (f-vec2-y b)
-              (f-mat2-ref a 0) (f-mat2-ref a 2))
-        (dot2 (f-vec2-x b) (f-vec2-y b)
-              (f-mat2-ref a 1) (f-mat2-ref a 3)))))
-  (declare mul-f-mat2-f-vec2 (Fmat2 * Fvec2 -> Fvec2))
-  (define (mul-f-mat2-f-vec2 a b) (multiply a b))
-
-  (define-instance (Multipliable Fvec2 Fmat2 Fvec2)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec2
-        (dot2 (f-vec2-x a) (f-vec2-y a)
-              (f-mat2-ref b 0) (f-mat2-ref b 2))
-        (dot2 (f-vec2-x a) (f-vec2-y a)
-              (f-mat2-ref b 1) (f-mat2-ref b 3)))))
-  (declare mul-f-vec2-f-mat2 (Fvec2 * Fmat2 -> Fvec2))
-  (define (mul-f-vec2-f-mat2 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat2 Dmat2 Dmat2)
-    (inline)
-    (define (multiply a b)
-      (make-d-mat2
-        (dot2 (d-mat2-ref a 0) (d-mat2-ref a 2)
-              (d-mat2-ref b 0) (d-mat2-ref b 1))
-        (dot2 (d-mat2-ref a 1) (d-mat2-ref a 3)
-              (d-mat2-ref b 0) (d-mat2-ref b 1))
-        (dot2 (d-mat2-ref a 0) (d-mat2-ref a 2)
-              (d-mat2-ref b 2) (d-mat2-ref b 3))
-        (dot2 (d-mat2-ref a 1) (d-mat2-ref a 3)
-              (d-mat2-ref b 2) (d-mat2-ref b 3)))))
-  (declare mul-d-mat2-d-mat2 (Dmat2 * Dmat2 -> Dmat2))
-  (define (mul-d-mat2-d-mat2 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat2 Fmat2 Fmat2)
-    (inline)
-    (define (multiply a b)
-      (make-f-mat2
-        (dot2 (f-mat2-ref a 0) (f-mat2-ref a 2)
-              (f-mat2-ref b 0) (f-mat2-ref b 1))
-        (dot2 (f-mat2-ref a 1) (f-mat2-ref a 3)
-              (f-mat2-ref b 0) (f-mat2-ref b 1))
-        (dot2 (f-mat2-ref a 0) (f-mat2-ref a 2)
-              (f-mat2-ref b 2) (f-mat2-ref b 3))
-        (dot2 (f-mat2-ref a 1) (f-mat2-ref a 3)
-              (f-mat2-ref b 2) (f-mat2-ref b 3)))))
-  (declare mul-f-mat2-f-mat2 (Fmat2 * Fmat2 -> Fmat2))
-  (define (mul-f-mat2-f-mat2 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat2 Fmat2 Dmat2)
-    (inline)
-    (define (multiply a b)
-      (make-d-mat2
-        (dot2 (d-mat2-ref a 0) (d-mat2-ref a 2)
-              (widen (f-mat2-ref b 0)) (widen (f-mat2-ref b 1)))
-        (dot2 (d-mat2-ref a 1) (d-mat2-ref a 3)
-              (widen (f-mat2-ref b 0)) (widen (f-mat2-ref b 1)))
-        (dot2 (d-mat2-ref a 0) (d-mat2-ref a 2)
-              (widen (f-mat2-ref b 2)) (widen (f-mat2-ref b 3)))
-        (dot2 (d-mat2-ref a 1) (d-mat2-ref a 3)
-              (widen (f-mat2-ref b 2)) (widen (f-mat2-ref b 3))))))
-  (declare mul-d-mat2-f-mat2 (Dmat2 * Fmat2 -> Dmat2))
-  (define (mul-d-mat2-f-mat2 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat3 Dvec3 Dvec3)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec3
-        (dot3 (d-vec3-x b) (d-vec3-y b) (d-vec3-z b)
-              (d-mat3-ref a 0) (d-mat3-ref a 3) (d-mat3-ref a 6))
-        (dot3 (d-vec3-x b) (d-vec3-y b) (d-vec3-z b)
-              (d-mat3-ref a 1) (d-mat3-ref a 4) (d-mat3-ref a 7))
-        (dot3 (d-vec3-x b) (d-vec3-y b) (d-vec3-z b)
-              (d-mat3-ref a 2) (d-mat3-ref a 5) (d-mat3-ref a 8)))))
-  (declare mul-d-mat3-d-vec3 (Dmat3 * Dvec3 -> Dvec3))
-  (define (mul-d-mat3-d-vec3 a b) (multiply a b))
-
-  (define-instance (Multipliable Dvec3 Dmat3 Dvec3)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec3
-        (dot3 (d-vec3-x a) (d-vec3-y a) (d-vec3-z a)
-              (d-mat3-ref b 0) (d-mat3-ref b 3) (d-mat3-ref b 6))
-        (dot3 (d-vec3-x a) (d-vec3-y a) (d-vec3-z a)
-              (d-mat3-ref b 1) (d-mat3-ref b 4) (d-mat3-ref b 7))
-        (dot3 (d-vec3-x a) (d-vec3-y a) (d-vec3-z a)
-              (d-mat3-ref b 2) (d-mat3-ref b 5) (d-mat3-ref b 8)))))
-  (declare mul-d-vec3-d-mat3 (Dvec3 * Dmat3 -> Dvec3))
-  (define (mul-d-vec3-d-mat3 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat3 Fvec3 Dvec3)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec3
-        (dot3 (widen (f-vec3-x b)) (widen (f-vec3-y b)) (widen (f-vec3-z b))
-              (d-mat3-ref a 0) (d-mat3-ref a 3) (d-mat3-ref a 6))
-        (dot3 (widen (f-vec3-x b)) (widen (f-vec3-y b)) (widen (f-vec3-z b))
-              (d-mat3-ref a 1) (d-mat3-ref a 4) (d-mat3-ref a 7))
-        (dot3 (widen (f-vec3-x b)) (widen (f-vec3-y b)) (widen (f-vec3-z b))
-              (d-mat3-ref a 2) (d-mat3-ref a 5) (d-mat3-ref a 8)))))
-  (declare mul-d-mat3-f-vec3 (Dmat3 * Fvec3 -> Dvec3))
-  (define (mul-d-mat3-f-vec3 a b) (multiply a b))
-
-  (define-instance (Multipliable Fvec3 Dmat3 Dvec3)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec3
-        (dot3 (widen (f-vec3-x a)) (widen (f-vec3-y a)) (widen (f-vec3-z a))
-              (d-mat3-ref b 0) (d-mat3-ref b 3) (d-mat3-ref b 6))
-        (dot3 (widen (f-vec3-x a)) (widen (f-vec3-y a)) (widen (f-vec3-z a))
-              (d-mat3-ref b 1) (d-mat3-ref b 4) (d-mat3-ref b 7))
-        (dot3 (widen (f-vec3-x a)) (widen (f-vec3-y a)) (widen (f-vec3-z a))
-              (d-mat3-ref b 2) (d-mat3-ref b 5) (d-mat3-ref b 8)))))
-  (declare mul-f-vec3-d-mat3 (Fvec3 * Dmat3 -> Dvec3))
-  (define (mul-f-vec3-d-mat3 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat3 Fvec3 Fvec3)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec3
-        (dot3 (f-vec3-x b) (f-vec3-y b) (f-vec3-z b)
-              (f-mat3-ref a 0) (f-mat3-ref a 3) (f-mat3-ref a 6))
-        (dot3 (f-vec3-x b) (f-vec3-y b) (f-vec3-z b)
-              (f-mat3-ref a 1) (f-mat3-ref a 4) (f-mat3-ref a 7))
-        (dot3 (f-vec3-x b) (f-vec3-y b) (f-vec3-z b)
-              (f-mat3-ref a 2) (f-mat3-ref a 5) (f-mat3-ref a 8)))))
-  (declare mul-f-mat3-f-vec3 (Fmat3 * Fvec3 -> Fvec3))
-  (define (mul-f-mat3-f-vec3 a b) (multiply a b))
-
-  (define-instance (Multipliable Fvec3 Fmat3 Fvec3)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec3
-        (dot3 (f-vec3-x a) (f-vec3-y a) (f-vec3-z a)
-              (f-mat3-ref b 0) (f-mat3-ref b 3) (f-mat3-ref b 6))
-        (dot3 (f-vec3-x a) (f-vec3-y a) (f-vec3-z a)
-              (f-mat3-ref b 1) (f-mat3-ref b 4) (f-mat3-ref b 7))
-        (dot3 (f-vec3-x a) (f-vec3-y a) (f-vec3-z a)
-              (f-mat3-ref b 2) (f-mat3-ref b 5) (f-mat3-ref b 8)))))
-  (declare mul-f-vec3-f-mat3 (Fvec3 * Fmat3 -> Fvec3))
-  (define (mul-f-vec3-f-mat3 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat4 Dvec4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)))))
-  (declare mul-d-mat4-d-vec4 (Dmat4 * Dvec4 -> Dvec4))
-  (define (mul-d-mat4-d-vec4 a b) (multiply a b))
-
-  (define-instance (Multipliable Dvec4 Dmat4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (d-mat4-ref b 0) (d-mat4-ref b 4) (d-mat4-ref b 8) (d-mat4-ref b 12))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (d-mat4-ref b 1) (d-mat4-ref b 5) (d-mat4-ref b 9) (d-mat4-ref b 13))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (d-mat4-ref b 2) (d-mat4-ref b 6) (d-mat4-ref b 10) (d-mat4-ref b 14))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (d-mat4-ref b 3) (d-mat4-ref b 7) (d-mat4-ref b 11) (d-mat4-ref b 15)))))
-  (declare mul-d-vec4-d-mat4 (Dvec4 * Dmat4 -> Dvec4))
-  (define (mul-d-vec4-d-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat4 Fvec4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (widen (f-vec4-x b)) (widen (f-vec4-y b)) (widen (f-vec4-z b)) (widen (f-vec4-w b))
-              (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12))
-        (dot4 (widen (f-vec4-x b)) (widen (f-vec4-y b)) (widen (f-vec4-z b)) (widen (f-vec4-w b))
-              (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13))
-        (dot4 (widen (f-vec4-x b)) (widen (f-vec4-y b)) (widen (f-vec4-z b)) (widen (f-vec4-w b))
-              (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14))
-        (dot4 (widen (f-vec4-x b)) (widen (f-vec4-y b)) (widen (f-vec4-z b)) (widen (f-vec4-w b))
-              (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)))))
-  (declare mul-d-mat4-f-vec4 (Dmat4 * Fvec4 -> Dvec4))
-  (define (mul-d-mat4-f-vec4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fvec4 Dmat4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (widen (f-vec4-x a)) (widen (f-vec4-y a)) (widen (f-vec4-z a)) (widen (f-vec4-w a))
-              (d-mat4-ref b 0) (d-mat4-ref b 4) (d-mat4-ref b 8) (d-mat4-ref b 12))
-        (dot4 (widen (f-vec4-x a)) (widen (f-vec4-y a)) (widen (f-vec4-z a)) (widen (f-vec4-w a))
-              (d-mat4-ref b 1) (d-mat4-ref b 5) (d-mat4-ref b 9) (d-mat4-ref b 13))
-        (dot4 (widen (f-vec4-x a)) (widen (f-vec4-y a)) (widen (f-vec4-z a)) (widen (f-vec4-w a))
-              (d-mat4-ref b 2) (d-mat4-ref b 6) (d-mat4-ref b 10) (d-mat4-ref b 14))
-        (dot4 (widen (f-vec4-x a)) (widen (f-vec4-y a)) (widen (f-vec4-z a)) (widen (f-vec4-w a))
-              (d-mat4-ref b 3) (d-mat4-ref b 7) (d-mat4-ref b 11) (d-mat4-ref b 15)))))
-  (declare mul-f-vec4-d-mat4 (Fvec4 * Dmat4 -> Dvec4))
-  (define (mul-f-vec4-d-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat4 Dvec4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (widen (f-mat4-ref a 0)) (widen (f-mat4-ref a 4)) (widen (f-mat4-ref a 8)) (widen (f-mat4-ref a 12)))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (widen (f-mat4-ref a 1)) (widen (f-mat4-ref a 5)) (widen (f-mat4-ref a 9)) (widen (f-mat4-ref a 13)))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (widen (f-mat4-ref a 2)) (widen (f-mat4-ref a 6)) (widen (f-mat4-ref a 10)) (widen (f-mat4-ref a 14)))
-        (dot4 (d-vec4-x b) (d-vec4-y b) (d-vec4-z b) (d-vec4-w b)
-              (widen (f-mat4-ref a 3)) (widen (f-mat4-ref a 7)) (widen (f-mat4-ref a 11)) (widen (f-mat4-ref a 15))))))
-  (declare mul-f-mat4-d-vec4 (Fmat4 * Dvec4 -> Dvec4))
-  (define (mul-f-mat4-d-vec4 a b) (multiply a b))
-
-  (define-instance (Multipliable Dvec4 Fmat4 Dvec4)
-    (inline)
-    (define (multiply a b)
-      (make-d-vec4
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (widen (f-mat4-ref b 0)) (widen (f-mat4-ref b 4)) (widen (f-mat4-ref b 8)) (widen (f-mat4-ref b 12)))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (widen (f-mat4-ref b 1)) (widen (f-mat4-ref b 5)) (widen (f-mat4-ref b 9)) (widen (f-mat4-ref b 13)))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (widen (f-mat4-ref b 2)) (widen (f-mat4-ref b 6)) (widen (f-mat4-ref b 10)) (widen (f-mat4-ref b 14)))
-        (dot4 (d-vec4-x a) (d-vec4-y a) (d-vec4-z a) (d-vec4-w a)
-              (widen (f-mat4-ref b 3)) (widen (f-mat4-ref b 7)) (widen (f-mat4-ref b 11)) (widen (f-mat4-ref b 15))))))
-  (declare mul-d-vec4-f-mat4 (Dvec4 * Fmat4 -> Dvec4))
-  (define (mul-d-vec4-f-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat4 Fvec4 Fvec4)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec4
-        (dot4 (f-vec4-x b) (f-vec4-y b) (f-vec4-z b) (f-vec4-w b)
-              (f-mat4-ref a 0) (f-mat4-ref a 4) (f-mat4-ref a 8) (f-mat4-ref a 12))
-        (dot4 (f-vec4-x b) (f-vec4-y b) (f-vec4-z b) (f-vec4-w b)
-              (f-mat4-ref a 1) (f-mat4-ref a 5) (f-mat4-ref a 9) (f-mat4-ref a 13))
-        (dot4 (f-vec4-x b) (f-vec4-y b) (f-vec4-z b) (f-vec4-w b)
-              (f-mat4-ref a 2) (f-mat4-ref a 6) (f-mat4-ref a 10) (f-mat4-ref a 14))
-        (dot4 (f-vec4-x b) (f-vec4-y b) (f-vec4-z b) (f-vec4-w b)
-              (f-mat4-ref a 3) (f-mat4-ref a 7) (f-mat4-ref a 11) (f-mat4-ref a 15)))))
-  (declare mul-f-mat4-f-vec4 (Fmat4 * Fvec4 -> Fvec4))
-  (define (mul-f-mat4-f-vec4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fvec4 Fmat4 Fvec4)
-    (inline)
-    (define (multiply a b)
-      (make-f-vec4
-        (dot4 (f-vec4-x a) (f-vec4-y a) (f-vec4-z a) (f-vec4-w a)
-              (f-mat4-ref b 0) (f-mat4-ref b 4) (f-mat4-ref b 8) (f-mat4-ref b 12))
-        (dot4 (f-vec4-x a) (f-vec4-y a) (f-vec4-z a) (f-vec4-w a)
-              (f-mat4-ref b 1) (f-mat4-ref b 5) (f-mat4-ref b 9) (f-mat4-ref b 13))
-        (dot4 (f-vec4-x a) (f-vec4-y a) (f-vec4-z a) (f-vec4-w a)
-              (f-mat4-ref b 2) (f-mat4-ref b 6) (f-mat4-ref b 10) (f-mat4-ref b 14))
-        (dot4 (f-vec4-x a) (f-vec4-y a) (f-vec4-z a) (f-vec4-w a)
-              (f-mat4-ref b 3) (f-mat4-ref b 7) (f-mat4-ref b 11) (f-mat4-ref b 15)))))
-  (declare mul-f-vec4-f-mat4 (Fvec4 * Fmat4 -> Fvec4))
-  (define (mul-f-vec4-f-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat4 Dmat4 Dmat4)
-    (inline)
-    (define (multiply a b)
-      (make-d-mat4
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15)))))
-  (declare mul-d-mat4-d-mat4 (Dmat4 * Dmat4 -> Dmat4))
-  (define (mul-d-mat4-d-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat4 Fmat4 Fmat4)
-    (inline)
-    (define (multiply a b)
-      (make-f-mat4
-        (dot4 (f-mat4-ref a 0) (f-mat4-ref a 4) (f-mat4-ref a 8) (f-mat4-ref a 12)
-              (f-mat4-ref b 0) (f-mat4-ref b 1) (f-mat4-ref b 2) (f-mat4-ref b 3))
-        (dot4 (f-mat4-ref a 1) (f-mat4-ref a 5) (f-mat4-ref a 9) (f-mat4-ref a 13)
-              (f-mat4-ref b 0) (f-mat4-ref b 1) (f-mat4-ref b 2) (f-mat4-ref b 3))
-        (dot4 (f-mat4-ref a 2) (f-mat4-ref a 6) (f-mat4-ref a 10) (f-mat4-ref a 14)
-              (f-mat4-ref b 0) (f-mat4-ref b 1) (f-mat4-ref b 2) (f-mat4-ref b 3))
-        (dot4 (f-mat4-ref a 3) (f-mat4-ref a 7) (f-mat4-ref a 11) (f-mat4-ref a 15)
-              (f-mat4-ref b 0) (f-mat4-ref b 1) (f-mat4-ref b 2) (f-mat4-ref b 3))
-        (dot4 (f-mat4-ref a 0) (f-mat4-ref a 4) (f-mat4-ref a 8) (f-mat4-ref a 12)
-              (f-mat4-ref b 4) (f-mat4-ref b 5) (f-mat4-ref b 6) (f-mat4-ref b 7))
-        (dot4 (f-mat4-ref a 1) (f-mat4-ref a 5) (f-mat4-ref a 9) (f-mat4-ref a 13)
-              (f-mat4-ref b 4) (f-mat4-ref b 5) (f-mat4-ref b 6) (f-mat4-ref b 7))
-        (dot4 (f-mat4-ref a 2) (f-mat4-ref a 6) (f-mat4-ref a 10) (f-mat4-ref a 14)
-              (f-mat4-ref b 4) (f-mat4-ref b 5) (f-mat4-ref b 6) (f-mat4-ref b 7))
-        (dot4 (f-mat4-ref a 3) (f-mat4-ref a 7) (f-mat4-ref a 11) (f-mat4-ref a 15)
-              (f-mat4-ref b 4) (f-mat4-ref b 5) (f-mat4-ref b 6) (f-mat4-ref b 7))
-        (dot4 (f-mat4-ref a 0) (f-mat4-ref a 4) (f-mat4-ref a 8) (f-mat4-ref a 12)
-              (f-mat4-ref b 8) (f-mat4-ref b 9) (f-mat4-ref b 10) (f-mat4-ref b 11))
-        (dot4 (f-mat4-ref a 1) (f-mat4-ref a 5) (f-mat4-ref a 9) (f-mat4-ref a 13)
-              (f-mat4-ref b 8) (f-mat4-ref b 9) (f-mat4-ref b 10) (f-mat4-ref b 11))
-        (dot4 (f-mat4-ref a 2) (f-mat4-ref a 6) (f-mat4-ref a 10) (f-mat4-ref a 14)
-              (f-mat4-ref b 8) (f-mat4-ref b 9) (f-mat4-ref b 10) (f-mat4-ref b 11))
-        (dot4 (f-mat4-ref a 3) (f-mat4-ref a 7) (f-mat4-ref a 11) (f-mat4-ref a 15)
-              (f-mat4-ref b 8) (f-mat4-ref b 9) (f-mat4-ref b 10) (f-mat4-ref b 11))
-        (dot4 (f-mat4-ref a 0) (f-mat4-ref a 4) (f-mat4-ref a 8) (f-mat4-ref a 12)
-              (f-mat4-ref b 12) (f-mat4-ref b 13) (f-mat4-ref b 14) (f-mat4-ref b 15))
-        (dot4 (f-mat4-ref a 1) (f-mat4-ref a 5) (f-mat4-ref a 9) (f-mat4-ref a 13)
-              (f-mat4-ref b 12) (f-mat4-ref b 13) (f-mat4-ref b 14) (f-mat4-ref b 15))
-        (dot4 (f-mat4-ref a 2) (f-mat4-ref a 6) (f-mat4-ref a 10) (f-mat4-ref a 14)
-              (f-mat4-ref b 12) (f-mat4-ref b 13) (f-mat4-ref b 14) (f-mat4-ref b 15))
-        (dot4 (f-mat4-ref a 3) (f-mat4-ref a 7) (f-mat4-ref a 11) (f-mat4-ref a 15)
-              (f-mat4-ref b 12) (f-mat4-ref b 13) (f-mat4-ref b 14) (f-mat4-ref b 15)))))
-  (declare mul-f-mat4-f-mat4 (Fmat4 * Fmat4 -> Fmat4))
-  (define (mul-f-mat4-f-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Dmat4 Fmat4 Dmat4)
-    (inline)
-    (define (multiply a b)
-      (make-d-mat4
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (widen (f-mat4-ref b 0)) (widen (f-mat4-ref b 1)) (widen (f-mat4-ref b 2)) (widen (f-mat4-ref b 3)))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (widen (f-mat4-ref b 0)) (widen (f-mat4-ref b 1)) (widen (f-mat4-ref b 2)) (widen (f-mat4-ref b 3)))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (widen (f-mat4-ref b 0)) (widen (f-mat4-ref b 1)) (widen (f-mat4-ref b 2)) (widen (f-mat4-ref b 3)))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (widen (f-mat4-ref b 0)) (widen (f-mat4-ref b 1)) (widen (f-mat4-ref b 2)) (widen (f-mat4-ref b 3)))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (widen (f-mat4-ref b 4)) (widen (f-mat4-ref b 5)) (widen (f-mat4-ref b 6)) (widen (f-mat4-ref b 7)))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (widen (f-mat4-ref b 4)) (widen (f-mat4-ref b 5)) (widen (f-mat4-ref b 6)) (widen (f-mat4-ref b 7)))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (widen (f-mat4-ref b 4)) (widen (f-mat4-ref b 5)) (widen (f-mat4-ref b 6)) (widen (f-mat4-ref b 7)))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (widen (f-mat4-ref b 4)) (widen (f-mat4-ref b 5)) (widen (f-mat4-ref b 6)) (widen (f-mat4-ref b 7)))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (widen (f-mat4-ref b 8)) (widen (f-mat4-ref b 9)) (widen (f-mat4-ref b 10)) (widen (f-mat4-ref b 11)))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (widen (f-mat4-ref b 8)) (widen (f-mat4-ref b 9)) (widen (f-mat4-ref b 10)) (widen (f-mat4-ref b 11)))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (widen (f-mat4-ref b 8)) (widen (f-mat4-ref b 9)) (widen (f-mat4-ref b 10)) (widen (f-mat4-ref b 11)))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (widen (f-mat4-ref b 8)) (widen (f-mat4-ref b 9)) (widen (f-mat4-ref b 10)) (widen (f-mat4-ref b 11)))
-        (dot4 (d-mat4-ref a 0) (d-mat4-ref a 4) (d-mat4-ref a 8) (d-mat4-ref a 12)
-              (widen (f-mat4-ref b 12)) (widen (f-mat4-ref b 13)) (widen (f-mat4-ref b 14)) (widen (f-mat4-ref b 15)))
-        (dot4 (d-mat4-ref a 1) (d-mat4-ref a 5) (d-mat4-ref a 9) (d-mat4-ref a 13)
-              (widen (f-mat4-ref b 12)) (widen (f-mat4-ref b 13)) (widen (f-mat4-ref b 14)) (widen (f-mat4-ref b 15)))
-        (dot4 (d-mat4-ref a 2) (d-mat4-ref a 6) (d-mat4-ref a 10) (d-mat4-ref a 14)
-              (widen (f-mat4-ref b 12)) (widen (f-mat4-ref b 13)) (widen (f-mat4-ref b 14)) (widen (f-mat4-ref b 15)))
-        (dot4 (d-mat4-ref a 3) (d-mat4-ref a 7) (d-mat4-ref a 11) (d-mat4-ref a 15)
-              (widen (f-mat4-ref b 12)) (widen (f-mat4-ref b 13)) (widen (f-mat4-ref b 14)) (widen (f-mat4-ref b 15))))))
-  (declare mul-d-mat4-f-mat4 (Dmat4 * Fmat4 -> Dmat4))
-  (define (mul-d-mat4-f-mat4 a b) (multiply a b))
-
-  (define-instance (Multipliable Fmat4 Dmat4 Dmat4)
-    (inline)
-    (define (multiply a b)
-      (make-d-mat4
-        (dot4 (widen (f-mat4-ref a 0)) (widen (f-mat4-ref a 4)) (widen (f-mat4-ref a 8)) (widen (f-mat4-ref a 12))
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (widen (f-mat4-ref a 1)) (widen (f-mat4-ref a 5)) (widen (f-mat4-ref a 9)) (widen (f-mat4-ref a 13))
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (widen (f-mat4-ref a 2)) (widen (f-mat4-ref a 6)) (widen (f-mat4-ref a 10)) (widen (f-mat4-ref a 14))
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (widen (f-mat4-ref a 3)) (widen (f-mat4-ref a 7)) (widen (f-mat4-ref a 11)) (widen (f-mat4-ref a 15))
-              (d-mat4-ref b 0) (d-mat4-ref b 1) (d-mat4-ref b 2) (d-mat4-ref b 3))
-        (dot4 (widen (f-mat4-ref a 0)) (widen (f-mat4-ref a 4)) (widen (f-mat4-ref a 8)) (widen (f-mat4-ref a 12))
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (widen (f-mat4-ref a 1)) (widen (f-mat4-ref a 5)) (widen (f-mat4-ref a 9)) (widen (f-mat4-ref a 13))
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (widen (f-mat4-ref a 2)) (widen (f-mat4-ref a 6)) (widen (f-mat4-ref a 10)) (widen (f-mat4-ref a 14))
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (widen (f-mat4-ref a 3)) (widen (f-mat4-ref a 7)) (widen (f-mat4-ref a 11)) (widen (f-mat4-ref a 15))
-              (d-mat4-ref b 4) (d-mat4-ref b 5) (d-mat4-ref b 6) (d-mat4-ref b 7))
-        (dot4 (widen (f-mat4-ref a 0)) (widen (f-mat4-ref a 4)) (widen (f-mat4-ref a 8)) (widen (f-mat4-ref a 12))
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (widen (f-mat4-ref a 1)) (widen (f-mat4-ref a 5)) (widen (f-mat4-ref a 9)) (widen (f-mat4-ref a 13))
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (widen (f-mat4-ref a 2)) (widen (f-mat4-ref a 6)) (widen (f-mat4-ref a 10)) (widen (f-mat4-ref a 14))
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (widen (f-mat4-ref a 3)) (widen (f-mat4-ref a 7)) (widen (f-mat4-ref a 11)) (widen (f-mat4-ref a 15))
-              (d-mat4-ref b 8) (d-mat4-ref b 9) (d-mat4-ref b 10) (d-mat4-ref b 11))
-        (dot4 (widen (f-mat4-ref a 0)) (widen (f-mat4-ref a 4)) (widen (f-mat4-ref a 8)) (widen (f-mat4-ref a 12))
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (widen (f-mat4-ref a 1)) (widen (f-mat4-ref a 5)) (widen (f-mat4-ref a 9)) (widen (f-mat4-ref a 13))
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (widen (f-mat4-ref a 2)) (widen (f-mat4-ref a 6)) (widen (f-mat4-ref a 10)) (widen (f-mat4-ref a 14))
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15))
-        (dot4 (widen (f-mat4-ref a 3)) (widen (f-mat4-ref a 7)) (widen (f-mat4-ref a 11)) (widen (f-mat4-ref a 15))
-              (d-mat4-ref b 12) (d-mat4-ref b 13) (d-mat4-ref b 14) (d-mat4-ref b 15)))))
-  (declare mul-f-mat4-d-mat4 (Fmat4 * Dmat4 -> Dmat4))
-  (define (mul-f-mat4-d-mat4 a b) (multiply a b))
-
-  (repr :native (cl:simple-array cl:single-float (cl:* cl:*)))
-  (define-type FArray)
   (inline)
-  (declare f-array-ref (FArray * UFix * UFix -> F32))
-  (define (f-array-ref a i j)
-    (lisp (-> F32) (a i j)
-      (cl:locally
-        (cl:declare (cl:type (cl:simple-array cl:single-float (cl:* cl:*)) a)
-                    (cl:type (cl:integer 0 #.cl:most-positive-fixnum) i j))
-        (cl:the cl:single-float (cl:aref a i j)))))
+  (declare matn-rows (MatN :a -> UFix))
+  (define (matn-rows (MatNData rows _ _)) rows)
+
   (inline)
-  (declare f-array-set (FArray * UFix * UFix * F32 -> Void))
-  (define (f-array-set a i j x)
-    (lisp (-> Void) (a i j x)
-      (cl:locally
-        (cl:declare (cl:type (cl:simple-array cl:single-float (cl:* cl:*)) a)
-                    (cl:type (cl:integer 0 #.cl:most-positive-fixnum) i j)
-                    (cl:type cl:single-float x))
-        (cl:setf (cl:aref a i j) x))))
-  (declare make-f-array (UFix * UFix -> FArray))
-  (define (make-f-array m n)
-    (lisp (-> FArray) (m n)
-      (cl:locally
-        (cl:declare (cl:type (cl:integer 0 #.cl:most-positive-fixnum) m n))
-        (cl:the (cl:simple-array cl:single-float (cl:* cl:*))
-          (cl:make-array (cl:list m n) :element-type 'cl:single-float)))))
+  (declare matn-cols (MatN :a -> UFix))
+  (define (matn-cols (MatNData _ cols _)) cols)
 
-  (repr :native (cl:simple-array cl:double-float (cl:* cl:*)))
-  (define-type DArray)
   (inline)
-  (declare d-array-ref (DArray * UFix * UFix -> F64))
-  (define (d-array-ref a i j)
-    (lisp (-> F64) (a i j)
-      (cl:locally
-        (cl:declare (cl:type (cl:simple-array cl:double-float (cl:* cl:*)) a)
-                    (cl:type (cl:integer 0 #.cl:most-positive-fixnum) i j))
-        (cl:the cl:double-float (cl:aref a i j)))))
-  (inline)
-  (declare d-array-set (DArray * UFix * UFix * F64 -> Void))
-  (define (d-array-set a i j x)
-    (lisp (-> Void) (a i j x)
-      (cl:locally
-        (cl:declare (cl:type (cl:simple-array cl:double-float (cl:* cl:*)) a)
-                    (cl:type (cl:integer 0 #.cl:most-positive-fixnum) i j)
-                    (cl:type cl:double-float x))
-        (cl:setf (cl:aref a i j) x))))
-  (declare make-d-array (UFix * UFix -> DArray))
-  (define (make-d-array m n)
-    (lisp (-> DArray) (m n)
-      (cl:locally
-        (cl:declare (cl:type (cl:integer 0 #.cl:most-positive-fixnum) m n))
-        (cl:the (cl:simple-array cl:double-float (cl:* cl:*))
-          (cl:make-array (cl:list m n) :element-type 'cl:double-float)))))
+  (declare matn-ref (MatN :a * UFix * UFix -> :a))
+  (define (matn-ref (MatNData rows cols data) i j)
+    (if (and (< i rows) (< j cols))
+        (arr:aref data (+ (* i cols) j))
+        (error "Matrix index out of bounds")))
 
-  (declare array-dot-ff (FArray * FArray * UFix * UFix * UFix * UFix * F32 -> F32))
-  (define (array-dot-ff a b i j k n acc)
-    (if (== k n)
-        acc
-        (array-dot-ff a b i j (+ k 1) n
-          (+ acc (* (f-array-ref a i k) (f-array-ref b k j))))))
-  (declare array-row-ff (FArray * FArray * FArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-row-ff a b result i j n p)
-    (if (== j p)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (f-array-set result i j (array-dot-ff a b i j 0 n 0.0f0))
-          (array-row-ff a b result i (+ j 1) n p))))
-  (declare array-fill-ff (FArray * FArray * FArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-fill-ff a b result i m n p)
-    (if (== i m)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (array-row-ff a b result i 0 n p)
-          (array-fill-ff a b result (+ i 1) m n p))))
-  (declare mul-array-ff (FArray * FArray * UFix * UFix * UFix -> FArray))
-  (define (mul-array-ff a b m n p)
-    (let ((result (make-f-array m p)))
-      (array-fill-ff a b result 0 m n p)
-      result))
-
-  (declare array-dot-fd (FArray * DArray * UFix * UFix * UFix * UFix * F64 -> F64))
-  (define (array-dot-fd a b i j k n acc)
-    (if (== k n)
-        acc
-        (array-dot-fd a b i j (+ k 1) n
-          (+ acc (* (widen (f-array-ref a i k)) (d-array-ref b k j))))))
-  (declare array-row-fd (FArray * DArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-row-fd a b result i j n p)
-    (if (== j p)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (d-array-set result i j (array-dot-fd a b i j 0 n 0.0d0))
-          (array-row-fd a b result i (+ j 1) n p))))
-  (declare array-fill-fd (FArray * DArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-fill-fd a b result i m n p)
-    (if (== i m)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (array-row-fd a b result i 0 n p)
-          (array-fill-fd a b result (+ i 1) m n p))))
-  (declare mul-array-fd (FArray * DArray * UFix * UFix * UFix -> DArray))
-  (define (mul-array-fd a b m n p)
-    (let ((result (make-d-array m p)))
-      (array-fill-fd a b result 0 m n p)
-      result))
-
-  (declare array-dot-df (DArray * FArray * UFix * UFix * UFix * UFix * F64 -> F64))
-  (define (array-dot-df a b i j k n acc)
-    (if (== k n)
-        acc
-        (array-dot-df a b i j (+ k 1) n
-          (+ acc (* (d-array-ref a i k) (widen (f-array-ref b k j)))))))
-  (declare array-row-df (DArray * FArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-row-df a b result i j n p)
-    (if (== j p)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (d-array-set result i j (array-dot-df a b i j 0 n 0.0d0))
-          (array-row-df a b result i (+ j 1) n p))))
-  (declare array-fill-df (DArray * FArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-fill-df a b result i m n p)
-    (if (== i m)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (array-row-df a b result i 0 n p)
-          (array-fill-df a b result (+ i 1) m n p))))
-  (declare mul-array-df (DArray * FArray * UFix * UFix * UFix -> DArray))
-  (define (mul-array-df a b m n p)
-    (let ((result (make-d-array m p)))
-      (array-fill-df a b result 0 m n p)
-      result))
-
-  (declare array-dot-dd (DArray * DArray * UFix * UFix * UFix * UFix * F64 -> F64))
-  (define (array-dot-dd a b i j k n acc)
-    (if (== k n)
-        acc
-        (array-dot-dd a b i j (+ k 1) n
-          (+ acc (* (d-array-ref a i k) (d-array-ref b k j))))))
-  (declare array-row-dd (DArray * DArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-row-dd a b result i j n p)
-    (if (== j p)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (d-array-set result i j (array-dot-dd a b i j 0 n 0.0d0))
-          (array-row-dd a b result i (+ j 1) n p))))
-  (declare array-fill-dd (DArray * DArray * DArray * UFix * UFix * UFix * UFix -> Void))
-  (define (array-fill-dd a b result i m n p)
-    (if (== i m)
-        (lisp (-> Void) () (cl:values))
-        (progn
-          (array-row-dd a b result i 0 n p)
-          (array-fill-dd a b result (+ i 1) m n p))))
-  (declare mul-array-dd (DArray * DArray * UFix * UFix * UFix -> DArray))
-  (define (mul-array-dd a b m n p)
-    (let ((result (make-d-array m p)))
-      (array-fill-dd a b result 0 m n p)
-      result))
-
-)
+  (define-instance ((ScalarProduct :a :b :c) (types:RuntimeRepr :c) =>
+                    Multipliable (MatN :a) (MatN :b) (MatN :c))
+    (define (m* (MatNData m n a) (MatNData q p b))
+      (if (not (== n q))
+          (error "Incompatible matrix dimensions")
+          (let ((out (arr:make-uninitialized (* m p))))
+            (progn
+              (rec rows ((i 0))
+                (if (== i m)
+                    (values)
+                    (progn
+                      (rec cols ((j 0))
+                        (if (== j p)
+                            (values)
+                            (progn
+                              (arr:set! out (+ (* i p) j)
+                                (rec dot ((k 0) (acc 0))
+                                  (if (== k n)
+                                      acc
+                                      (dot (+ k 1)
+                                           (+ acc
+                                              (scalar-product
+                                                (arr:aref a (+ (* i n) k))
+                                                (arr:aref b (+ (* k p) j))))))))
+                              (cols (+ j 1)))))
+                      (rows (+ i 1)))))
+              (MatNData m p out)))))))

@@ -30,12 +30,11 @@
 	do (pushnew (translate-logical-pathname directory) asdf:*central-registry*)))
 
 
-;; Optional experiment; normal 3d-math has no Coalton dependency.
+;; Independent experiment: no dependency on 3d-math itself.
 (asdf:defsystem "3d-math/coalton"
-  :description "Experimental Coalton multiplication using existing 3d-math representations."
-  :depends-on ("3d-math" "coalton/library")
-  :serial t
-  :components ((:file "coalton-multiplication") (:file "coalton-interface"))
+  :description "Pure Coalton matrix and vector multiplication."
+  :depends-on ("coalton")
+  :components ((:file "coalton-multiplication"))
   :in-order-to ((asdf:test-op (asdf:test-op "3d-math/coalton/tests"))))
 
 (asdf:defsystem "3d-math/coalton/tests"
@@ -43,4 +42,4 @@
   :components ((:file "coalton-tests"))
   :perform (asdf:test-op (op system)
              (declare (ignore op system))
-             (uiop:symbol-call :3dm.coalton :run-tests)))
+             (uiop:symbol-call :3dm.coalton.tests :run-tests)))
