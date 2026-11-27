@@ -28,3 +28,19 @@
 			 #p"3d-math-submodules:fast-generic-functions;code;")))
   (loop for directory in directories
 	do (pushnew (translate-logical-pathname directory) asdf:*central-registry*)))
+
+
+;; Optional experiment; normal 3d-math has no Coalton dependency.
+(asdf:defsystem "3d-math/coalton"
+  :description "Experimental Coalton multiplication using existing 3d-math representations."
+  :depends-on ("3d-math" "coalton/library")
+  :serial t
+  :components ((:file "coalton-multiplication") (:file "coalton-interface"))
+  :in-order-to ((asdf:test-op (asdf:test-op "3d-math/coalton/tests"))))
+
+(asdf:defsystem "3d-math/coalton/tests"
+  :depends-on ("3d-math/coalton")
+  :components ((:file "coalton-tests"))
+  :perform (asdf:test-op (op system)
+             (declare (ignore op system))
+             (uiop:symbol-call :3dm.coalton :run-tests)))
