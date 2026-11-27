@@ -2,7 +2,7 @@
   :description "Generic 3d math common lisp library for 3d graphics applications."
   :author "Andrew Kenneth Wolven <awolven@gmail.com>"
   :license "MIT"
-  :depends-on (:fast-generic-functions)
+  :depends-on (:fast-generic-functions "3d-math/coalton")
   :components
   ((:file "package")
    (:file "macros")
@@ -12,6 +12,7 @@
    (:file "rational-types")
    (:file "generic")
    (:file "vector-methods")
+   (:file "coalton-method-kernels")
    (:file "matrix-methods")
    (:file "quaternion-methods")))
 

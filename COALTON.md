@@ -43,3 +43,11 @@ The code uses the current Coalton APIs documented in [define-type](https://githu
       (coalton/math/fraction:mkFraction 3 1))))
 ;; Vec2 Fraction: 2 and 43/12
 ```
+
+## Original CLOS dispatch with Coalton-generated method bodies
+
+The branch now also integrates the typed arithmetic with the original Common Lisp system. Loading `3d-math` depends on the pure Coalton system and compiles the same sealed `binary-m*` methods; their fixed-size bodies use `coalton-matrix-matrix` or `coalton-matrix-vector`. The five homogeneous/mixed float and rational array paths use `coalton-simple-array-multiply`. General numeric arrays retain the original fallback, and private KRMA-specific multiplication macros remain unchanged. Original CL matrix/vector representations, variadic API, compiler macro, and dispatch signatures are preserved. No conversion to Coalton matrix values occurs.
+
+`coalton-method-kernels.lisp` defines concrete inline `(monomorphize)` entry points for the shared pure Coalton dot products and multiply-accumulate operations. The method macros place typed `coalton:coalton` expressions inside the existing storage operations, with explicit host CL scalar type annotations. Coalton compiles those expressions during method compilation. The compiler may inline the concrete roots; actual generated code and dictionary elimination must be verified, not presumed. The pure Coalton system remains independently loadable. A new Lisp image is needed because the original methods are sealed.
+
+This integration adds Coalton as a dependency of the branch's main system. It is not yet compiled or runtime-tested. The source changes intentionally retain the original fixed-size dispatch coverage and general-array fallback rather than adding new CLOS methods for every combination possible in the pure Coalton API.

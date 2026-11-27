@@ -189,139 +189,139 @@
 (3dm-def::define-m*-mat2-vec2 :3dm.d :3dm.d :3dm.d :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat2) (b 3dm.d::vec2))
-  (3dm.d::m*-mat2-vec2 a b))
+  (3dm-def::coalton-matrix-vector a b 2 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::vec2) (b 3dm.d::mat2))
-  (3dm.d::m*-mat2-vec2 b a))
+  (3dm-def::coalton-matrix-vector b a 2 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat2-vec2 :3dm.d&f :3dm.d :3dm.f :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat2) (b 3dm.f::vec2))
-  (3dm.d&f::m*-mat2-vec2 a b))
+  (3dm-def::coalton-matrix-vector a b 2 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec2) (b 3dm.d::mat2))
-  (3dm.d&f::m*-mat2-vec2 b a))
+  (3dm-def::coalton-matrix-vector b a 2 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def::define-m*-mat2-vec2 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat2) (b 3dm.f::vec2))
-  (3dm.f::m*-mat2-vec2 a b))
+  (3dm-def::coalton-matrix-vector a b 2 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec2) (b 3dm.f::mat2))
-  (3dm.f::m*-mat2-vec2 b a))
+  (3dm-def::coalton-matrix-vector b a 2 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def::define-m*-mat2-mat2 :3dm.d :3dm.d :3dm.d :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat2) (b 3dm.d::mat2))
-  (3dm.d::m*-mat2-mat2 a b))
+  (3dm-def::coalton-matrix-matrix a b 2 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat2-mat2 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat2) (b 3dm.f::mat2))
-  (3dm.f::m*-mat2-mat2 a b))
+  (3dm-def::coalton-matrix-matrix a b 2 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def::define-m*-mat2-mat2 :3dm.d&f :3dm.d :3dm.f :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat2) (b 3dm.f::mat2))
-  (3dm.d&f::m*-mat2-mat2 a b))
+  (3dm-def::coalton-matrix-matrix a b 2 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def::define-m*-mat3-vec3 :3dm.d :3dm.d :3dm.d :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat3) (b 3dm.d::vec3))
-  (3dm.d::m*-mat3-vec3 a b))
+  (3dm-def::coalton-matrix-vector a b 3 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::vec3) (b 3dm.d::mat3))
-  (3dm.d::m*-mat3-vec3 b a))
+  (3dm-def::coalton-matrix-vector b a 3 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat3-vec3 :3dm.d&f :3dm.d :3dm.f :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat3) (b 3dm.f::vec3))
-  (3dm.d&f::m*-mat3-vec3 a b))
+  (3dm-def::coalton-matrix-vector a b 3 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec3) (b 3dm.d::mat3))
-  (3dm.d&f::m*-mat3-vec3 b a))
+  (3dm-def::coalton-matrix-vector b a 3 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def::define-m*-mat3-vec3 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat3) (b 3dm.f::vec3))
-  (3dm.f::m*-mat3-vec3 a b))
+  (3dm-def::coalton-matrix-vector a b 3 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec3) (b 3dm.f::mat3))
-  (3dm.f::m*-mat3-vec3 b a))
+  (3dm-def::coalton-matrix-vector b a 3 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def::define-m*-mat4-vec4 :3dm.d :3dm.d :3dm.d :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.d::vec4))
-  (3dm.d::m*-mat4-vec4 a b))
+  (3dm-def::coalton-matrix-vector a b 4 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::vec4) (b 3dm.d::mat4))
-  (3dm.d::m*-mat4-vec4 b a))
+  (3dm-def::coalton-matrix-vector b a 4 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat4-vec4 :3dm.d&f :3dm.d :3dm.f :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.f::vec4))
-  (3dm.d&f::m*-mat4-vec4 a b))
+  (3dm-def::coalton-matrix-vector a b 4 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec4) (b 3dm.d::mat4))
-  (3dm.d&f::m*-mat4-vec4 b a))
+  (3dm-def::coalton-matrix-vector b a 4 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def::define-m*-mat4-vec4 :3dm.f&d :3dm.f :3dm.d :3dm.d)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::vec4))
-  (3dm.f&d::m*-mat4-vec4 a b))
+  (3dm-def::coalton-matrix-vector a b 4 :3dm.f :3dm.d :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::vec4) (b 3dm.f::mat4))
-  (3dm.f&d::m*-mat4-vec4 b a))
+  (3dm-def::coalton-matrix-vector b a 4 :3dm.f :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat4-vec4 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.f::vec4))
-  (3dm.f::m*-mat4-vec4 a b))
+  (3dm-def::coalton-matrix-vector a b 4 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::vec4) (b 3dm.f::mat4))
-  (3dm.f::m*-mat4-vec4 b a))
+  (3dm-def::coalton-matrix-vector b a 4 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.d :3dm.d :3dm.d :3dm.d)
 (3dm-def::define-m*-mat4-single-float-mat4 :3dm.d :3dm.d :3dm.d) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.d::mat4))
-  (3dm.d::m*-mat4-mat4 a b))
+  (3dm-def::coalton-matrix-matrix a b 4 :3dm.d :3dm.d :3dm.d))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.f :3dm.f :3dm.f :3dm.f)
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.f::mat4))
-  (3dm.f::m*-mat4-mat4 a b))
+  (3dm-def::coalton-matrix-matrix a b 4 :3dm.f :3dm.f :3dm.f))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.d&f :3dm.d :3dm.f :3dm.d)
 (3dm-def::define-m*-mat4-single-float-mat4 :3dm.d&f :3dm.d :3dm.f) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.d::mat4) (b 3dm.f::mat4))
-  (3dm.d&f::m*-mat4-mat4 a b))
+  (3dm-def::coalton-matrix-matrix a b 4 :3dm.d :3dm.f :3dm.d))
 
 (3dm-def::define-m*-mat4-mat4 :3dm.f&d :3dm.f :3dm.d :3dm.d)
 (3dm-def::define-m*-mat4-single-float-mat4 :3dm.f&d :3dm.f :3dm.d) ;; used by krma
 
 (3dm-def:defsealed binary-m* ((a 3dm.f::mat4) (b 3dm.d::mat4))
-  (3dm.f&d::m*-mat4-mat4 a b))
+  (3dm-def::coalton-matrix-matrix a b 4 :3dm.f :3dm.d :3dm.d))
 
 (3dm-def:defsealed binary-m* ((a #-(or ALLEGRO ECL) simple-array #+(or ALLEGRO ECL) array)
 			      (b #-(or ALLEGRO ECL) simple-array #+(or ALLEGRO ECL) array))
   (declare (optimize (speed 3) (safety 3)))
   (cond ((and (eq (array-element-type a) 'double-float)
 	      (eq (array-element-type b) 'double-float))
-	 (3dm-def::binary-m*-simple-array a b double-float double-float double-float))
+	 (3dm-def::coalton-simple-array-multiply a b double-float double-float double-float))
 	((and (eq (array-element-type a) 'single-float)
 	      (eq (array-element-type b) 'double-float))
-	 (3dm-def::binary-m*-simple-array a b single-float double-float double-float))
+	 (3dm-def::coalton-simple-array-multiply a b single-float double-float double-float))
 	((and (eq (array-element-type a) 'double-float)
 	      (eq (array-element-type b) 'single-float))
-	 (3dm-def::binary-m*-simple-array a b double-float single-float double-float))
+	 (3dm-def::coalton-simple-array-multiply a b double-float single-float double-float))
 	((and (eq (array-element-type a) 'single-float)
 	      (eq (array-element-type b) 'single-float))
-	 (3dm-def::binary-m*-simple-array a b single-float single-float single-float))
+	 (3dm-def::coalton-simple-array-multiply a b single-float single-float single-float))
 	((and (eq (array-element-type a) 'rational)
 	      (eq (array-element-type b) 'rational))
-	 (3dm-def::binary-m*-simple-array a b rational rational rational))
+	 (3dm-def::coalton-simple-array-multiply a b rational rational rational))
 	(t (3dm-def::binary-m*-simple-array a b number number t))))
 
 (3dm-def::define-ofun m* (val &rest vals)
