@@ -145,9 +145,9 @@
   (defun coalton-argument (type form)
     (let ((coalton-type
             (ecase type
-              (single-float 'coalton-prelude:F32)
-              (double-float 'coalton-prelude:F64)
-              (rational 'coalton-prelude:Fraction))))
+              (single-float 'coalton:F32)
+              (double-float 'coalton:F64)
+              (rational 'coalton:Fraction))))
       `(coalton:lisp (coalton:-> ,coalton-type) ()
          (the ,type ,form))))
 
