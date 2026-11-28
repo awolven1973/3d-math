@@ -4,12 +4,12 @@
 (coalton-toplevel
   (inline)
   (declare vec2-component-0 ((Vec2 :a) -> :a))
-  (define (vec2-component-0 (Vec2 a0 a1))
+  (define (vec2-component-0 (Vec2 a0 _))
     a0)
 
   (inline)
   (declare vec2-component-1 ((Vec2 :a) -> :a))
-  (define (vec2-component-1 (Vec2 a0 a1))
+  (define (vec2-component-1 (Vec2 _ a1))
     a1)
 
   (inline)
@@ -121,17 +121,17 @@
 
   (inline)
   (declare vec3-component-0 ((Vec3 :a) -> :a))
-  (define (vec3-component-0 (Vec3 a0 a1 a2))
+  (define (vec3-component-0 (Vec3 a0 _ _))
     a0)
 
   (inline)
   (declare vec3-component-1 ((Vec3 :a) -> :a))
-  (define (vec3-component-1 (Vec3 a0 a1 a2))
+  (define (vec3-component-1 (Vec3 _ a1 _))
     a1)
 
   (inline)
   (declare vec3-component-2 ((Vec3 :a) -> :a))
-  (define (vec3-component-2 (Vec3 a0 a1 a2))
+  (define (vec3-component-2 (Vec3 _ _ a2))
     a2)
 
   (inline)
@@ -243,22 +243,22 @@
 
   (inline)
   (declare vec4-component-0 ((Vec4 :a) -> :a))
-  (define (vec4-component-0 (Vec4 a0 a1 a2 a3))
+  (define (vec4-component-0 (Vec4 a0 _ _ _))
     a0)
 
   (inline)
   (declare vec4-component-1 ((Vec4 :a) -> :a))
-  (define (vec4-component-1 (Vec4 a0 a1 a2 a3))
+  (define (vec4-component-1 (Vec4 _ a1 _ _))
     a1)
 
   (inline)
   (declare vec4-component-2 ((Vec4 :a) -> :a))
-  (define (vec4-component-2 (Vec4 a0 a1 a2 a3))
+  (define (vec4-component-2 (Vec4 _ _ a2 _))
     a2)
 
   (inline)
   (declare vec4-component-3 ((Vec4 :a) -> :a))
-  (define (vec4-component-3 (Vec4 a0 a1 a2 a3))
+  (define (vec4-component-3 (Vec4 _ _ _ a3))
     a3)
 
   (inline)
@@ -380,22 +380,22 @@
 
   (inline)
   (declare quat-component-0 ((Quat :a) -> :a))
-  (define (quat-component-0 (Quat x y z w))
+  (define (quat-component-0 (Quat x _ _ _))
     x)
 
   (inline)
   (declare quat-component-1 ((Quat :a) -> :a))
-  (define (quat-component-1 (Quat x y z w))
+  (define (quat-component-1 (Quat _ y _ _))
     y)
 
   (inline)
   (declare quat-component-2 ((Quat :a) -> :a))
-  (define (quat-component-2 (Quat x y z w))
+  (define (quat-component-2 (Quat _ _ z _))
     z)
 
   (inline)
   (declare quat-component-3 ((Quat :a) -> :a))
-  (define (quat-component-3 (Quat x y z w))
+  (define (quat-component-3 (Quat _ _ _ w))
     w)
 
   (inline)
