@@ -1702,7 +1702,7 @@
     (let ((tangent (coalton/math/elementary:tan
                     (* 0.5d0 (* fovy (/ (the F64 coalton/math/elementary:pi) 180))))))
       (perspective-vulkan-from-tangent
-       (lisp F32 (tangent) (cl:coerce tangent 'cl:single-float))
+       (lisp (-> F32) (tangent) (cl:coerce tangent 'cl:single-float))
        aspect-ratio near far)))
 
   (inline)
