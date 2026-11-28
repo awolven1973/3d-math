@@ -6,7 +6,10 @@
 (coalton-toplevel
   (declare check (Boolean * String -> Void))
   (define (check ok message)
-    (if ok (values) (error message)))
+    (if ok
+        (values)
+        (lisp (-> Void) (message)
+          (cl:error "~A" message))))
 
   (declare run-tests (Void -> Void))
   (define (run-tests)
