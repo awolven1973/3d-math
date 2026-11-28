@@ -1,53 +1,50 @@
 (in-package :3dm-def)
 
-(declaim (inline clampf))
 (declaim (inline clampf) (ftype (function (real) single-float) clampf))
 (defun clampf (number)
-  "Clamp real number to single-float limits."
-  (block nil
-    (when (typep number 'single-float)
-      (return number))
-    (etypecase number
-      (real
-       (etypecase number
-	 (double-float
-	  (when (= number 0.0d0)
-	    (return 0.0f0))
-	  (when (< (cl:the double-float (load-time-value (/ least-negative-single-float 2.0d0)))
-		   number
-		   (cl:the double-float (load-time-value (/ least-positive-single-float 2.0d0))))
-	    (return 0.0f0))
-	  (when (< number 0.0d0)
-	    (when (> number (cl:the single-float least-negative-single-float))
-	      (return least-negative-single-float))
-	    (when (< number (cl:the single-float most-negative-single-float))
-	      (return most-negative-single-float))
-	    (return (coerce number 'single-float)))
-	  (when (< number (cl:the single-float least-positive-single-float))
-	    (return least-positive-single-float))
-	  (when (> number (cl:the single-float most-positive-single-float))
-	    (return most-positive-single-float))
-	  (coerce number 'single-float))      
-	 (integer
-	  (when (= number 0)
-	    (return 0.0f0))
-	  (when (< number (cl:the single-float most-negative-single-float))
-	    (return most-negative-single-float))
-	  (when (> number (cl:the single-float most-positive-single-float))
-	    (return most-positive-single-float))
-	  (coerce number 'single-float))
-	 (rational
-	  (when (< (cl:the double-float (load-time-value (/ least-negative-single-float 2.0d0)))
-		   number
-		   (cl:the double-float (load-time-value (/ least-positive-single-float 2.0d0))))
-	    (return 0.0f0))
-	  (when (< number 0)
-	    (when (> number (cl:the single-float least-negative-single-float))
-	      (return least-negative-single-float))
-	    (return (coerce number 'single-float)))
-	  (when (< number (cl:the single-float least-positive-single-float))
-	    (return least-positive-single-float))
-	  (coerce number 'single-float)))))))
+  "Convert to single-float, saturating overflow and rounding tiny values
+to the nearest representable magnitude (ties to even at zero).
+Preserve the sign of floating-point zero and of values rounded to zero."
+  (etypecase number
+    (single-float number)
+    (double-float
+     (let ((magnitude (abs number)))
+       (cond
+         ((<= magnitude
+              (load-time-value (/ (coerce least-positive-single-float
+                                          'double-float)
+                                  2.0d0)))
+          (if (minusp (float-sign number)) -0.0f0 0.0f0))
+         ((< magnitude least-positive-single-float)
+          (if (minusp number)
+              least-negative-single-float
+              least-positive-single-float))
+         ((> number most-positive-single-float) most-positive-single-float)
+         ((< number most-negative-single-float) most-negative-single-float)
+         (t (coerce number 'single-float)))))
+    (integer
+     (cond
+       ((> number (load-time-value (rational most-positive-single-float)))
+        most-positive-single-float)
+       ((< number (load-time-value (rational most-negative-single-float)))
+        most-negative-single-float)
+       (t (coerce number 'single-float))))
+    (rational
+     ;; Use exact rational bounds: do not round NUMBER before comparing.
+     (let ((magnitude (abs number)))
+       (cond
+         ((<= magnitude (load-time-value
+                          (/ (rational least-positive-single-float) 2)))
+          (if (minusp number) -0.0f0 0.0f0))
+         ((< magnitude (load-time-value (rational least-positive-single-float)))
+          (if (minusp number)
+              least-negative-single-float
+              least-positive-single-float))
+         ((> number (load-time-value (rational most-positive-single-float)))
+          most-positive-single-float)
+         ((< number (load-time-value (rational most-negative-single-float)))
+          most-negative-single-float)
+         (t (coerce number 'single-float)))))))
 
 (defun expand-mycoerce (number type)
   (ecase type
