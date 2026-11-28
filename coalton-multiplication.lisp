@@ -12,7 +12,10 @@
            #:mat2-ref #:mat3-ref #:mat4-ref #:matn-ref
            #:matn-rows #:matn-cols
            #:ScalarProduct #:scalar-product
-           #:Multipliable #:m*))
+           #:Multipliable #:m*
+           #:mperspective-vulkan #:mortho-vulkan
+           #:mperspective-vulkan-f #:mperspective-vulkan-d
+           #:mortho-vulkan-f #:mortho-vulkan-d))
 (cl:in-package #:3dm.coalton)
 
 (coalton-toplevel

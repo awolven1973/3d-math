@@ -101,7 +101,7 @@
 	   #:define-define-veccomp-macro
 	   ))	   
 
-(defmacro def-3d-math-package (name &key nicknames)
+(defmacro def-3d-math-package (name &key nicknames extra-exports)
   `(defpackage ,name
      (:nicknames ,@nicknames)
      (:export #:vec2
@@ -117,10 +117,13 @@
 	      #:with-vec2
 	      #:with-vec3
 	      #:with-vec4
-	      #:with-vec)))
+	      #:with-vec
+      ,@extra-exports)))
 
-(def-3d-math-package :3dm.d :nicknames (:3d-math-double-float))
-(def-3d-math-package :3dm.f :nicknames (:3d-math-single-float))
+(def-3d-math-package :3dm.d :nicknames (:3d-math-double-float)
+  :extra-exports (#:mperspective-vulkan #:mortho-vulkan))
+(def-3d-math-package :3dm.f :nicknames (:3d-math-single-float)
+  :extra-exports (#:mperspective-vulkan #:mortho-vulkan))
 (def-3d-math-package :3dm.fix :nicknames (:3d-math-fixnum))
 (def-3d-math-package :3dm.rat :nicknames (:3d-math-rational))
 (def-3d-math-package :3dm.fc :nicknames (:3d-math-single-float-complex))

@@ -1644,3 +1644,81 @@
   (declare lookat-d ((Vec3 F64) * (Vec3 F64) * (Vec3 F64) -> (Mat4 F64)))
   (define (lookat-d p0 p1 p2) (lookat p0 p1 p2))
 )
+
+;;;; Vulkan projection matrices, ported from KRMA utilities.lisp.
+;;;; Right-handed eye coordinates (forward = -Z), NDC depth [0,1],
+;;;; inverted Y, column-vector multiplication. make-mat4 takes rows.
+
+(coalton-toplevel
+  (inline)
+  (declare perspective-vulkan-from-tangent
+    ((Reciprocable :a) (types:RuntimeRepr :a) =>
+     :a * :a * :a * :a -> (Mat4 :a)))
+  (define (perspective-vulkan-from-tangent half-fovy-tangent aspect-ratio near far)
+    (let ((f (/ 1 half-fovy-tangent))
+          (near-far (- near far)))
+      (let ((a (/ far near-far))
+            (b (/ (* near far) near-far))
+            (x (/ f aspect-ratio))
+            (y (negate f)))
+        (make-mat4 x 0 0 0
+                   0 y 0 0
+                   0 0 a b
+                   0 0 -1 0))))
+
+  (inline)
+  (declare mperspective-vulkan
+    ((Reciprocable :a) (coalton/math/elementary:Trigonometric :a)
+     (types:RuntimeRepr :a) =>
+     :a * :a * :a * :a -> (Mat4 :a)))
+  (define (mperspective-vulkan fovy aspect-ratio near far)
+    "Perspective projection. FOVY is the vertical field of view in degrees."
+    (perspective-vulkan-from-tangent
+     (coalton/math/elementary:tan
+      (* (/ 1 2) (* fovy (/ coalton/math/elementary:pi 180))))
+     aspect-ratio near far))
+
+  (inline)
+  (declare mortho-vulkan
+    ((Reciprocable :a) (types:RuntimeRepr :a) =>
+     :a * :a * :a * :a * :a * :a -> (Mat4 :a)))
+  (define (mortho-vulkan left right bottom top near far)
+    "Orthographic projection. NEAR and FAR are distances along negative Z."
+    (let ((rl (- right left))
+          (bu (- bottom top))
+          (nf (- near far)))
+      (make-mat4 (/ 2 rl) 0 0 (negate (/ (+ right left) rl))
+                 0 (/ 2 bu) 0 (negate (/ (+ bottom top) bu))
+                 0 0 (/ 1 nf) (/ near nf)
+                 0 0 0 1))))
+
+(coalton-toplevel
+  ;; Match KRMA: compute tan in double precision even when the rest
+  ;; of the perspective coefficients and the result are single-float.
+  (inline)
+  (monomorphize)
+  (declare mperspective-vulkan-f (F64 * F32 * F32 * F32 -> (Mat4 F32)))
+  (define (mperspective-vulkan-f fovy aspect-ratio near far)
+    (let ((tangent (coalton/math/elementary:tan
+                    (* 0.5d0 (* fovy (/ (the F64 coalton/math/elementary:pi) 180))))))
+      (perspective-vulkan-from-tangent
+       (lisp F32 (tangent) (cl:coerce tangent 'cl:single-float))
+       aspect-ratio near far)))
+
+  (inline)
+  (monomorphize)
+  (declare mperspective-vulkan-d (F64 * F64 * F64 * F64 -> (Mat4 F64)))
+  (define (mperspective-vulkan-d fovy aspect-ratio near far)
+    (mperspective-vulkan fovy aspect-ratio near far))
+
+  (inline)
+  (monomorphize)
+  (declare mortho-vulkan-f (F32 * F32 * F32 * F32 * F32 * F32 -> (Mat4 F32)))
+  (define (mortho-vulkan-f left right bottom top near far)
+    (mortho-vulkan left right bottom top near far))
+
+  (inline)
+  (monomorphize)
+  (declare mortho-vulkan-d (F64 * F64 * F64 * F64 * F64 * F64 -> (Mat4 F64)))
+  (define (mortho-vulkan-d left right bottom top near far)
+    (mortho-vulkan left right bottom top near far)))

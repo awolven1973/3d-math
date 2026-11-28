@@ -37,8 +37,60 @@
         (check x most-positive-single-float)
         (check (- x) most-negative-single-float)))))
 
+(defun test-vulkan-projections ()
+  ;; Check both matrix entries and transformed homogeneous coordinates.
+  ;; Asymmetric bounds catch transposition, translation and Y-sign mistakes.
+  (dolist (spec (list (list 'single-float #'3dm.f:mperspective-vulkan
+                           #'3dm.f:mortho-vulkan #'3dm.f:vec4 2d-6)
+                     (list 'double-float #'3dm.d:mperspective-vulkan
+                           #'3dm.d:mortho-vulkan #'3dm.d:vec4 1d-12)))
+    (destructuring-bind (precision perspective ortho vec4 tolerance) spec
+      (flet ((check-matrix (m expected)
+               (assert (typep m '3dm.coalton:mat4))
+               (let ((entries (3dm::port-matrix-elements m)))
+                 (assert (= (length entries) 16))
+                 (assert (every (lambda (x) (typep x precision)) entries))
+                 (assert (every (lambda (a b) (near a b tolerance))
+                                entries expected))))
+             (check-projection (m point expected-w expected)
+               (let* ((clip (3dm:m* m (apply vec4 point)))
+                      (w (3dm:vw clip)))
+                 (assert (near w expected-w tolerance))
+                 (assert (every (lambda (a b) (near a b tolerance))
+                                (list (/ (3dm:vx clip) w)
+                                      (/ (3dm:vy clip) w)
+                                      (/ (3dm:vz clip) w))
+                                expected)))))
+        (let ((p (funcall perspective 90 2 1 11)))
+          (check-matrix p '(1/2 0 0 0  0 -1 0 0
+                            0 0 -11/10 -11/10  0 0 -1 0))
+          (check-projection p '(0 0 -1 1) 1 '(0 0 0))
+          (check-projection p '(0 0 -11 1) 11 '(0 0 1))
+          (check-projection p '(2 1 -1 1) 1 '(1 -1 0))
+          (check-projection p '(-22 -11 -11 1) 11 '(-1 1 1))
+          (check-projection p '(0 0 -2 1) 2 '(0 0 11/20)))
+        ;; Nontrivial FOV: compare directly with the original KRMA formula.
+        (let* ((p (funcall perspective 53 7/5 1/4 500))
+               (n (coerce 1/4 precision))
+               (f (coerce 500 precision))
+               (aspect (coerce 7/5 precision))
+               (focal (/ (coerce 1 precision)
+                         (coerce (tan (* 0.5d0 (* 53 (/ pi 180)))) precision)))
+               (nf (- n f)))
+          (check-matrix p (list (/ focal aspect) 0 0 0
+                                0 (- focal) 0 0
+                                0 0 (/ f nf) (/ (* n f) nf)
+                                0 0 -1 0)))
+        (let ((o (funcall ortho -2 6 -3 1 2 10)))
+          (check-matrix o '(1/4 0 0 -1/2  0 -1/2 0 -1/2
+                            0 0 -1/8 -1/4  0 0 0 1))
+          (check-projection o '(-2 -3 -2 1) 1 '(-1 1 0))
+          (check-projection o '(6 1 -10 1) 1 '(1 -1 1))
+          (check-projection o '(2 -1 -6 1) 1 '(0 0 1/2)))))))
+
 (defun run-tests ()
   (test-clampf)
+  (test-vulkan-projections)
   (let* ((f (3dm.f:vec3 1 2 3)) (d (3dm.d:vec3 4 5 6))
          (r (3dm.rat:vec3 1/3 2/3 3/7)))
     (assert (eq (class-of f) (class-of d)))

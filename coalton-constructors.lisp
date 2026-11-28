@@ -17,6 +17,22 @@
 
 (cl:in-package :3dm.d)
 
+(cl:defun mperspective-vulkan (fovy aspect-ratio near far)
+  "Vulkan perspective projection with double-float coefficients; FOVY in degrees."
+  (3dm.coalton:mperspective-vulkan-d
+   (cl:coerce fovy 'cl:double-float)
+   (cl:coerce aspect-ratio 'cl:double-float)
+   (cl:coerce near 'cl:double-float)
+   (cl:coerce far 'cl:double-float)))
+
+(cl:defun mortho-vulkan (left right bottom top near far)
+  "Vulkan orthographic projection with double-float coefficients."
+  (3dm.coalton:mortho-vulkan-d
+   (cl:coerce left 'cl:double-float) (cl:coerce right 'cl:double-float)
+   (cl:coerce bottom 'cl:double-float) (cl:coerce top 'cl:double-float)
+   (cl:coerce near 'cl:double-float) (cl:coerce far 'cl:double-float)))
+
+
 (cl:defun vec2-p (v)
   (cl:and (cl:typep v '3dm.coalton:vec2) (3dm::port-precision-p v :vec2 :d)))
 
@@ -225,6 +241,22 @@
 (cl:defun m*-mat4-single-float-mat4 (a b) (3dm::binary-m*-mat4-mat4-to-single-float-mat4 a b))
 
 (cl:in-package :3dm.f)
+
+(cl:defun mperspective-vulkan (fovy aspect-ratio near far)
+  "Vulkan perspective projection with single-float coefficients; FOVY in degrees."
+  (3dm.coalton:mperspective-vulkan-f
+   (cl:coerce fovy 'cl:double-float)
+   (3dm-def::clampf aspect-ratio)
+   (3dm-def::clampf near)
+   (3dm-def::clampf far)))
+
+(cl:defun mortho-vulkan (left right bottom top near far)
+  "Vulkan orthographic projection with single-float coefficients."
+  (3dm.coalton:mortho-vulkan-f
+   (3dm-def::clampf left) (3dm-def::clampf right)
+   (3dm-def::clampf bottom) (3dm-def::clampf top)
+   (3dm-def::clampf near) (3dm-def::clampf far)))
+
 
 (cl:defun vec2-p (v)
   (cl:and (cl:typep v '3dm.coalton:vec2) (3dm::port-precision-p v :vec2 :f)))
