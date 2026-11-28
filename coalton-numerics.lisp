@@ -83,18 +83,18 @@
     (Vec2 (+ a0 (* (- b0 a0) s)) (+ a1 (* (- b1 a1) s))))
 
   (inline)
-  (declare vec2-length (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec2 :a) -> :a))
+  (declare vec2-length ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec2 :a) -> :a))
   (define (vec2-length v)
     (sqrt (vec2-sqrlength v)))
 
   (inline)
-  (declare vec2-unit (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec2 :a) -> (Vec2 :a)))
+  (declare vec2-unit ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec2 :a) -> (Vec2 :a)))
   (define (vec2-unit (Vec2 a0 a1))
     (let ((len (vec2-length (Vec2 a0 a1))))
       (Vec2 (/ a0 len) (/ a1 len))))
 
   (inline)
-  (declare vec2-angle (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec2 :a) * (Vec2 :a) -> :a))
+  (declare vec2-angle ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec2 :a) * (Vec2 :a) -> :a))
   (define (vec2-angle a b)
     (acos (min 1 (max -1 (/ (/ (vec2-dot a b) (vec2-length a)) (vec2-length b))))))
 
@@ -114,7 +114,7 @@
     (+ (* (mat2-ref m 0 0) (mat2-ref m 1 1)) (negate (* (mat2-ref m 0 1) (mat2-ref m 1 0)))))
 
   (inline)
-  (declare mat2-inverse (((Reciprocable :a) (types:RuntimeRepr :a)) => (Mat2 :a) -> (Mat2 :a)))
+  (declare mat2-inverse ((Reciprocable :a) (types:RuntimeRepr :a) => (Mat2 :a) -> (Mat2 :a)))
   (define (mat2-inverse m)
     (let ((invdet (/ 1 (mat2-det m))))
       (make-mat2 (* invdet (mat2-ref m 1 1)) (* invdet (negate (mat2-ref m 0 1))) (* invdet (negate (mat2-ref m 1 0))) (* invdet (mat2-ref m 0 0)))))
@@ -205,18 +205,18 @@
     (Vec3 (+ a0 (* (- b0 a0) s)) (+ a1 (* (- b1 a1) s)) (+ a2 (* (- b2 a2) s))))
 
   (inline)
-  (declare vec3-length (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec3 :a) -> :a))
+  (declare vec3-length ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec3 :a) -> :a))
   (define (vec3-length v)
     (sqrt (vec3-sqrlength v)))
 
   (inline)
-  (declare vec3-unit (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec3 :a) -> (Vec3 :a)))
+  (declare vec3-unit ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec3 :a) -> (Vec3 :a)))
   (define (vec3-unit (Vec3 a0 a1 a2))
     (let ((len (vec3-length (Vec3 a0 a1 a2))))
       (Vec3 (/ a0 len) (/ a1 len) (/ a2 len))))
 
   (inline)
-  (declare vec3-angle (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec3 :a) * (Vec3 :a) -> :a))
+  (declare vec3-angle ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec3 :a) * (Vec3 :a) -> :a))
   (define (vec3-angle a b)
     (acos (min 1 (max -1 (/ (/ (vec3-dot a b) (vec3-length a)) (vec3-length b))))))
 
@@ -236,7 +236,7 @@
     (+ (+ (* (mat3-ref m 0 0) (+ (* (mat3-ref m 1 1) (mat3-ref m 2 2)) (negate (* (mat3-ref m 1 2) (mat3-ref m 2 1))))) (negate (* (mat3-ref m 0 1) (+ (* (mat3-ref m 1 0) (mat3-ref m 2 2)) (negate (* (mat3-ref m 1 2) (mat3-ref m 2 0))))))) (* (mat3-ref m 0 2) (+ (* (mat3-ref m 1 0) (mat3-ref m 2 1)) (negate (* (mat3-ref m 1 1) (mat3-ref m 2 0)))))))
 
   (inline)
-  (declare mat3-inverse (((Reciprocable :a) (types:RuntimeRepr :a)) => (Mat3 :a) -> (Mat3 :a)))
+  (declare mat3-inverse ((Reciprocable :a) (types:RuntimeRepr :a) => (Mat3 :a) -> (Mat3 :a)))
   (define (mat3-inverse m)
     (let ((invdet (/ 1 (mat3-det m))))
       (make-mat3 (* invdet (+ (* (mat3-ref m 1 1) (mat3-ref m 2 2)) (negate (* (mat3-ref m 1 2) (mat3-ref m 2 1))))) (* invdet (negate (+ (* (mat3-ref m 0 1) (mat3-ref m 2 2)) (negate (* (mat3-ref m 0 2) (mat3-ref m 2 1)))))) (* invdet (+ (* (mat3-ref m 0 1) (mat3-ref m 1 2)) (negate (* (mat3-ref m 0 2) (mat3-ref m 1 1))))) (* invdet (negate (+ (* (mat3-ref m 1 0) (mat3-ref m 2 2)) (negate (* (mat3-ref m 1 2) (mat3-ref m 2 0)))))) (* invdet (+ (* (mat3-ref m 0 0) (mat3-ref m 2 2)) (negate (* (mat3-ref m 0 2) (mat3-ref m 2 0))))) (* invdet (negate (+ (* (mat3-ref m 0 0) (mat3-ref m 1 2)) (negate (* (mat3-ref m 0 2) (mat3-ref m 1 0)))))) (* invdet (+ (* (mat3-ref m 1 0) (mat3-ref m 2 1)) (negate (* (mat3-ref m 1 1) (mat3-ref m 2 0))))) (* invdet (negate (+ (* (mat3-ref m 0 0) (mat3-ref m 2 1)) (negate (* (mat3-ref m 0 1) (mat3-ref m 2 0)))))) (* invdet (+ (* (mat3-ref m 0 0) (mat3-ref m 1 1)) (negate (* (mat3-ref m 0 1) (mat3-ref m 1 0))))))))
@@ -332,18 +332,18 @@
     (Vec4 (+ a0 (* (- b0 a0) s)) (+ a1 (* (- b1 a1) s)) (+ a2 (* (- b2 a2) s)) (+ a3 (* (- b3 a3) s))))
 
   (inline)
-  (declare vec4-length (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec4 :a) -> :a))
+  (declare vec4-length ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec4 :a) -> :a))
   (define (vec4-length v)
     (sqrt (vec4-sqrlength v)))
 
   (inline)
-  (declare vec4-unit (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec4 :a) -> (Vec4 :a)))
+  (declare vec4-unit ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec4 :a) -> (Vec4 :a)))
   (define (vec4-unit (Vec4 a0 a1 a2 a3))
     (let ((len (vec4-length (Vec4 a0 a1 a2 a3))))
       (Vec4 (/ a0 len) (/ a1 len) (/ a2 len) (/ a3 len))))
 
   (inline)
-  (declare vec4-angle (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec4 :a) * (Vec4 :a) -> :a))
+  (declare vec4-angle ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec4 :a) * (Vec4 :a) -> :a))
   (define (vec4-angle a b)
     (acos (min 1 (max -1 (/ (/ (vec4-dot a b) (vec4-length a)) (vec4-length b))))))
 
@@ -363,7 +363,7 @@
     (+ (+ (+ (* (mat4-ref m 0 0) (+ (+ (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1))))))) (negate (* (mat4-ref m 0 1) (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0))))))))) (* (mat4-ref m 0 2) (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0)))))))) (negate (* (mat4-ref m 0 3) (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0))))))))))
 
   (inline)
-  (declare mat4-inverse (((Reciprocable :a) (types:RuntimeRepr :a)) => (Mat4 :a) -> (Mat4 :a)))
+  (declare mat4-inverse ((Reciprocable :a) (types:RuntimeRepr :a) => (Mat4 :a) -> (Mat4 :a)))
   (define (mat4-inverse m)
     (let ((invdet (/ 1 (mat4-det m))))
       (make-mat4 (* invdet (+ (+ (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 1) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1)))))))) (* invdet (+ (+ (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 1))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 3 1))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 2) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 1) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 1))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 1) (mat4-ref m 2 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 2 1)))))))) (* invdet (negate (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0)))))))) (* invdet (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 2 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 2) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 3 0)))))))) (* invdet (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 2) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 2))))) (negate (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 2 0))))))) (* invdet (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 2 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0)))))))) (* invdet (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 1) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 1 1) (mat4-ref m 3 0))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 1) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 3)) (negate (* (mat4-ref m 1 3) (mat4-ref m 2 0))))))) (* (mat4-ref m 0 3) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 1)) (negate (* (mat4-ref m 1 1) (mat4-ref m 2 0)))))))) (* invdet (negate (+ (+ (* (mat4-ref m 1 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 1 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0))))))) (* (mat4-ref m 1 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0)))))))) (* invdet (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 2 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 2 2) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 2) (+ (* (mat4-ref m 2 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 2 1) (mat4-ref m 3 0))))))) (* invdet (negate (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 1) (mat4-ref m 3 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 3 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 3 0))))))) (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 0) (mat4-ref m 3 1)) (negate (* (mat4-ref m 1 1) (mat4-ref m 3 0)))))))) (* invdet (+ (+ (* (mat4-ref m 0 0) (+ (* (mat4-ref m 1 1) (mat4-ref m 2 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 2 1))))) (negate (* (mat4-ref m 0 1) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 2)) (negate (* (mat4-ref m 1 2) (mat4-ref m 2 0))))))) (* (mat4-ref m 0 2) (+ (* (mat4-ref m 1 0) (mat4-ref m 2 1)) (negate (* (mat4-ref m 1 1) (mat4-ref m 2 0))))))))))
@@ -434,7 +434,7 @@
       ((Quat a b c _) (Vec3 a b c))))
 
   (inline)
-  (declare quat-rotation (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec3 :a) * :a -> (Quat :a)))
+  (declare quat-rotation ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec3 :a) * :a -> (Quat :a)))
   (define (quat-rotation v theta)
     (let ((half (/ theta 2)))
       (let ((s (sin half)))
@@ -442,7 +442,7 @@
       ((Vec3 x y z) (Quat (* x s) (* y s) (* z s) (cos half)))))))
 
   (inline)
-  (declare quat-from-to (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Vec3 :a) * (Vec3 :a) -> (Quat :a)))
+  (declare quat-from-to ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Vec3 :a) * (Vec3 :a) -> (Quat :a)))
   (define (quat-from-to u v)
     (let ((from (vec3-unit u)))
       (let ((to (vec3-unit v)))
@@ -463,37 +463,37 @@
               ((Vec3 a b c) (Quat a b c (vec3-dot from half))))))))))
 
   (inline)
-  (declare quat-matrix (((Num :a) (types:RuntimeRepr :a)) => (Quat :a) -> (Mat4 :a)))
+  (declare quat-matrix ((Num :a) (types:RuntimeRepr :a) => (Quat :a) -> (Mat4 :a)))
   (define (quat-matrix (Quat x y z w))
     (make-mat4 (- (- 1 (* 2 (* y y))) (* 2 (* z z))) (* 2 (- (* x y) (* w z))) (* 2 (+ (* x z) (* w y))) 0 (* 2 (+ (* x y) (* w z))) (- (- 1 (* 2 (* x x))) (* 2 (* z z))) (* 2 (- (* y z) (* w x))) 0 (* 2 (- (* x z) (* w y))) (* 2 (+ (* y z) (* w x))) (- (- 1 (* 2 (* x x))) (* 2 (* y y))) 0 0 0 0 1))
 
   (inline)
-  (declare quat-x-axis (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Quat :a) -> (Vec3 :a)))
+  (declare quat-x-axis ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Quat :a) -> (Vec3 :a)))
   (define (quat-x-axis (Quat x y z w))
     (vec3-unit (Vec3 (+ (+ (+ (* w w) (* x x)) (negate (* y y))) (negate (* z z))) (* 2 (+ (* x y) (* w z))) (* 2 (- (* x z) (* w y))))))
 
   (inline)
-  (declare quat-y-axis (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Quat :a) -> (Vec3 :a)))
+  (declare quat-y-axis ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Quat :a) -> (Vec3 :a)))
   (define (quat-y-axis (Quat x y z w))
     (vec3-unit (Vec3 (* 2 (- (* x y) (* w z))) (+ (+ (+ (* w w) (negate (* x x))) (* y y)) (negate (* z z))) (* 2 (+ (* y z) (* w x))))))
 
   (inline)
-  (declare quat-z-axis (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a)) => (Quat :a) -> (Vec3 :a)))
+  (declare quat-z-axis ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) => (Quat :a) -> (Vec3 :a)))
   (define (quat-z-axis (Quat x y z w))
     (vec3-unit (Vec3 (* 2 (+ (* x z) (* w y))) (* 2 (- (* y z) (* w x))) (+ (+ (+ (* w w) (negate (* x x))) (negate (* y y))) (* z z)))))
 
   (inline)
-  (declare mat4-translate (((Num :a) (types:RuntimeRepr :a)) => (Mat4 :a) * (Vec3 :a) -> (Mat4 :a)))
+  (declare mat4-translate ((Num :a) (types:RuntimeRepr :a) => (Mat4 :a) * (Vec3 :a) -> (Mat4 :a)))
   (define (mat4-translate m (Vec3 x y z))
     (make-mat4 (mat4-ref m 0 0) (mat4-ref m 0 1) (mat4-ref m 0 2) (+ (+ (+ (mat4-ref m 0 3) (* (mat4-ref m 0 0) x)) (* (mat4-ref m 0 1) y)) (* (mat4-ref m 0 2) z)) (mat4-ref m 1 0) (mat4-ref m 1 1) (mat4-ref m 1 2) (+ (+ (+ (mat4-ref m 1 3) (* (mat4-ref m 1 0) x)) (* (mat4-ref m 1 1) y)) (* (mat4-ref m 1 2) z)) (mat4-ref m 2 0) (mat4-ref m 2 1) (mat4-ref m 2 2) (+ (+ (+ (mat4-ref m 2 3) (* (mat4-ref m 2 0) x)) (* (mat4-ref m 2 1) y)) (* (mat4-ref m 2 2) z)) (mat4-ref m 3 0) (mat4-ref m 3 1) (mat4-ref m 3 2) (+ (+ (+ (mat4-ref m 3 3) (* (mat4-ref m 3 0) x)) (* (mat4-ref m 3 1) y)) (* (mat4-ref m 3 2) z))))
 
   (inline)
-  (declare mat4-scale (((Num :a) (types:RuntimeRepr :a)) => (Mat4 :a) * (Vec3 :a) -> (Mat4 :a)))
+  (declare mat4-scale ((Num :a) (types:RuntimeRepr :a) => (Mat4 :a) * (Vec3 :a) -> (Mat4 :a)))
   (define (mat4-scale m (Vec3 x y z))
     (make-mat4 (* (mat4-ref m 0 0) x) (* (mat4-ref m 0 1) y) (* (mat4-ref m 0 2) z) (mat4-ref m 0 3) (* (mat4-ref m 1 0) x) (* (mat4-ref m 1 1) y) (* (mat4-ref m 1 2) z) (mat4-ref m 1 3) (* (mat4-ref m 2 0) x) (* (mat4-ref m 2 1) y) (* (mat4-ref m 2 2) z) (mat4-ref m 2 3) (* (mat4-ref m 3 0) x) (* (mat4-ref m 3 1) y) (* (mat4-ref m 3 2) z) (mat4-ref m 3 3)))
 
   (inline)
-  (declare lookat (((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) (types:RuntimeRepr :a)) => (Vec3 :a) * (Vec3 :a) * (Vec3 :a) -> (Mat4 :a)))
+  (declare lookat ((coalton/math/elementary:Radical :a) (Reciprocable :a) (Ord :a) (coalton/math/elementary:Trigonometric :a) (types:RuntimeRepr :a) => (Vec3 :a) * (Vec3 :a) * (Vec3 :a) -> (Mat4 :a)))
   (define (lookat eye target up)
     (let ((z (vec3-unit (vec3-sub eye target))))
       (let ((u (vec3-unit up)))
